@@ -1,0 +1,32 @@
+CookieMonster! - iConomy Money and Items for PvM
+
+Description:
+This is a continuation of Coelho's initial CookieMonster
+CookieMonster is based off of the inactive iMonster, however uses none of the code from it, 
+so it is extremely lightweight and fast. 
+
+
+Features:
+configurable item drops and iconomy reward for each monster
+Ability to add extra drops with drop-rate.
+Ability to add minimum and maximum money drops for randomness
+Extremely small and weightless code
+
+
+To-Do/Suggestions:
+Message Configuration
+
+
+
+Changelog:
+
+Version 1.0 - ?
+Initial re-release, now maintained by jascotty2
+compatibility with 612
+
+
+-------- Coelho --------
+Version 0.2:
+Fixed tuns of first-release bugs
+Version 0.1:
+Initial release

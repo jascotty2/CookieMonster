@@ -1,0 +1,4 @@
+name: CookieMonster
+main: com.pi.coelho.CookieMonster.CookieMonster
+version: 0.2
+authors: [Coelho, jascotty2]
