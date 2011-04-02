@@ -1,0 +1,77 @@
+# any LivingEntity listed here can have it's own rewards
+# give a range for iConomy reward ( min-max )
+# can configure custom drops for each (origional drops are replaced with these, so 0%0 would disable rewards)
+# drops syntax: itemID[:subData][@maxDrop]%Probability[,another drop... ]
+## 100 Probability means will drop each time
+## if = 50, only means 50% chance of drop, chance of full drop is random
+rewards:
+    Chicken: 
+        drops: 0%0
+    Cow:
+    Creeper:
+        drops: 2256@1%.5, 289@4%80
+        coins: 1-4
+    Ghast:
+        drops:
+        coins: 2-5
+    Giant:
+        # giant zombie, not very likely to encounter
+    Monster:
+        # this is a fake human, not likely to occur
+    Pig:
+    PigZombie:
+        drops:
+        coins: 2-3
+    Sheep:
+    Skeleton:
+        drops: 261@1%10, 262@4%80
+        coins: 1-3
+    Slime:
+        drops:
+        coins: 1-2
+    Spider:
+        drops:
+        coins: 1-2
+    Squid:
+    Zombie:
+        drops:
+        coins: 1-2
+    Wolf:
+        drops:
+        coins: -1--2
+    MobSpawner:
+        drops:
+        coins: -4--5
+        
+messages:
+    # Colors are specified by using "&[colorcode]".
+    #     (Never put colors within the angle brackets of a tag)
+    #   Color table:
+    #       &0 is black
+    #       &1 is dark blue
+    #       &2 is dark green
+    #       &3 is dark sky blue
+    #       &4 is red
+    #       &5 is magenta
+    #       &6 is gold or amber
+    #       &7 is light grey
+    #       &8 is dark grey
+    #       &9 is medium blue
+    #       &a is light green
+    #       &b is cyan
+    #       &c is orange-red
+    #       &d is pink
+    #       &e is yellow
+    #       &f is white
+    # (use && for a & symbol)
+
+    # rewarded for killing a monster:
+    # <amount>  how much credited to account
+    # <monster> name of the creature killed
+    reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
+    
+    # penelized for killing a monster (if coin range is negative)
+    # <amount>  how much removed from account
+    # <monster> name of the creature killed
+    penalty: "&c You are penalized &f<amount>&c for killing the &f<monster>"
+

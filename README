@@ -8,19 +8,34 @@ so it is extremely lightweight and fast.
 
 Features:
 configurable item drops and iconomy reward for each monster
-Ability to add extra drops with drop-rate.
+Ability to change entity drops with drop-rate.
 Ability to add minimum and maximum money drops for randomness
 Extremely small and weightless code
 
 
-To-Do/Suggestions:
-Message Configuration
-
+To-Do:
+don't allow to damage a creature if penalty is greater than account balance
+? import itemsDB from bettershop to check against config (check if valid items entered as drops)
+option to only drop items for a direct kill (stops autofarmers)
 
 
 Changelog:
 
-Version 1.0 - ?
+Version 1.1 - 4/1/11
+Configurable Messages
+configuration file & format changed
+can now reward/penalize any LivingEntity kill
+custom drops replace normal drops, instead of adding to them
+note: if you're getting "NoSuchMethodError: com.jascotty2.Rand.RandomDouble(DD)D", update BetterShop
+	(confusing, i know, but java is caching the older of the two versions of the same file)
+kill handlers fixed for 600+
+known fixes from 0.2:
+no longer messes up the drop amount
+drops are droped by the killed entity, not in front of the player
+no more multi-rewards for killing the same entity
+
+
+Version 1.0 - 3/31/11
 Initial re-release, now maintained by jascotty2
 compatibility with 612
 

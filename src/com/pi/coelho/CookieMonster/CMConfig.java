@@ -1,0 +1,204 @@
+package com.pi.coelho.CookieMonster;
+
+import com.jascotty2.MonsterDrops;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import org.bukkit.entity.*;
+
+import org.bukkit.util.config.Configuration;
+
+public class CMConfig {
+
+    // Files and Directories
+    public final static File pluginFolder = new File("plugins", CookieMonster.name);
+    public final static File configfile = new File(pluginFolder, "config.yml");
+    //public final static File configurationFile = new File("plugins" + File.pathSeparatorChar + "CookieMonster" + File.pathSeparatorChar + "config.yml");
+    public static String Plugin_Directory;
+    //Creature Names (MUST be parallel to CreatureType.values())
+    public final static String CreatureNodes[] = {
+        "Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
+        "Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Wolf", "MobSpawner"
+    };
+    //Monster Configuration
+    public static MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
+    // settings
+    public static long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
+    // messages
+    public static HashMap<String, String> messages = new HashMap<String, String>();
+
+    public static boolean load() {
+        extractConfig();
+        messages.clear();
+        messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
+        messages.put("penalty", "&c You are penalized &f<amount>&c for killing the &f<monster>");
+        try {
+            Configuration config = new Configuration(configfile);
+            config.load();
+            for (int i = 0; i < Monster_Drop.length; ++i) {
+                Monster_Drop[i] = new MonsterDrops();
+            }
+            if (config.getNodes("rewards") != null) {
+                for (String k : config.getNodes("rewards").keySet()) {
+                    int i = creatureIndex(k);
+                    if (i >= 0) {
+                        if(!Monster_Drop[i].setDrops(config.getString("rewards." + k + ".drops"))){
+                            CookieMonster.Log(Level.WARNING, k + " coin reward has an invalid value");
+                        }
+                        Monster_Drop[i].setReward(config.getString("rewards." + k + ".coins"));
+                    }
+                }
+            } else {
+                CookieMonster.Log(Level.SEVERE, "rewards node missing from config");
+            }
+            if (config.getNodes("messages") != null) {
+                List<String> msgs = config.getKeys("messages");//.getNodes("messages").keySet();
+                for (String k : msgs) {
+                    if (!messages.containsKey(k)) {
+                        CookieMonster.Log(Level.WARNING, "unused message setting: " + k);
+                    } else {
+                        messages.put(k, config.getString("messages." + k, messages.get(k)));
+                    }
+                }
+                // check if there are any missing, and replace chatcolorcodes
+                for (String k : messages.keySet()) {
+                    if (!msgs.contains(k)) {
+                        CookieMonster.Log(Level.WARNING, "missing message setting: " + k);
+                    }
+                    messages.put(k, messages.get(k).replaceAll("&&", "\b").replaceAll("&", "\u00A7").replaceAll("\b", "&"));
+                }
+            } else {
+                CookieMonster.Log(Level.WARNING, "messages node missing from config");
+            }
+            return true;
+        } catch (Exception ex) {
+            CookieMonster.Log(Level.SEVERE, "error loading configuration", ex);
+        }
+        return false;
+    }
+
+    public static String checkMonsters(LivingEntity le) {
+        String name = "";
+        if (le instanceof Chicken) {
+            name = "Chicken";
+        } else if (le instanceof Cow) {
+            name = "Cow";
+        } else if (le instanceof Creeper) {
+            name = "Creeper";
+        } else if (le instanceof Ghast) {
+            name = "Ghast";
+        } else if (le instanceof Giant) {
+            name = "Giant";
+        } else if (le instanceof Pig) {
+            name = "Pig";
+        } else if (le instanceof PigZombie) {
+            name = "PigZombie";
+        } else if (le instanceof Sheep) {
+            name = "Sheep";
+        } else if (le instanceof Skeleton) {
+            name = "Skeleton";
+        } else if (le instanceof Slime) {
+            name = "Slime";
+        } else if (le instanceof Spider) {
+            name = "Spider";
+        } else if (le instanceof Squid) {
+            name = "Squid";
+        } else if (le instanceof Zombie) {
+            name = "Zombie";
+        }
+        return name;
+    }
+
+    public static int creatureIndex(Entity le) {
+        if (le == null) {
+            return -1;
+        }
+        if (le instanceof Chicken) {
+            return 0;
+        } else if (le instanceof Cow) {
+            return 1;
+        } else if (le instanceof Creeper) {
+            return 2;
+        } else if (le instanceof Ghast) {
+            return 3;
+        } else if (le instanceof Giant) {
+            return 4;
+        } else if (le instanceof Pig) {
+            return 6;
+        } else if (le instanceof PigZombie) {
+            return 7;
+        } else if (le instanceof Sheep) {
+            return 8;
+        } else if (le instanceof Skeleton) {
+            return 9;
+        } else if (le instanceof Slime) {
+            return 10;
+        } else if (le instanceof Spider) {
+            return 11;
+        } else if (le instanceof Squid) {
+            return 12;
+        } else if (le instanceof Zombie) {
+            return 13;
+        } else if (le instanceof Wolf) {
+            return 14;
+        } else if (le instanceof Monster) {
+            return 5;
+        }
+        return -1;
+    }
+
+    public static int creatureIndex(String e) {
+        if (e == null) {
+            return -1;
+        }
+        for (int i = 0; i < CreatureNodes.length; ++i) {
+            if (e.equalsIgnoreCase(CreatureNodes[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static void extractConfig() {
+        //(new File(configurationFile.getAbsolutePath().substring(
+        //        0, configurationFile.getAbsolutePath().length() - configurationFile.getName().length()))).mkdirs();
+        pluginFolder.mkdirs();
+
+        if (!configfile.exists()) {
+            InputStream input = CMConfig.class.getResourceAsStream("/config.yml");
+            if (input != null) {
+                FileOutputStream output = null;
+
+                try {
+                    output = new FileOutputStream(configfile);
+                    byte[] buf = new byte[8192];
+                    int length = 0;
+
+                    while ((length = input.read(buf)) > 0) {
+                        output.write(buf, 0, length);
+                    }
+
+                    System.out.println("[CookieMonster] Default setup file written: " + configfile);
+                } catch (Exception e) {
+                    CookieMonster.Log(Level.SEVERE, e);
+                } finally {
+                    try {
+                        if (input != null) {
+                            input.close();
+                        }
+                    } catch (Exception e) {
+                    }
+                    try {
+                        if (output != null) {
+                            output.close();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }
+    }
+}
