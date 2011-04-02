@@ -6,7 +6,7 @@
 ## if = 50, only means 50% chance of drop, chance of full drop is random
 rewards:
     Chicken: 
-        drops: 0%0
+        drops: 344%10, 288@2%70
     Cow:
     Creeper:
         drops: 2256@1%.5, 289@4%80
@@ -20,7 +20,7 @@ rewards:
         # this is a fake human, not likely to occur
     Pig:
     PigZombie:
-        drops:
+        drops: 320@2%70, 283%01
         coins: 2-3
     Sheep:
     Skeleton:

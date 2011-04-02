@@ -31,7 +31,6 @@ public class CMEntityListener extends EntityListener {
                 monsterDamaged(event.getEntity(),
                         event.getDamager() instanceof Player ? (Player) event.getDamager() : null);
                 return;
-                 //System.out.println((Monster) event.getEntity() + " damaged by " + ((Player) event.getDamager()).getName());
             }
         } else if (entEvent instanceof EntityDamageByProjectileEvent) {
             EntityDamageByProjectileEvent event = (EntityDamageByProjectileEvent) entEvent;
@@ -39,7 +38,6 @@ public class CMEntityListener extends EntityListener {
                 monsterDamaged(event.getEntity(),
                         event.getDamager() instanceof Player ? (Player) event.getDamager() : null);
                 return;
-                //System.out.println((Monster) event.getEntity() + " damaged by " + ((Player) event.getDamager()).getName());
             }
         }
         monsterDamaged(entEvent.getEntity(), null);

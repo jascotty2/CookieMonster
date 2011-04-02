@@ -21,6 +21,10 @@ option to only drop items for a direct kill (stops autofarmers)
 
 Changelog:
 
+Version 1.1.0.1 - 4/2/11
+removed a debugging line
+
+
 Version 1.1 - 4/1/11
 Configurable Messages
 configuration file & format changed

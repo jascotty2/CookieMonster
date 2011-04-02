@@ -10,31 +10,6 @@ public class CMRewardHandler {
 
     public CMRewardHandler() {
     }
-    /*
-    public void GivePlayerReward(Player p, Monster m) {
-    if (m instanceof Creeper) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 0);
-    } else if (m instanceof Skeleton) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 1);
-    } else if (m instanceof Zombie) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 2);
-    } else if (m instanceof Spider) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 3);
-    } else if (m instanceof Slime) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 4);
-    } else if (m instanceof PigZombie) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 5);
-    } else if (m instanceof Ghast) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 6);
-    } else if (m instanceof Giant) {
-    CookieMonster.getRewardHandler().GivePlayerReward(p, 7);
-    }
-    }
-
-    public void GivePlayerReward(Player p, int m) {
-    GivePlayerCoinReward(p, m);
-    GivePlayerDropReward(p, m);
-    }//*/
 
     public void GivePlayerCoinReward(Player p, Entity e) {
         int c = CMConfig.creatureIndex(e);
@@ -60,8 +35,6 @@ public class CMRewardHandler {
                 account.subtract(amount);
                 p.sendMessage(CMConfig.messages.get("penalty").replaceAll("<amount>", iConomy.getBank().format(amount)).replaceAll("<monster>", CMConfig.CreatureNodes[m]));
             }
-        } else {
-            System.out.println("no reward for " + CMConfig.CreatureNodes[m]);
         }
     }
     /*
