@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import org.bukkit.entity.*;
 
 import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 public class CMConfig {
 
@@ -27,6 +28,10 @@ public class CMConfig {
     public static MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
     // settings
     public static long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
+    public static boolean intOnly = false,
+            disableAnoymDrop = false,
+            allowWolfHunt = true,
+            disableExpensiveKill = true;
     // messages
     public static HashMap<String, String> messages = new HashMap<String, String>();
 
@@ -35,17 +40,27 @@ public class CMConfig {
         messages.clear();
         messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
         messages.put("penalty", "&c You are penalized &f<amount>&c for killing the &f<monster>");
+
+        messages.put("norewardMonster", "&c there is no reward for killing a &f<monster>");
+        messages.put("norewardCreature", "");
         try {
             Configuration config = new Configuration(configfile);
             config.load();
             for (int i = 0; i < Monster_Drop.length; ++i) {
                 Monster_Drop[i] = new MonsterDrops();
             }
+            if (config.getNode("settings") != null) {
+                ConfigurationNode n = config.getNode("settings");
+                intOnly = n.getBoolean("wholeNumberRewards", intOnly);
+                disableAnoymDrop = n.getBoolean("onlyKillDrop", disableAnoymDrop);
+                allowWolfHunt = n.getBoolean("allowWolfHunt", allowWolfHunt);
+                disableExpensiveKill = n.getBoolean("disableExpensiveKill", disableExpensiveKill);
+            }
             if (config.getNodes("rewards") != null) {
                 for (String k : config.getNodes("rewards").keySet()) {
                     int i = creatureIndex(k);
                     if (i >= 0) {
-                        if(!Monster_Drop[i].setDrops(config.getString("rewards." + k + ".drops"))){
+                        if (!Monster_Drop[i].setDrops(config.getString("rewards." + k + ".drops"))) {
                             CookieMonster.Log(Level.WARNING, k + " coin reward has an invalid value");
                         }
                         Monster_Drop[i].setReward(config.getString("rewards." + k + ".coins"));
@@ -160,6 +175,14 @@ public class CMConfig {
             }
         }
         return -1;
+    }
+
+    public static boolean isCreature(int i) {
+        return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14;
+    }
+
+    public static boolean isMonster(int i) {
+        return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9 || i == 10 || i == 11 || i == 13 || i == 14;
     }
 
     private static void extractConfig() {

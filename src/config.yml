@@ -1,3 +1,17 @@
+settings:
+    # general plugin settings
+    # if you don't want deciamls ($1.23)
+    wholeNumberRewards: false
+    # if only direct player kills gives reward
+    #   (disables mob farming)
+    onlyKillDrop: false
+    # if allow hunting with wolves
+    # NOTE: does not yet work, as the bukkit wolf is not complete
+    #   petition them to add a getOwner and setOwner method!
+    allowWolfHunt: true
+    #disable damage if can't afford to kill?
+    disableExpensiveKill: true
+
 # any LivingEntity listed here can have it's own rewards
 # give a range for iConomy reward ( min-max )
 # can configure custom drops for each (origional drops are replaced with these, so 0%0 would disable rewards)
@@ -74,4 +88,9 @@ messages:
     # <amount>  how much removed from account
     # <monster> name of the creature killed
     penalty: "&c You are penalized &f<amount>&c for killing the &f<monster>"
+    
+    # if no money rewarded (can be blank for none)
+    norewardMonster: "&c there is no reward for killing a &f<monster>"
+    norewardCreature: 
+    
 

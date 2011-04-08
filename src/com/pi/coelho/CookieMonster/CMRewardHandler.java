@@ -24,6 +24,9 @@ public class CMRewardHandler {
 
     private void GivePlayerCoinReward(Player p, int m) {
         double amount = CMConfig.Monster_Drop[m].getCoinReward();
+        if (CMConfig.intOnly) {
+            amount = Math.round(amount);
+        }
         //System.out.println(CMConfig.Monster_Drop[m].getMaxCoin());
         if (amount != 0 && iConomy.getBank().hasAccount(p.getName())) {
             Account account = iConomy.getBank().getAccount(p.getName());
@@ -32,8 +35,18 @@ public class CMRewardHandler {
                 account.add(amount);
                 p.sendMessage(CMConfig.messages.get("reward").replaceAll("<amount>", iConomy.getBank().format(amount)).replaceAll("<monster>", CMConfig.CreatureNodes[m]));
             } else if (amount < 0.0) {
-                account.subtract(amount);
+                account.subtract(-amount);
                 p.sendMessage(CMConfig.messages.get("penalty").replaceAll("<amount>", iConomy.getBank().format(amount)).replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+            }
+        } else if (amount == 0) {
+            if (CMConfig.isCreature(m)) {
+                if (CMConfig.messages.get("norewardCreature").length() > 0) {
+                    p.sendMessage(CMConfig.messages.get("norewardCreature").replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                }
+            } else {
+                if (CMConfig.messages.get("norewardMonster").length() > 0) {
+                    p.sendMessage(CMConfig.messages.get("norewardMonster").replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                }
             }
         }
     }

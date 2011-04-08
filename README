@@ -12,14 +12,25 @@ Ability to change entity drops with drop-rate.
 Ability to add minimum and maximum money drops for randomness
 Extremely small and weightless code
 
-
-To-Do:
-don't allow to damage a creature if penalty is greater than account balance
-? import itemsDB from bettershop to check against config (check if valid items entered as drops)
+doesn't allow to damage a creature if penalty is greater than account balance
 option to only drop items for a direct kill (stops autofarmers)
 
+To-Do:
+? import itemsDB from bettershop to check against config (check if valid items entered as drops)
+command to reload settings
 
 Changelog:
+
+Version 1.2.1 - 4/8/11
+custom messages for no reward added
+
+Version 1.2 - 4/8/11
+fixed negative reward being added (not subtract)
+added settings for config:
+- wholeNumberRewards: for rounding decimals to whole numbers
+- onlyKillDrop: entities only drop items if killed by a player 
+- disableExpensiveKill: can't harm something that a player can't afford to kill
+
 
 Version 1.1.0.1 - 4/2/11
 removed a debugging line
