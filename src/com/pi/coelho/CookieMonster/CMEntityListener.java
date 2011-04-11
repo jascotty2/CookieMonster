@@ -1,11 +1,14 @@
 package com.pi.coelho.CookieMonster;
 
-import com.nijiko.coelho.iConomy.iConomy;
+import com.jynxdaddy.wolfspawn_04.UpdatedWolf;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -16,8 +19,10 @@ import org.bukkit.inventory.ItemStack;
 public class CMEntityListener extends EntityListener {
 
     protected HashMap<Integer, MonsterAttack> attacks = new HashMap<Integer, MonsterAttack>();
+    Server sv = null;
 
-    public CMEntityListener() {
+    public CMEntityListener(Server bukkitServer) {
+        sv = bukkitServer;
     }
 
     @Override
@@ -28,37 +33,39 @@ public class CMEntityListener extends EntityListener {
 
         if (entEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
-            entDamage(event.getEntity(),
-                    event.getDamager() instanceof Player ? (Player) event.getDamager() : null,
-                    entEvent);
+            entDamage(event.getEntity(), event.getDamager(), entEvent);
         } else if (entEvent instanceof EntityDamageByProjectileEvent) {
             EntityDamageByProjectileEvent event = (EntityDamageByProjectileEvent) entEvent;
-            entDamage(event.getEntity(),
-                    event.getDamager() instanceof Player ? (Player) event.getDamager() : null,
-                    entEvent);
+            entDamage(event.getEntity(), event.getDamager(), entEvent);
         } else {
             monsterDamaged(entEvent.getEntity(), null);
         }
     }
 
-    void entDamage(Entity monster, Player player, EntityDamageEvent entEvent) {
+    void entDamage(Entity monster, Entity damager, EntityDamageEvent entEvent) {
         if (monster instanceof LivingEntity) {
-            if (player == null) {
-                monsterDamaged(monster, player);
+            //System.out.println(damager);
+            Player pl = null;
+            if (damager instanceof Player) {
+                pl = (Player) damager;
+            } else if (damager instanceof Wolf && CMConfig.allowWolfHunt && sv != null) {
+                UpdatedWolf w = new UpdatedWolf((Wolf) damager);
+                //System.out.println(w);
+                if (w.isTame()) {
+                    pl = sv.getPlayer(w.getOwner());
+                }
+            }
+            if (pl == null) {
+                monsterDamaged(monster, pl);
             } else {
                 if (CMConfig.disableExpensiveKill) {
                     int c = CMConfig.creatureIndex(monster);
-                    if (c >= 0 && CMConfig.Monster_Drop[c].getMinCoin() < 0
-                            && iConomy.getBank().getAccount(player.getName()).getBalance()
-                            < -CMConfig.Monster_Drop[c].getMinCoin()) {
-                        //if (!attacks.containsKey(monster.getEntityId())) {
-                        player.sendMessage("You cannot afford to kill a " + CMConfig.CreatureNodes[c]);
+                    if (c >= 0 && !CookieMonster.getRewardHandler().canAffordKill(pl, monster)) {
                         entEvent.setCancelled(true);
                         return;
-                        //}
                     }
                 }
-                monsterDamaged(monster, player);
+                monsterDamaged(monster, pl);
             }
         }
     }
@@ -75,17 +82,22 @@ public class CMEntityListener extends EntityListener {
 
     @Override
     public void onEntityDeath(EntityDeathEvent event) {
+        if (CMConfig.disableAnoymDrop) {
+            event.getDrops().clear();
+        } else if (CMConfig.alwaysReplaceDrops) {
+            ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
+            if (newDrops != null) {
+                event.getDrops().clear();
+                event.getDrops().addAll(Arrays.asList(newDrops));
+            }
+        }
         if (event.getEntity() instanceof LivingEntity
                 && attacks.containsKey(event.getEntity().getEntityId())) {
             if (attacks.get(event.getEntity().getEntityId()).attackTimeAgo()
                     <= CMConfig.damageTimeThreshold) {
                 attacks.get(event.getEntity().getEntityId()).rewardKill(event);
-            } else if (CMConfig.disableAnoymDrop) {
-                event.getDrops().clear();
             }
             attacks.remove(event.getEntity().getEntityId());
-        } else if (CMConfig.disableAnoymDrop) {
-            event.getDrops().clear();
         }
     }
 

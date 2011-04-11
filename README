@@ -21,8 +21,17 @@ command to reload settings
 
 Changelog:
 
+Version 1.3 - 4/11/11
+mobspawner destroy check fixed
+BOSeconomy support added
+added alwaysReplaceDrops option, so your custom drop always occur
+support for no economy plugin added - so can just replace monster drops
+configurable rewards for items used
+
+
 Version 1.2.1 - 4/8/11
 custom messages for no reward added
+
 
 Version 1.2 - 4/8/11
 fixed negative reward being added (not subtract)

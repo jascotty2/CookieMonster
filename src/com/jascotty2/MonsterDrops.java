@@ -7,6 +7,7 @@
 package com.jascotty2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -14,38 +15,36 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MonsterDrops {
 
-    protected double coin_max, coin_min;
-    protected ArrayList<Drop> drops = new ArrayList<Drop>();
+    private CoinReward reward = new CoinReward(); // double reward.max, reward.min;
+    private HashMap<Integer, CoinReward> itemRewards = new HashMap<Integer, CoinReward>();
+    private ArrayList<Drop> drops = new ArrayList<Drop>();
 
     public boolean setReward(String str) {
+        return reward.setReward(str);
+    }
+
+    public boolean setItemRewards(String str) {
+        boolean good = true;
+        itemRewards.clear();
         if (str != null) {
-            if (str.contains("-")) {
-                if (str.indexOf("-") == 0) {
-                    if (Str.count(str, "-") == 1) {
-                        coin_min = coin_max = CheckInput.GetDouble(str, Double.NEGATIVE_INFINITY);
+            for (String s : str.split(",")) {
+                String p[] = s.split("\\>");
+                if (p.length == 2) {
+                    int i = CheckInput.GetInt(p[0].trim(), -1);
+                    if (i >= 0) {
+                        itemRewards.put(i, new CoinReward());
+                        if (!itemRewards.get(i).setReward(p[1])) {
+                            good = false;
+                        }
                     } else {
-                        coin_min = CheckInput.GetDouble(str.substring(0, str.indexOf("-", 1)).trim(), Double.NEGATIVE_INFINITY);
-                        coin_max = CheckInput.GetDouble(str.substring(str.indexOf("-", 1) + 1).trim(), Double.NEGATIVE_INFINITY);
+                        good = false;
                     }
                 } else {
-                    coin_min = CheckInput.GetDouble(str.substring(0, str.indexOf("-")).trim(), Double.NEGATIVE_INFINITY);
-                    coin_max = CheckInput.GetDouble(str.substring(str.indexOf("-") + 1).trim(), Double.NEGATIVE_INFINITY);
+                    good = false;
                 }
-            } else {
-                coin_min = coin_max = CheckInput.GetDouble(str, Double.NEGATIVE_INFINITY);
             }
-            if (coin_min == Double.NEGATIVE_INFINITY || coin_max == Double.NEGATIVE_INFINITY) {
-                coin_min = coin_max = 0;
-                return false;
-            }else if(coin_min > coin_max){
-                double t = coin_min;
-                coin_min = coin_max;
-                coin_max = t;
-            }
-        } else {
-            coin_min = coin_max = 0;
         }
-        return true;
+        return good;
     }
 
     public boolean setDrops(String str) {
@@ -63,18 +62,41 @@ public class MonsterDrops {
         return true;
     }
 
-    public double getMinCoin(){
-        return coin_min;
+    public double getMinCoin() {
+        return reward.min;
     }
-    public double getMaxCoin(){
-        return coin_max;
+
+    public double getMaxCoin() {
+        return reward.max;
+    }
+
+    public double getMinCoin(int itemId) {
+        if (itemRewards.containsKey(itemId)) {
+            return itemRewards.get(itemId).min;
+        }
+        return reward.min;
+    }
+
+    public double getMaxCoin(int itemId) {
+        if (itemRewards.containsKey(itemId)) {
+            return itemRewards.get(itemId).max;
+        }
+        return reward.max;
     }
 
     public double getCoinReward() {
-        if (coin_min == 0 && coin_max == 0) {
-            return 0;
+        return reward.getCoinReward();
+    }
+
+    public double getCoinReward(int itemId) {
+        if (itemRewards.containsKey(itemId)) {
+            return itemRewards.get(itemId).getCoinReward();
         }
-        return Rand.RandomDouble(coin_min, coin_max);
+        return reward.getCoinReward();
+    }
+
+    public boolean itemHasReward(int itemId) {
+        return itemRewards.containsKey(itemId);
     }
 
     public ItemStack[] getDropsReward() {
@@ -89,5 +111,57 @@ public class MonsterDrops {
             }
         }
         return droppings.toArray(new ItemStack[0]);
+    }
+
+    private static final class CoinReward {
+
+        public double max, min;
+
+        public CoinReward() {
+            max = min = 0;
+        }
+
+        public CoinReward(String str) {
+            setReward(str);
+        }
+
+        public boolean setReward(String str) {
+            max = min = 0;
+            if (str != null) {
+                if (str.contains("-")) {
+                    if (str.indexOf("-") == 0) {
+                        if (Str.count(str, "-") == 1) {
+                            min = max = CheckInput.GetDouble(str, Double.NEGATIVE_INFINITY);
+                        } else {
+                            min = CheckInput.GetDouble(str.substring(0, str.indexOf("-", 1)).trim(), Double.NEGATIVE_INFINITY);
+                            max = CheckInput.GetDouble(str.substring(str.indexOf("-", 1) + 1).trim(), Double.NEGATIVE_INFINITY);
+                        }
+                    } else {
+                        min = CheckInput.GetDouble(str.substring(0, str.indexOf("-")).trim(), Double.NEGATIVE_INFINITY);
+                        max = CheckInput.GetDouble(str.substring(str.indexOf("-") + 1).trim(), Double.NEGATIVE_INFINITY);
+                    }
+                } else {
+                    min = max = CheckInput.GetDouble(str, Double.NEGATIVE_INFINITY);
+                }
+                if (min == Double.NEGATIVE_INFINITY || max == Double.NEGATIVE_INFINITY) {
+                    min = max = 0;
+                    return false;
+                } else if (min > max) {
+                    double t = min;
+                    min = max;
+                    max = t;
+                }
+            } else {
+                min = max = 0;
+            }
+            return true;
+        }
+
+        public double getCoinReward() {
+            if (min == 0 && max == 0) {
+                return 0;
+            }
+            return Rand.RandomDouble(min, max);
+        }
     }
 }

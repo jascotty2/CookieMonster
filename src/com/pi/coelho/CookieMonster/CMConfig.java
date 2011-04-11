@@ -30,6 +30,7 @@ public class CMConfig {
     public static long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
     public static boolean intOnly = false,
             disableAnoymDrop = false,
+            alwaysReplaceDrops = true,
             allowWolfHunt = true,
             disableExpensiveKill = true;
     // messages
@@ -39,10 +40,19 @@ public class CMConfig {
         extractConfig();
         messages.clear();
         messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
+        messages.put("itemreward", "&a You are rewarded &f<amount>&a for killing the &f<monster> with a <item>");
+
         messages.put("penalty", "&c You are penalized &f<amount>&c for killing the &f<monster>");
+        messages.put("itempenalty", "&c You are penalized &f<amount>&c for killing the &f<monster>&c with a &f<item>");
+
+        messages.put("notafford", "&c You cannot afford to kill a &f<monster>");
+        messages.put("itemnotafford", "&c You cannot afford to kill a &f<monster>&c with a &f<item>");
 
         messages.put("norewardMonster", "&c there is no reward for killing a &f<monster>");
         messages.put("norewardCreature", "");
+
+        messages.put("itemnorewardMonster", "&c there is no reward for killing a &f<monster>&c with a &f<item>");
+        messages.put("itemnorewardCreature", "");
         try {
             Configuration config = new Configuration(configfile);
             config.load();
@@ -55,6 +65,7 @@ public class CMConfig {
                 disableAnoymDrop = n.getBoolean("onlyKillDrop", disableAnoymDrop);
                 allowWolfHunt = n.getBoolean("allowWolfHunt", allowWolfHunt);
                 disableExpensiveKill = n.getBoolean("disableExpensiveKill", disableExpensiveKill);
+                alwaysReplaceDrops = n.getBoolean("alwaysReplaceDrops", alwaysReplaceDrops);
             }
             if (config.getNodes("rewards") != null) {
                 for (String k : config.getNodes("rewards").keySet()) {
@@ -62,6 +73,9 @@ public class CMConfig {
                     if (i >= 0) {
                         if (!Monster_Drop[i].setDrops(config.getString("rewards." + k + ".drops"))) {
                             CookieMonster.Log(Level.WARNING, k + " coin reward has an invalid value");
+                        }
+                        if (!Monster_Drop[i].setItemRewards(config.getString("rewards." + k + ".itemCoins"))) {
+                            CookieMonster.Log(Level.WARNING, k + " item coin reward has an invalid value");
                         }
                         Monster_Drop[i].setReward(config.getString("rewards." + k + ".coins"));
                     }
@@ -83,10 +97,13 @@ public class CMConfig {
                     if (!msgs.contains(k)) {
                         CookieMonster.Log(Level.WARNING, "missing message setting: " + k);
                     }
-                    messages.put(k, messages.get(k).replaceAll("&&", "\b").replaceAll("&", "\u00A7").replaceAll("\b", "&"));
                 }
             } else {
                 CookieMonster.Log(Level.WARNING, "messages node missing from config");
+            }
+            // replace chatcolorcodes
+            for (String k : messages.keySet()) {
+                messages.put(k, messages.get(k).replaceAll("&&", "\b").replaceAll("&", "\u00A7").replaceAll("\b", "&"));
             }
             return true;
         } catch (Exception ex) {

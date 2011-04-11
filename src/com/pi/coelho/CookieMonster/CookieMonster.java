@@ -15,7 +15,7 @@ public class CookieMonster extends JavaPlugin {
 
     protected final static Logger logger = Logger.getLogger("Minecraft");
     public static final String name = "CookieMonster";
-    private static Server Server;
+    private static Server server;
     private static CMBlockListener blockListener;
     private static CMEntityListener entityListener;
     private static CMRewardHandler rewardHandler;
@@ -23,7 +23,12 @@ public class CookieMonster extends JavaPlugin {
     @Override
     public void onEnable() {
         //Getting the server
-        Server = getServer();
+        server = getServer();
+
+        // economic plugin
+        if(!CMEcon.initEcon(server)){
+            Log(Level.WARNING, "Failed to find a supported economy plugin!");
+        }
 
         // Directory
         getDataFolder().mkdir();
@@ -32,19 +37,19 @@ public class CookieMonster extends JavaPlugin {
         CMConfig.Plugin_Directory = getDataFolder().getPath();
 
         // Grab plugin details
-        PluginManager pm = Server.getPluginManager();
+        PluginManager pm = server.getPluginManager();
         PluginDescriptionFile pdfFile = this.getDescription();
 
         // Configuration
         if(!CMConfig.load()){
-            Server.getPluginManager().disablePlugin(this);
+            server.getPluginManager().disablePlugin(this);
             Log(Level.SEVERE, "Failed to retrieve configuration from directory.");
             Log(Level.SEVERE, "Please back up your current settings and let CookieMonster recreate it.");
             return;
         }
 
         // Initializing Listeners
-        entityListener = new CMEntityListener();
+        entityListener = new CMEntityListener(getServer());
         blockListener = new CMBlockListener();
         rewardHandler = new CMRewardHandler();
 
@@ -63,7 +68,7 @@ public class CookieMonster extends JavaPlugin {
     }
 
     public static Server getBukkitServer() {
-        return Server;
+        return server;
     }
 
     public static CMRewardHandler getRewardHandler() {

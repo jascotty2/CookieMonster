@@ -5,15 +5,17 @@ settings:
     # if only direct player kills gives reward
     #   (disables mob farming)
     onlyKillDrop: false
+    # if onlyKillDrop: false, should custom drops always occur?
+    alwaysReplaceDrops: true
     # if allow hunting with wolves
-    # NOTE: does not yet work, as the bukkit wolf is not complete
-    #   petition them to add a getOwner and setOwner method!
+    # NOTE: does not yet work, as bukkit entity damage event is broken for wolves
     allowWolfHunt: true
     #disable damage if can't afford to kill?
     disableExpensiveKill: true
 
 # any LivingEntity listed here can have it's own rewards
-# give a range for iConomy reward ( min-max )
+# can give a range for economy reward ( min-max )
+# itemCoins to give custom ranges for individual items (note: durability not supported for items here)
 # can configure custom drops for each (origional drops are replaced with these, so 0%0 would disable rewards)
 # drops syntax: itemID[:subData][@maxDrop]%Probability[,another drop... ]
 ## 100 Probability means will drop each time
@@ -25,6 +27,8 @@ rewards:
     Creeper:
         drops: 2256@1%.5, 289@4%80
         coins: 1-4
+        # itemCoins example: bow&arrow give no reward, wooden sword is worth more
+        itemCoins: "261>0, 268>3-6"
     Ghast:
         drops:
         coins: 2-5
@@ -83,14 +87,24 @@ messages:
     # <amount>  how much credited to account
     # <monster> name of the creature killed
     reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
+    # <item>    what used to kill it
+    itemreward: "&a You are rewarded &f<amount>&a for killing the &f<monster>&a with a &f<item>"
     
-    # penelized for killing a monster (if coin range is negative)
+    # penalized for killing a monster (if coin range is negative)
     # <amount>  how much removed from account
     # <monster> name of the creature killed
     penalty: "&c You are penalized &f<amount>&c for killing the &f<monster>"
+    # <item>    what used to kill it
+    itempenalty: "&c You are penalized &f<amount>&c for killing the &f<monster>&c with a &f<item>"
+    
+    # if cannot afford the penalty for killing the entity
+    notafford: "&c You cannot afford to kill a &f<monster>"
+    itemnotafford: "&c You cannot afford to kill a &f<monster>&c with a &f<item>"
     
     # if no money rewarded (can be blank for none)
     norewardMonster: "&c there is no reward for killing a &f<monster>"
     norewardCreature: 
-    
+    # <item>    what used to kill it
+    itemnorewardMonster: "&c there is no reward for killing a &f<monster>&c with a &f<item>"
+    itemnorewardCreature: 
 
