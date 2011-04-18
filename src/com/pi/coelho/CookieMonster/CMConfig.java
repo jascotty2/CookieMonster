@@ -1,6 +1,6 @@
 package com.pi.coelho.CookieMonster;
 
-import com.jascotty2.MonsterDrops;
+import com.jascotty2.item.MonsterDrops;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -18,17 +18,17 @@ public class CMConfig {
     public final static File pluginFolder = new File("plugins", CookieMonster.name);
     public final static File configfile = new File(pluginFolder, "config.yml");
     //public final static File configurationFile = new File("plugins" + File.pathSeparatorChar + "CookieMonster" + File.pathSeparatorChar + "config.yml");
-    public static String Plugin_Directory;
+    //public static String Plugin_Directory;
     //Creature Names (MUST be parallel to CreatureType.values())
     public final static String CreatureNodes[] = {
         "Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
         "Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Wolf", "MobSpawner"
     };
     //Monster Configuration
-    public static MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
+    public MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
     // settings
-    public static long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
-    public static boolean intOnly = false,
+    public long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
+    public boolean intOnly = false,
             disableAnoymDrop = false,
             alwaysReplaceDrops = true,
             allowWolfHunt = true,
@@ -36,7 +36,13 @@ public class CMConfig {
     // messages
     public static HashMap<String, String> messages = new HashMap<String, String>();
 
-    public static boolean load() {
+    public CMConfig() {
+        for (int i = 0; i < Monster_Drop.length; ++i) {
+            Monster_Drop[i] = new MonsterDrops();
+        }
+    }
+
+    public boolean load() {
         extractConfig();
         messages.clear();
         messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
@@ -53,12 +59,14 @@ public class CMConfig {
 
         messages.put("itemnorewardMonster", "&c there is no reward for killing a &f<monster>&c with a &f<item>");
         messages.put("itemnorewardCreature", "");
+
+        for (int i = 0; i < Monster_Drop.length; ++i) {
+            Monster_Drop[i].useCustomDrops = false;
+            Monster_Drop[i].setReward(0);
+        }
         try {
             Configuration config = new Configuration(configfile);
             config.load();
-            for (int i = 0; i < Monster_Drop.length; ++i) {
-                Monster_Drop[i] = new MonsterDrops();
-            }
             if (config.getNode("settings") != null) {
                 ConfigurationNode n = config.getNode("settings");
                 intOnly = n.getBoolean("wholeNumberRewards", intOnly);
@@ -78,6 +86,8 @@ public class CMConfig {
                             CookieMonster.Log(Level.WARNING, k + " item coin reward has an invalid value");
                         }
                         Monster_Drop[i].setReward(config.getString("rewards." + k + ".coins"));
+                    } else {
+                        CookieMonster.Log(Level.WARNING, "Invalid Entity Node: " + k);
                     }
                 }
             } else {

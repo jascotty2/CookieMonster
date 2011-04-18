@@ -33,9 +33,9 @@ public class CMRewardHandler {
     }
 
     private boolean canAffordKill(Player p, int c) {
-        if (c >= 0 && CMConfig.Monster_Drop[c].getMinCoin() < 0
-                && !CMEcon.canAfford(p, -CMConfig.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()))) {
-            if (CMConfig.Monster_Drop[c].itemHasReward(p.getItemInHand().getTypeId())) {
+        if (c >= 0 && CookieMonster.config.Monster_Drop[c].getMinCoin() < 0
+                && !CMEcon.canAfford(p, -CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()))) {
+            if (CookieMonster.config.Monster_Drop[c].itemHasReward(p.getItemInHand().getTypeId())) {
                 p.sendMessage(CMConfig.messages.get("notafford").
                         replaceAll("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
                         replaceAll("<monster>", CMConfig.CreatureNodes[c]));
@@ -52,7 +52,7 @@ public class CMRewardHandler {
     public double MinMobSpawnerCoinReward(int itemId) {
         int c = CMConfig.creatureIndex("MobSpawner");
         if (c >= 0) {
-            return CMConfig.Monster_Drop[c].getMinCoin(itemId);
+            return CookieMonster.config.Monster_Drop[c].getMinCoin(itemId);
         }
         return 0;
     }
@@ -61,13 +61,13 @@ public class CMRewardHandler {
         if (m < 0 || !CMEcon.hasAccount(p)) {
             return;
         }
-        double amount = CMConfig.Monster_Drop[m].getCoinReward(itemId);
-        if (CMConfig.intOnly || !CMEcon.decimalSupported()) {
+        double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId);
+        if (CookieMonster.config.intOnly || !CMEcon.decimalSupported()) {
             amount = Math.round(amount);
         }
-        //System.out.println(CMConfig.Monster_Drop[m].getMaxCoin());
+        //System.out.println(CookieMonster.config.Monster_Drop[m].getMaxCoin());
         String pre = "";
-        if (CMConfig.Monster_Drop[m].itemHasReward(itemId)) {
+        if (CookieMonster.config.Monster_Drop[m].itemHasReward(itemId)) {
             pre = "item";
         }
         Material i = Material.getMaterial(itemId);
@@ -103,11 +103,11 @@ public class CMRewardHandler {
     }
     /*
     public void GivePlayerDropReward(Player p, int m) {
-    for (int i = 0; i < CMConfig.Monster_Drop[m].length; i++) {
+    for (int i = 0; i < CookieMonster.config.Monster_Drop[m].length; i++) {
     double random = Math.floor(Math.random() * 100);
-    if (random < CMConfig.Monster_Drop[m][i][2]) {
-    ItemStack item = new ItemStack(CMConfig.Monster_Drop[m][i][0],
-    CMConfig.Monster_Drop[m][i][2], (short) 0);
+    if (random < CookieMonster.config.Monster_Drop[m][i][2]) {
+    ItemStack item = new ItemStack(CookieMonster.config.Monster_Drop[m][i][0],
+    CookieMonster.config.Monster_Drop[m][i][2], (short) 0);
     p.getWorld().dropItemNaturally(p.getLocation(), item);
     }
     }
@@ -123,7 +123,7 @@ public class CMRewardHandler {
 
     private ItemStack[] getDropReward(int c) {
         if (c >= 0) {
-            return CMConfig.Monster_Drop[c].getDropsReward();
+            return CookieMonster.config.Monster_Drop[c].getDropsReward();
         }
         return null;
     }

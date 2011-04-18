@@ -4,9 +4,10 @@
  * Description:
  * Date: Apr 1, 2011
  */
-package com.jascotty2;
+package com.jascotty2.item;
 
-import com.jascotty2.item.Item;
+import com.jascotty2.CheckInput;
+import com.jascotty2.Str;
 
 /**
  * @author jacob

@@ -7,19 +7,28 @@ so it is extremely lightweight and fast.
 
 
 Features:
-configurable item drops and iconomy reward for each monster
+configurable item drops and economy reward for each monster
+configurable econoy reward for items used to kill monsters
+Supports iConomy & BOSeconomy
 Ability to change entity drops with drop-rate.
 Ability to add minimum and maximum money drops for randomness
 Extremely small and weightless code
 
-doesn't allow to damage a creature if penalty is greater than account balance
+doesn't allow to damage a creature/mobspawner if penalty is greater than account balance
 option to only drop items for a direct kill (stops autofarmers)
+option to replace drop items globally
+configurable messages (including if there is no reward)
+
 
 To-Do:
 ? import itemsDB from bettershop to check against config (check if valid items entered as drops)
 command to reload settings
 
 Changelog:
+
+Version 1.3.1 - 4/12/11
+fixed player not dropping items if onlyKillDrop enabled
+
 
 Version 1.3 - 4/11/11
 mobspawner destroy check fixed

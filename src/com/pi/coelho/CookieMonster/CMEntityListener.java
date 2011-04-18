@@ -3,7 +3,6 @@ package com.pi.coelho.CookieMonster;
 import com.jynxdaddy.wolfspawn_04.UpdatedWolf;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -48,7 +47,7 @@ public class CMEntityListener extends EntityListener {
             Player pl = null;
             if (damager instanceof Player) {
                 pl = (Player) damager;
-            } else if (damager instanceof Wolf && CMConfig.allowWolfHunt && sv != null) {
+            } else if (damager instanceof Wolf && CookieMonster.config.allowWolfHunt && sv != null) {
                 UpdatedWolf w = new UpdatedWolf((Wolf) damager);
                 //System.out.println(w);
                 if (w.isTame()) {
@@ -58,7 +57,7 @@ public class CMEntityListener extends EntityListener {
             if (pl == null) {
                 monsterDamaged(monster, pl);
             } else {
-                if (CMConfig.disableExpensiveKill) {
+                if (CookieMonster.config.disableExpensiveKill) {
                     int c = CMConfig.creatureIndex(monster);
                     if (c >= 0 && !CookieMonster.getRewardHandler().canAffordKill(pl, monster)) {
                         entEvent.setCancelled(true);
@@ -82,9 +81,13 @@ public class CMEntityListener extends EntityListener {
 
     @Override
     public void onEntityDeath(EntityDeathEvent event) {
-        if (CMConfig.disableAnoymDrop) {
+        if (event.getEntity() instanceof Player) {
+            return;
+        }
+        if (CookieMonster.config.disableAnoymDrop) {
+            if(!attacks.containsKey(event.getEntity().getEntityId()))
             event.getDrops().clear();
-        } else if (CMConfig.alwaysReplaceDrops) {
+        } else if (CookieMonster.config.alwaysReplaceDrops) {
             ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
             if (newDrops != null) {
                 event.getDrops().clear();
@@ -94,7 +97,7 @@ public class CMEntityListener extends EntityListener {
         if (event.getEntity() instanceof LivingEntity
                 && attacks.containsKey(event.getEntity().getEntityId())) {
             if (attacks.get(event.getEntity().getEntityId()).attackTimeAgo()
-                    <= CMConfig.damageTimeThreshold) {
+                    <= CookieMonster.config.damageTimeThreshold) {
                 attacks.get(event.getEntity().getEntityId()).rewardKill(event);
             }
             attacks.remove(event.getEntity().getEntityId());

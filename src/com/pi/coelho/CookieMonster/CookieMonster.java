@@ -15,6 +15,7 @@ public class CookieMonster extends JavaPlugin {
 
     protected final static Logger logger = Logger.getLogger("Minecraft");
     public static final String name = "CookieMonster";
+    protected static CMConfig config = new CMConfig();
     private static Server server;
     private static CMBlockListener blockListener;
     private static CMEntityListener entityListener;
@@ -34,14 +35,14 @@ public class CookieMonster extends JavaPlugin {
         getDataFolder().mkdir();
         getDataFolder().setWritable(true);
         getDataFolder().setExecutable(true);
-        CMConfig.Plugin_Directory = getDataFolder().getPath();
+        //CMConfig.Plugin_Directory = getDataFolder().getPath();
 
         // Grab plugin details
         PluginManager pm = server.getPluginManager();
         PluginDescriptionFile pdfFile = this.getDescription();
 
         // Configuration
-        if(!CMConfig.load()){
+        if(!config.load()){
             server.getPluginManager().disablePlugin(this);
             Log(Level.SEVERE, "Failed to retrieve configuration from directory.");
             Log(Level.SEVERE, "Please back up your current settings and let CookieMonster recreate it.");

@@ -4,8 +4,11 @@
  * Description:
  * Date: Apr 1, 2011
  */
-package com.jascotty2;
+package com.jascotty2.item;
 
+import com.jascotty2.CheckInput;
+import com.jascotty2.Rand;
+import com.jascotty2.Str;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.inventory.ItemStack;
@@ -18,9 +21,18 @@ public class MonsterDrops {
     private CoinReward reward = new CoinReward(); // double reward.max, reward.min;
     private HashMap<Integer, CoinReward> itemRewards = new HashMap<Integer, CoinReward>();
     private ArrayList<Drop> drops = new ArrayList<Drop>();
+    public boolean useCustomDrops = false;
 
     public boolean setReward(String str) {
         return reward.setReward(str);
+    }
+
+    public void setReward(double min, double max) {
+        reward.setReward(min, max);
+    }
+    
+    public void setReward(double amt) {
+        reward.setReward(amt, amt);
     }
 
     public boolean setItemRewards(String str) {
@@ -49,6 +61,7 @@ public class MonsterDrops {
 
     public boolean setDrops(String str) {
         drops.clear();
+        useCustomDrops = (str != null);
         if (str != null) {
             for (String dropStr : str.split(",")) {
                 Drop toAdd = Drop.fromStr(dropStr);
@@ -100,7 +113,7 @@ public class MonsterDrops {
     }
 
     public ItemStack[] getDropsReward() {
-        if (drops.isEmpty()) {
+        if (!useCustomDrops) {
             return null;
         }
         ArrayList<ItemStack> droppings = new ArrayList<ItemStack>();
@@ -155,6 +168,15 @@ public class MonsterDrops {
                 min = max = 0;
             }
             return true;
+        }
+
+        public void setReward(double minCoin, double maxCoin) {
+            min = minCoin;
+            max = maxCoin;if (min > max) {
+                double t = min;
+                min = max;
+                max = t;
+            }
         }
 
         public double getCoinReward() {
