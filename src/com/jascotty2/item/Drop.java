@@ -39,9 +39,13 @@ public class Drop {
             if (sdat <= samt && sdat < sper && samt < sper) {
                 Item src = Item.fromIDD(str.substring(0, samt > 0 ? samt : sper).trim());
                 if (src != null) {
-                    return new Drop(src,
-                            samt > 0 ? CheckInput.GetInt(str.substring(samt + 1, sper), 1) : 1,
-                            CheckInput.GetDouble(str.substring(sper + 1), 50));
+                    if (org.bukkit.Material.getMaterial(src.itemId) != null) {
+                        return new Drop(src,
+                                samt > 0 ? CheckInput.GetInt(str.substring(samt + 1, sper), 1) : 1,
+                                CheckInput.GetDouble(str.substring(sper + 1), 50));
+                    } else {
+                        return null;
+                    }
                 }
             }
         }

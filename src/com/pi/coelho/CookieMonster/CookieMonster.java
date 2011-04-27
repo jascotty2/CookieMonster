@@ -1,10 +1,11 @@
 package com.pi.coelho.CookieMonster;
 
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -17,17 +18,20 @@ public class CookieMonster extends JavaPlugin {
     public static final String name = "CookieMonster";
     protected static CMConfig config = new CMConfig();
     private static Server server;
-    private static CMBlockListener blockListener;
-    private static CMEntityListener entityListener;
-    private static CMRewardHandler rewardHandler;
+    private static CMBlockListener blockListener = null;
+    private static CMEntityListener entityListener = null;
+    private static CMRewardHandler rewardHandler = null;
 
     @Override
     public void onEnable() {
-        //Getting the server
+        
+        // Grab plugin details
         server = getServer();
+        PluginManager pm = server.getPluginManager();
+        PluginDescriptionFile pdfFile = this.getDescription();
 
         // economic plugin
-        if(!CMEcon.initEcon(server)){
+        if (!CMEcon.initEcon(server)) {
             Log(Level.WARNING, "Failed to find a supported economy plugin!");
         }
 
@@ -37,12 +41,8 @@ public class CookieMonster extends JavaPlugin {
         getDataFolder().setExecutable(true);
         //CMConfig.Plugin_Directory = getDataFolder().getPath();
 
-        // Grab plugin details
-        PluginManager pm = server.getPluginManager();
-        PluginDescriptionFile pdfFile = this.getDescription();
-
         // Configuration
-        if(!config.load()){
+        if (!config.load()) {
             server.getPluginManager().disablePlugin(this);
             Log(Level.SEVERE, "Failed to retrieve configuration from directory.");
             Log(Level.SEVERE, "Please back up your current settings and let CookieMonster recreate it.");
@@ -66,6 +66,25 @@ public class CookieMonster extends JavaPlugin {
 
     @Override
     public void onDisable() {
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("cookiemonster")) {
+            if (!sender.isOp()) {
+                sender.sendMessage("You are not OP!");
+                return true;
+            }
+            if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+                if (!config.load()) {
+                    sender.sendMessage("Reload Failed!");
+                }
+                sender.sendMessage("Settings Reloaded");
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static Server getBukkitServer() {

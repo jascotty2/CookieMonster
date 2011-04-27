@@ -102,7 +102,7 @@ public class CMConfig {
                         messages.put(k, config.getString("messages." + k, messages.get(k)));
                     }
                 }
-                // check if there are any missing, and replace chatcolorcodes
+                // check if there are any missing
                 for (String k : messages.keySet()) {
                     if (!msgs.contains(k)) {
                         CookieMonster.Log(Level.WARNING, "missing message setting: " + k);

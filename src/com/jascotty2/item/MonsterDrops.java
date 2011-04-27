@@ -68,7 +68,7 @@ public class MonsterDrops {
                 if (toAdd != null) {
                     drops.add(toAdd);
                 } else {
-                    System.out.println("Invalid drop syntax: " + dropStr);
+                    System.out.println("Invalid drop or drop syntax: " + dropStr);
                 }
             }
         }

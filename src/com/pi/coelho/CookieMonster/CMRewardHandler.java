@@ -1,5 +1,7 @@
 package com.pi.coelho.CookieMonster;
 
+import java.util.logging.Level;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 
@@ -61,44 +63,49 @@ public class CMRewardHandler {
         if (m < 0 || !CMEcon.hasAccount(p)) {
             return;
         }
-        double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId);
-        if (CookieMonster.config.intOnly || !CMEcon.decimalSupported()) {
-            amount = Math.round(amount);
-        }
-        //System.out.println(CookieMonster.config.Monster_Drop[m].getMaxCoin());
-        String pre = "";
-        if (CookieMonster.config.Monster_Drop[m].itemHasReward(itemId)) {
-            pre = "item";
-        }
-        Material i = Material.getMaterial(itemId);
-        if (amount != 0) {
-            if (amount > 0.0) {
-                CMEcon.addMoney(p, amount);
-                p.sendMessage(CMConfig.messages.get(pre + "reward").
-                        replaceAll("<amount>", CMEcon.format(amount)).
-                        replaceAll("<item>", i.name()).
-                        replaceAll("<monster>", CMConfig.CreatureNodes[m]));
-            } else if (amount < 0.0) {
-                CMEcon.subtractMoney(p, -amount);
-                p.sendMessage(CMConfig.messages.get(pre + "penalty").
-                        replaceAll("<amount>", CMEcon.format(amount)).
-                        replaceAll("<item>", i.name()).
-                        replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+        try {
+            double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId);
+            if (CookieMonster.config.intOnly || !CMEcon.decimalSupported()) {
+                amount = Math.round(amount);
             }
-        } else if (amount == 0) {
-            if (CMConfig.isCreature(m)) {
-                if (CMConfig.messages.get(pre + "norewardCreature").length() > 0) {
-                    p.sendMessage(CMConfig.messages.get(pre + "norewardCreature").
+            //System.out.println(CookieMonster.config.Monster_Drop[m].getMaxCoin());
+            String pre = "";
+            if (CookieMonster.config.Monster_Drop[m].itemHasReward(itemId)) {
+                pre = "item";
+            }
+            Material i = Material.getMaterial(itemId);
+            if (amount != 0) {
+                if (amount > 0.0) {
+                    CMEcon.addMoney(p, amount);
+                    p.sendMessage(CMConfig.messages.get(pre + "reward").
+                            replaceAll("<amount>", CMEcon.format(amount)).
+                            replaceAll("<item>", i.name()).
+                            replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                } else if (amount < 0.0) {
+                    CMEcon.subtractMoney(p, -amount);
+                    p.sendMessage(CMConfig.messages.get(pre + "penalty").
+                            replaceAll("<amount>", CMEcon.format(amount)).
                             replaceAll("<item>", i.name()).
                             replaceAll("<monster>", CMConfig.CreatureNodes[m]));
                 }
-            } else {
-                if (CMConfig.messages.get(pre + "norewardMonster").length() > 0) {
-                    p.sendMessage(CMConfig.messages.get(pre + "norewardMonster").
-                            replaceAll("<item>", i.name()).
-                            replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+            } else if (amount == 0) {
+                if (CMConfig.isCreature(m)) {
+                    if (CMConfig.messages.get(pre + "norewardCreature").length() > 0) {
+                        p.sendMessage(CMConfig.messages.get(pre + "norewardCreature").
+                                replaceAll("<item>", i.name()).
+                                replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                    }
+                } else {
+                    if (CMConfig.messages.get(pre + "norewardMonster").length() > 0) {
+                        p.sendMessage(CMConfig.messages.get(pre + "norewardMonster").
+                                replaceAll("<item>", i.name()).
+                                replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                    }
                 }
             }
+        } catch (Exception e) {
+            p.sendMessage(ChatColor.RED + "Unexpected Error processing Reward");
+            CookieMonster.Log(Level.SEVERE, "Unexpected Error processing Reward", e);
         }
     }
     /*
