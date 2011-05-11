@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class CMRewardHandler {
 
-    //private static final String strs[] = new String[]{"reward", "penalty", "norewardCreature", "norewardMonster"};
     public CMRewardHandler() {
     }
 

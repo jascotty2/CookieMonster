@@ -32,6 +32,15 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.3.4 - ?
+updated for iConomy 1.5 (1.4 compatiblity maintained :D)
+
+
+Version 1.3.3 - 4/27/11
+updated wolves for 1.5
+Items are checked to be valid before added to drops list
+
+
 Version 1.3.2 - 4/18/11
 fixed default drops when onlyKillDrop enabled
 added reload command

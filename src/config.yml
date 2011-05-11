@@ -8,7 +8,7 @@ settings:
     # if onlyKillDrop: false, should custom drops always occur?
     alwaysReplaceDrops: true
     # if allow hunting with wolves
-    # NOTE: does not yet work, as bukkit entity damage event is broken for wolves
+    # NOTE: wolf attack canceling does not yet work, as bukkit entity damage event is broken for wolves
     allowWolfHunt: true
     #disable damage if can't afford to kill?
     disableExpensiveKill: true
