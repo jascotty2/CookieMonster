@@ -2,16 +2,39 @@ settings:
     # general plugin settings
     # if you don't want deciamls ($1.23)
     wholeNumberRewards: false
-    # if only direct player kills gives reward
-    #   (disables mob farming)
+    # if only direct player kills gives reward (disables mob farming)
+    #  (this is ignored if on a disabled world or region)
     onlyKillDrop: false
+    # if replaceDrop, then default drops are removed & substituted
+    #   if false, custom drops are added to the existing drops
+    replaceDrops: true
     # if onlyKillDrop: false, should custom drops always occur?
     alwaysReplaceDrops: true
     # if allow hunting with wolves
-    # NOTE: wolf attack canceling does not yet work, as bukkit entity damage event is broken for wolves
     allowWolfHunt: true
-    #disable damage if can't afford to kill?
+    #disable damage if can't afford to kill? (applies to wolves, too)
     disableExpensiveKill: true
+    # any world listed here won't be checked (comma-delimited, case-insensitive)
+    disableWorlds: testWorld1, world2, random_world_nether
+    # if any regions are defined, should they be disabled regions or the only places cm is enabled?
+    # true (default): regions are areas where cm is disabled
+    #     (however, regions on disabled worlds are reversed & will be enabled)
+    # false: cm is globally disabled, except for within regions (disabled worlds ignored)
+    regionsDisable: true
+
+#spawn camp tracking is not yet finished in CookieMonster 1.4
+spwanCampTracking:
+    # if enabled, there are no rewards or drops after the threshold is passed
+    enabled: false
+    # elevation change max
+    deltaY: 5
+    # square about center (distance from center to edge)
+    deltaX: 20
+    # time before a kill is no longer counted against tracking
+    #   positive integer values only, units being m(inutes) h(hours) d(ays) w(eeks) M(onths) (default: m)
+    timeout: 20m
+    # max kills in the area before counted as spawn camping
+    campKills: 50
 
 # any LivingEntity listed here can have it's own rewards
 # can give a range for economy reward ( min-max )
@@ -29,6 +52,11 @@ rewards:
         coins: 1-4
         # itemCoins example: bow&arrow give no reward, wooden sword is worth more
         itemCoins: "261>0, 268>3-6"
+    Charged_Creeper:
+        drops: 2256@1%2, 289@5%90
+        coins: 2-8
+        # itemCoins example: bow&arrow give no reward, wooden sword is worth more
+        itemCoins: "261>0, 268>5-16"
     Ghast:
         drops:
         coins: 2-5
@@ -54,9 +82,16 @@ rewards:
     Zombie:
         drops:
         coins: 1-2
-    Wolf:
+    Wild_Wolf:
         drops:
         coins: -1--2
+    Tame_Wolf:
+        drops:
+        coins: -5--10
+    Pet_Wolf:
+        # this applies if you kill a wolf that is your own
+        drops:
+        coins: 
     MobSpawner:
         drops:
         coins: -4--5

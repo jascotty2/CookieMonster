@@ -7,7 +7,7 @@
 package com.jascotty2.item;
 
 import com.jascotty2.CheckInput;
-import com.jascotty2.Str;
+import com.jascotty2.util.Str;
 
 /**
  * @author jacob

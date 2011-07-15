@@ -42,7 +42,7 @@ public class CMEcon {
     }
 
     public static boolean decimalSupported() {
-        return iConomy != null;
+        return iConomy != null || legacyIConomy != null;
     }
 
     public static boolean canAfford(Player pl, double amt) {

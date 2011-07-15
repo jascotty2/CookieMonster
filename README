@@ -32,7 +32,30 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
-Version 1.3.4 - ?
+Version 1.5 - ?
+[]added a kill tracking system to check for spawn camping
+
+
+Version 1.4 - 7/14/11
+wolves updated for mc 1.6 (although appearent breaks didn't really seem to be broken, anyway...)
+- notibly, entities killed with wolves will reward the owner
+fixed decimal reward if using older iConomy
+added option to not clear drops before adding custom drops
+added ability to disable for defined worlds
+added regions (selections using worldguard, most code came from worldguard)
+- command to set (once a region is selected in worldedit) -  /cm region define <id>
+- can list regions (in current world if as a player) -  /cm region list [page]
+- then, to remove regions -  /cm region remove <id>
+- default is to disable for these regions
+- - on disabled worlds, regions will be enabled areas
+- alternatively, can be set to only be enabled in defined regions
+"Wolf" has been replaced with "Wild_Wolf"
+- and added "Tame_Wolf" & "Pet_Wolf"
+added "Charged_Creeper"
+
+
+
+Version 1.3.4 - 5/11/11
 updated for iConomy 1.5 (1.4 compatiblity maintained :D)
 
 

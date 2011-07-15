@@ -4,9 +4,12 @@ import com.jascotty2.item.MonsterDrops;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 
 import org.bukkit.util.config.Configuration;
@@ -22,7 +25,8 @@ public class CMConfig {
     //Creature Names (MUST be parallel to CreatureType.values())
     public final static String CreatureNodes[] = {
         "Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
-        "Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Wolf", "MobSpawner"
+        "Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
+        "Charged_Creeper", "Wild_Wolf", "Pet_Wolf"
     };
     //Monster Configuration
     public MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
@@ -30,11 +34,18 @@ public class CMConfig {
     public long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
     public boolean intOnly = false,
             disableAnoymDrop = false,
+            replaceDrops = true, 
             alwaysReplaceDrops = true,
             allowWolfHunt = true,
-            disableExpensiveKill = true;
+            disableExpensiveKill = true,
+            regionsDisable = true;
+    protected ArrayList<String> disabledWorlds = new ArrayList<String>();
     // messages
     public static HashMap<String, String> messages = new HashMap<String, String>();
+    // spawn camping settings
+    public boolean campTrackingEnabled = false;
+    public int deltaY = 5, deltaX = 20, campKills = 50;
+    public long campTrackingTimeout = 20 * 60;
 
     public CMConfig() {
         for (int i = 0; i < Monster_Drop.length; ++i) {
@@ -44,6 +55,7 @@ public class CMConfig {
 
     public boolean load() {
         extractConfig();
+        disabledWorlds.clear();
         messages.clear();
         messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
         messages.put("itemreward", "&a You are rewarded &f<amount>&a for killing the &f<monster> with a <item>");
@@ -73,7 +85,15 @@ public class CMConfig {
                 disableAnoymDrop = n.getBoolean("onlyKillDrop", disableAnoymDrop);
                 allowWolfHunt = n.getBoolean("allowWolfHunt", allowWolfHunt);
                 disableExpensiveKill = n.getBoolean("disableExpensiveKill", disableExpensiveKill);
+                replaceDrops = n.getBoolean("replaceDrops", replaceDrops);
                 alwaysReplaceDrops = n.getBoolean("alwaysReplaceDrops", alwaysReplaceDrops);
+                regionsDisable = n.getBoolean("regionsDisable", regionsDisable);
+                String dw = n.getString("disableWorlds");
+                if (dw != null) {
+                    for (String w : dw.split(",")) {
+                        disabledWorlds.add(w.trim().toLowerCase());
+                    }
+                }
             }
             if (config.getNodes("rewards") != null) {
                 for (String k : config.getNodes("rewards").keySet()) {
@@ -122,14 +142,36 @@ public class CMConfig {
         return false;
     }
 
+    public boolean cmEnabled(Location l) {
+        if (l != null) {
+            boolean isRegion = CookieMonster.regions.globalRegionManager.hasRegion(l);
+            if(!regionsDisable){ // regions are enabled areas
+                return isRegion;
+            }else{ // regions are disabled on allowed worlds, enabled on disabled worlds
+                String w = l.getWorld().getName().toLowerCase();
+                boolean dw =  disabledWorlds.contains(w);
+                return dw == isRegion;
+            }
+        }
+        return true;
+    }
+
     public static String checkMonsters(LivingEntity le) {
+        return checkMonsters(le, null);
+    }
+
+    public static String checkMonsters(LivingEntity le, Player p) {
         String name = "";
         if (le instanceof Chicken) {
             name = "Chicken";
         } else if (le instanceof Cow) {
             name = "Cow";
         } else if (le instanceof Creeper) {
-            name = "Creeper";
+            if (((Creeper) le).isPowered()) {
+                name = "Charged_Creeper";
+            } else {
+                name = "Creeper";
+            }
         } else if (le instanceof Ghast) {
             name = "Ghast";
         } else if (le instanceof Giant) {
@@ -150,11 +192,27 @@ public class CMConfig {
             name = "Squid";
         } else if (le instanceof Zombie) {
             name = "Zombie";
+        } else if (le instanceof Wolf) {
+            if (((Wolf) le).isTamed()) {
+                if (p != null && ((CraftWolf) le).getOwner() == p) {
+                    name = "Pet_Wolf";
+                } else {
+                    name = "Tame_Wolf";
+                }
+            } else {
+                name = "Wild_Wolf";
+            }
+        } else if (le instanceof Monster) {
+            return "Monster";
         }
         return name;
     }
 
     public static int creatureIndex(Entity le) {
+        return creatureIndex(le, null);
+    }
+
+    public static int creatureIndex(Entity le, Player p) {
         if (le == null) {
             return -1;
         }
@@ -163,7 +221,11 @@ public class CMConfig {
         } else if (le instanceof Cow) {
             return 1;
         } else if (le instanceof Creeper) {
-            return 2;
+            if (((Creeper) le).isPowered()) {
+                return 16;
+            } else {
+                return 2;
+            }
         } else if (le instanceof Ghast) {
             return 3;
         } else if (le instanceof Giant) {
@@ -185,7 +247,15 @@ public class CMConfig {
         } else if (le instanceof Zombie) {
             return 13;
         } else if (le instanceof Wolf) {
-            return 14;
+            if (((Wolf) le).isTamed()) {
+                if (p != null && ((CraftWolf) le).getOwner() == p) {
+                    return 18;
+                } else {
+                    return 14;
+                }
+            } else {
+                return 17;
+            }
         } else if (le instanceof Monster) {
             return 5;
         }
@@ -205,11 +275,12 @@ public class CMConfig {
     }
 
     public static boolean isCreature(int i) {
-        return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14;
+        return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18;
     }
 
     public static boolean isMonster(int i) {
-        return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9 || i == 10 || i == 11 || i == 13 || i == 14;
+        return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9
+                || i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17;
     }
 
     private static void extractConfig() {

@@ -13,7 +13,7 @@ public class CMRewardHandler {
     }
 
     public void GivePlayerCoinReward(Player p, Entity e) {
-        int c = CMConfig.creatureIndex(e);
+        int c = CMConfig.creatureIndex(e, p);
         if (c >= 0) {
             GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId());
         }
@@ -38,12 +38,12 @@ public class CMRewardHandler {
                 && !CMEcon.canAfford(p, -CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()))) {
             if (CookieMonster.config.Monster_Drop[c].itemHasReward(p.getItemInHand().getTypeId())) {
                 p.sendMessage(CMConfig.messages.get("notafford").
-                        replaceAll("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
-                        replaceAll("<monster>", CMConfig.CreatureNodes[c]));
+                        replace("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
+                        replace("<monster>", CMConfig.CreatureNodes[c]));
             } else {
                 p.sendMessage(CMConfig.messages.get("notafford").
-                        replaceAll("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
-                        replaceAll("<monster>", CMConfig.CreatureNodes[c]));
+                        replace("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
+                        replace("<monster>", CMConfig.CreatureNodes[c]));
             }
             return false;
         }
@@ -77,28 +77,28 @@ public class CMRewardHandler {
                 if (amount > 0.0) {
                     CMEcon.addMoney(p, amount);
                     p.sendMessage(CMConfig.messages.get(pre + "reward").
-                            replaceAll("<amount>", CMEcon.format(amount)).
-                            replaceAll("<item>", i.name()).
-                            replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                            replace("<amount>", CMEcon.format(amount)).
+                            replace("<item>", i.name()).
+                            replace("<monster>", CMConfig.CreatureNodes[m]));
                 } else if (amount < 0.0) {
                     CMEcon.subtractMoney(p, -amount);
                     p.sendMessage(CMConfig.messages.get(pre + "penalty").
-                            replaceAll("<amount>", CMEcon.format(amount)).
-                            replaceAll("<item>", i.name()).
-                            replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                            replace("<amount>", CMEcon.format(amount)).
+                            replace("<item>", i.name()).
+                            replace("<monster>", CMConfig.CreatureNodes[m]));
                 }
             } else if (amount == 0) {
                 if (CMConfig.isCreature(m)) {
                     if (CMConfig.messages.get(pre + "norewardCreature").length() > 0) {
                         p.sendMessage(CMConfig.messages.get(pre + "norewardCreature").
-                                replaceAll("<item>", i.name()).
-                                replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                                replace("<item>", i.name()).
+                                replace("<monster>", CMConfig.CreatureNodes[m]));
                     }
                 } else {
                     if (CMConfig.messages.get(pre + "norewardMonster").length() > 0) {
                         p.sendMessage(CMConfig.messages.get(pre + "norewardMonster").
-                                replaceAll("<item>", i.name()).
-                                replaceAll("<monster>", CMConfig.CreatureNodes[m]));
+                                replace("<item>", i.name()).
+                                replace("<monster>", CMConfig.CreatureNodes[m]));
                     }
                 }
             }

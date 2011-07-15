@@ -1,9 +1,10 @@
 package com.pi.coelho.CookieMonster;
 
-import com.jynxdaddy.wolfspawn_04.UpdatedWolf;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.entity.CraftWolf;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class CMEntityListener extends EntityListener {
         if (entEvent.isCancelled()) {
             return;
         }
-
+        //System.out.println(entEvent);
         if (entEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
             entDamage(event.getEntity(), event.getDamager(), entEvent);
@@ -37,7 +38,7 @@ public class CMEntityListener extends EntityListener {
             EntityDamageByProjectileEvent event = (EntityDamageByProjectileEvent) entEvent;
             entDamage(event.getEntity(), event.getDamager(), entEvent);
         } else {
-            monsterDamaged(entEvent.getEntity(), null);
+            monsterDamaged(entEvent.getEntity(), null, true);
         }
     }
 
@@ -47,35 +48,42 @@ public class CMEntityListener extends EntityListener {
             Player pl = null;
             if (damager instanceof Player) {
                 pl = (Player) damager;
-            } else if (damager instanceof Wolf && CookieMonster.config.allowWolfHunt && sv != null) {
-                UpdatedWolf w = new UpdatedWolf((Wolf) damager);
-                //System.out.println(w);
-                if (w.isTame()) {
-                    pl = sv.getPlayer(w.getOwner());
-                }
+            } else if (damager instanceof Wolf && CookieMonster.config.allowWolfHunt) {
+                if (((CraftWolf) damager).isTamed()) {
+                    AnimalTamer at = ((CraftWolf) damager).getOwner();
+                    if (at instanceof Player) {
+                        pl = (Player) at;
+                        //System.out.println("player wolf: " + pl.getName());
+                    }//else System.out.println("unkown owner " + at);
+                }//else System.out.println("untamed wolf");
+
             }
+            boolean handleKill = CookieMonster.config.cmEnabled(entEvent.getEntity().getLocation());
             if (pl == null) {
-                monsterDamaged(monster, pl);
+                monsterDamaged(monster, pl, handleKill);
             } else {
-                if (CookieMonster.config.disableExpensiveKill) {
+                if (handleKill && CookieMonster.config.disableExpensiveKill) {
                     int c = CMConfig.creatureIndex(monster);
                     if (c >= 0 && !CookieMonster.getRewardHandler().canAffordKill(pl, monster)) {
                         entEvent.setCancelled(true);
+                        if (damager instanceof Wolf) {
+                            ((CraftWolf) damager).setTarget(null);
+                        }
                         return;
                     }
                 }
-                monsterDamaged(monster, pl);
+                monsterDamaged(monster, pl, handleKill);
             }
         }
     }
 
-    public void monsterDamaged(Entity monster, Player player) {
+    public void monsterDamaged(Entity monster, Player player, boolean handleKill) {
         if (!attacks.containsKey(monster.getEntityId())) {
             if (player != null) {
-                attacks.put(monster.getEntityId(), new MonsterAttack(player));
+                attacks.put(monster.getEntityId(), new MonsterAttack(player, handleKill));
             }
         } else {
-            attacks.get(monster.getEntityId()).setAttack(player);
+            attacks.get(monster.getEntityId()).setAttack(player, handleKill);
         }
     }
 
@@ -85,8 +93,9 @@ public class CMEntityListener extends EntityListener {
             return;
         }
         if (CookieMonster.config.disableAnoymDrop) {
-            if(!attacks.containsKey(event.getEntity().getEntityId()))
-            event.getDrops().clear();
+            if (!attacks.containsKey(event.getEntity().getEntityId())) {
+                event.getDrops().clear();
+            }
         } else if (CookieMonster.config.alwaysReplaceDrops) {
             ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
             if (newDrops != null) {
@@ -108,26 +117,30 @@ public class CMEntityListener extends EntityListener {
 
         long lastAttackTime;
         Player lastAttackPlayer;
+        boolean handleKill = true;
 
-        public MonsterAttack(Player attacker) {
-            setAttack(attacker);
+        public MonsterAttack(Player attacker, boolean handleKill) {
+            setAttack(attacker, handleKill);
         }
 
         public long attackTimeAgo() {
             return lastAttackTime > 0 ? System.currentTimeMillis() - lastAttackTime : 0;
         }
 
-        public final void setAttack(Player attacker) {
+        public final void setAttack(Player attacker, boolean handleKill) {
             lastAttackPlayer = attacker;
+            this.handleKill = handleKill;
             lastAttackTime = System.currentTimeMillis();
         }
 
         public void rewardKill(EntityDeathEvent event) {
-            if (lastAttackPlayer != null) {
+            if (handleKill && lastAttackPlayer != null) {
                 CookieMonster.getRewardHandler().GivePlayerCoinReward(lastAttackPlayer, event.getEntity());
                 ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
                 if (newDrops != null) {
-                    event.getDrops().clear();
+                    if (CookieMonster.config.replaceDrops) {
+                        event.getDrops().clear();
+                    }
                     event.getDrops().addAll(Arrays.asList(newDrops));
                 }
             }
