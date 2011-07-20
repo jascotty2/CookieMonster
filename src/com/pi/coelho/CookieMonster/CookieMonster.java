@@ -34,7 +34,6 @@ public class CookieMonster extends JavaPlugin {
 
         // Grab plugin details
         server = getServer();
-        regions = new CMRegions(server, getDataFolder());
         PluginManager pm = server.getPluginManager();
         PluginDescriptionFile pdfFile = this.getDescription();
 
@@ -50,6 +49,18 @@ public class CookieMonster extends JavaPlugin {
         } else {
             Log(Level.INFO, "Failed to find WorldEdit: regions cannot be defined");
         }
+        
+        try {
+            regions = new CMRegions(server, getDataFolder());
+        } catch (Exception e) {
+            if (worldEdit == null) {
+                Log(Level.INFO, "to enable existing regions, put a copy of WorldEdit in the CookieMonster folder, "
+                        + "or install WorldEdit to the server");
+            } else {
+                Log(Level.WARNING, "Unexpected error while loading region manager", e);
+            }
+            regions = null;
+        }
 
         // Directory
         getDataFolder().mkdir();
@@ -64,7 +75,10 @@ public class CookieMonster extends JavaPlugin {
             Log(Level.SEVERE, "Please back up your current settings and let CookieMonster recreate it.");
             return;
         }
-        regions.load();//getServer(), getDataFolder());//new File(getDataFolder(), "regions.yml"));
+
+        if (regions != null) {
+            regions.load();//getServer(), getDataFolder());//new File(getDataFolder(), "regions.yml"));
+        }
 
         // Initializing Listeners
         entityListener = new CMEntityListener(getServer());
@@ -88,6 +102,9 @@ public class CookieMonster extends JavaPlugin {
     @Override
     public void onDisable() {
         regions.globalRegionManager.unload();
+        if(killTracker != null){
+            killTracker.save();
+        }
     }
 
     @Override
@@ -117,8 +134,7 @@ public class CookieMonster extends JavaPlugin {
                     sender.sendMessage("/" + label + " region define <id>    - define a cookiemonster region");
                     sender.sendMessage("/" + label + " region list <page>    - list regions");
                     sender.sendMessage("/" + label + " region remove <id>   - remove a cookiemonster region");
-                    return true;
-                } else if (Str.isIn(args[1], "define,def,d")){//args[1].equalsIgnoreCase("define")) {
+                } else if (Str.isIn(args[1], "define,def,d")) {//args[1].equalsIgnoreCase("define")) {
                     if (worldEdit == null) {
                         sender.sendMessage("WorldEdit (required to define regions) is not installed");
                     } else if (!(sender instanceof Player)) {
@@ -126,7 +142,7 @@ public class CookieMonster extends JavaPlugin {
                     } else {
                         regions.define((Player) sender, args, worldEdit.getSelection((Player) sender));
                     }
-                } else if (Str.isIn(args[1], "remove,delete,del,rem")){//args[1].equalsIgnoreCase("remove")) {
+                } else if (Str.isIn(args[1], "remove,delete,del,rem")) {//args[1].equalsIgnoreCase("remove")) {
                     regions.remove(sender, args);
                 }
             } else {

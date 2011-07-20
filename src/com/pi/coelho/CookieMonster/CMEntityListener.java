@@ -2,6 +2,7 @@ package com.pi.coelho.CookieMonster;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
@@ -53,10 +54,8 @@ public class CMEntityListener extends EntityListener {
                     AnimalTamer at = ((CraftWolf) damager).getOwner();
                     if (at instanceof Player) {
                         pl = (Player) at;
-                        //System.out.println("player wolf: " + pl.getName());
-                    }//else System.out.println("unkown owner " + at);
-                }//else System.out.println("untamed wolf");
-
+                    }
+                }
             }
             boolean handleKill = CookieMonster.config.cmEnabled(entEvent.getEntity().getLocation());
             if (pl == null) {
@@ -99,7 +98,9 @@ public class CMEntityListener extends EntityListener {
         } else if (CookieMonster.config.alwaysReplaceDrops) {
             ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
             if (newDrops != null) {
-                event.getDrops().clear();
+                if (CookieMonster.config.replaceDrops) {
+                    event.getDrops().clear();
+                }
                 event.getDrops().addAll(Arrays.asList(newDrops));
             }
         }
@@ -110,6 +111,15 @@ public class CMEntityListener extends EntityListener {
                 attacks.get(event.getEntity().getEntityId()).rewardKill(event);
             }
             attacks.remove(event.getEntity().getEntityId());
+        } else if (CookieMonster.config.globalCampTrackingEnabled) {
+            Location loc = event.getEntity().getLocation();
+            CookieMonster.killTracker.addKill(loc);
+            if (CookieMonster.killTracker.numKills(loc,
+                    CookieMonster.config.deltaX, CookieMonster.config.deltaY,
+                    CookieMonster.config.campTrackingTimeout) > CookieMonster.config.campKills) {
+                event.getDrops().clear();
+                return;
+            }
         }
     }
 
@@ -134,14 +144,34 @@ public class CMEntityListener extends EntityListener {
         }
 
         public void rewardKill(EntityDeathEvent event) {
-            if (handleKill && lastAttackPlayer != null) {
-                CookieMonster.getRewardHandler().GivePlayerCoinReward(lastAttackPlayer, event.getEntity());
-                ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
-                if (newDrops != null) {
-                    if (CookieMonster.config.replaceDrops) {
-                        event.getDrops().clear();
+            if (handleKill) {
+                if (CookieMonster.config.campTrackingEnabled) {
+                    Location loc = event.getEntity().getLocation();
+                    CookieMonster.killTracker.addKill(loc);
+//                    System.out.println("kill added, bringing toatal about " + loc + " to " + CookieMonster.killTracker.numKills(loc,
+//                            CookieMonster.config.deltaX, CookieMonster.config.deltaY,
+//                            CookieMonster.config.campTrackingTimeout));
+                    if (CookieMonster.killTracker.numKills(loc,
+                            CookieMonster.config.deltaX, CookieMonster.config.deltaY,
+                            CookieMonster.config.campTrackingTimeout) > CookieMonster.config.campKills) {
+                        if (lastAttackPlayer != null) {
+                            lastAttackPlayer.sendMessage(CMConfig.messages.get("nocampingreward"));
+                        }
+                        if (CookieMonster.config.disableCampingDrops) {
+                            event.getDrops().clear();
+                        }
+                        return;
                     }
-                    event.getDrops().addAll(Arrays.asList(newDrops));
+                }
+                if (lastAttackPlayer != null) {
+                    CookieMonster.getRewardHandler().GivePlayerCoinReward(lastAttackPlayer, event.getEntity());
+                    ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
+                    if (newDrops != null) {
+                        if (CookieMonster.config.replaceDrops) {
+                            event.getDrops().clear();
+                        }
+                        event.getDrops().addAll(Arrays.asList(newDrops));
+                    }
                 }
             }
         }

@@ -22,10 +22,16 @@ settings:
     # false: cm is globally disabled, except for within regions (disabled worlds ignored)
     regionsDisable: true
 
-#spawn camp tracking is not yet finished in CookieMonster 1.4
+#spawn camp tracking occurs when a player kills a monster
 spwanCampTracking:
-    # if enabled, there are no rewards or drops after the threshold is passed
+    # if enabled, there are no rewards (or drops) after the threshold is passed
     enabled: false
+    # if global is enabled, will apply camp tracking to "natural" deaths
+    #   this would allow monsters to drop items naturally, but disable monster killing machines
+    #   (ignores player disableDrops setting: all drops are disabled if threshold passed)
+    global: false
+    # if suspected camping kills won't drop items
+    disableDrops: true
     # elevation change max
     deltaY: 5
     # square about center (distance from center to edge)
@@ -121,9 +127,12 @@ messages:
     # rewarded for killing a monster:
     # <amount>  how much credited to account
     # <monster> name of the creature killed
-    reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
     # <item>    what used to kill it
+    reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
+    # if the reward is specific to what the user is holding
     itemreward: "&a You are rewarded &f<amount>&a for killing the &f<monster>&a with a &f<item>"
+    # this is for when a reward is withheld for suspected spawn camping
+    nocampingreward: "&a No more rewards avaliable for this area.. Try again later"
     
     # penalized for killing a monster (if coin range is negative)
     # <amount>  how much removed from account

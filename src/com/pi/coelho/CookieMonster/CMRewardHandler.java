@@ -25,19 +25,29 @@ public class CMRewardHandler {
 
     public boolean canAffordKill(Player p, Entity e) {
         int c = CMConfig.creatureIndex(e);
-        return canAffordKill(p, c);
+        return c >= 0 ? canAffordKill(p, c) : true;
     }
 
     public boolean canAffordMobSpawner(Player p) {
         int c = CMConfig.creatureIndex("MobSpawner");
         return canAffordKill(p, c);
     }
+    
+    public boolean hasPenalty(Player p, Entity e) {
+        int c = CMConfig.creatureIndex(e);
+        return c >= 0 ? canAffordKill(p, c) : false;
+    }
+    
+    private boolean hasPenalty(Player p, int c) {
+		return CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()) < 0;
+	}
 
     private boolean canAffordKill(Player p, int c) {
-        if (c >= 0 && CookieMonster.config.Monster_Drop[c].getMinCoin() < 0
-                && !CMEcon.canAfford(p, -CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()))) {
+		double min = CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId());
+        if (c >= 0 && min < 0
+                && !CMEcon.canAfford(p, -min)) {
             if (CookieMonster.config.Monster_Drop[c].itemHasReward(p.getItemInHand().getTypeId())) {
-                p.sendMessage(CMConfig.messages.get("notafford").
+                p.sendMessage(CMConfig.messages.get("itemnotafford").
                         replace("<item>", Material.getMaterial(p.getItemInHand().getTypeId()).name()).
                         replace("<monster>", CMConfig.CreatureNodes[c]));
             } else {

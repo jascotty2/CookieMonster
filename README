@@ -8,32 +8,45 @@ so it is extremely lightweight and fast.
 
 Features:
 configurable item drops and economy reward for each monster
-configurable econoy reward for items used to kill monsters
+configurable economy reward for items used to kill monsters
 Supports iConomy & BOSeconomy
 Ability to change entity drops with drop-rate.
 Ability to add minimum and maximum money drops for randomness
-Extremely small and weightless code
+
 
 doesn't allow to damage a creature/mobspawner if penalty is greater than account balance
 option to only drop items for a direct kill (stops autofarmers)
-option to replace drop items globally
+option to replace normal drops with custom drops
+option to drop custom drops items globally
 configurable messages (including if there is no reward)
+can distingush charged from normal creepers, and tame/pet wolves from wild wolves
+can disable/enable rewards for defined regions
 
 
 Commands:
 /cookiemonster (cm) reload		reloads settings from configuration file
+/cm region define <id>			set a region (once a region is selected in worldedit)
+/cm region list [page]			list regions (in current world if as a player)
+/cm region remove <id>			to remove regions
 
 
 To-Do:
+mob farming checks (track kill locations & time)
 ? import itemsDB from bettershop to check against config (check if valid items entered as drops)
-permissions? (maybe permission to kill without penalty?)
+permissions? (for rewards & maybe permission to kill without penalty?)
 penalties/rewards for killing players (even groups)
 
 
 Changelog:
 
-Version 1.5 - ?
-[]added a kill tracking system to check for spawn camping
+Version 1.5 - 7/20/11
+added a kill tracking system to check for spawn camping
+- define a square-radius for area to check, including max. elevation change
+- define # of kills in this area within a timespan
+- anything over that number within the area will disable rewards until the records are old enough to be removed
+- so far, only lasts in server memory, so records are lost on server stop/reload
+fixed anonymous replace/add drops setting
+(hopefully) fixed a nullpointer exception in region checking
 
 
 Version 1.4 - 7/14/11

@@ -198,6 +198,6 @@ public class GlobalRegionManager {
 
         RegionManager mgr = get(world);
 
-        return mgr.getApplicableRegions(loc).size() > 0;
+        return mgr != null && mgr.getApplicableRegions(loc).size() > 0;
     }
 }

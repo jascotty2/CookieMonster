@@ -1,5 +1,6 @@
 package com.pi.coelho.CookieMonster;
 
+import com.jascotty2.CheckInput;
 import com.jascotty2.item.MonsterDrops;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,9 +44,11 @@ public class CMConfig {
     // messages
     public static HashMap<String, String> messages = new HashMap<String, String>();
     // spawn camping settings
-    public boolean campTrackingEnabled = false;
+    public boolean campTrackingEnabled = false,
+			disableCampingDrops = true,
+                        globalCampTrackingEnabled = false;
     public int deltaY = 5, deltaX = 20, campKills = 50;
-    public long campTrackingTimeout = 20 * 60;
+    public long campTrackingTimeout = 20 * 60000;
 
     public CMConfig() {
         for (int i = 0; i < Monster_Drop.length; ++i) {
@@ -59,7 +62,8 @@ public class CMConfig {
         messages.clear();
         messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
         messages.put("itemreward", "&a You are rewarded &f<amount>&a for killing the &f<monster> with a <item>");
-
+        messages.put("nocampingreward", "&a No more rewards avaliable for this area.. Try again later");
+        
         messages.put("penalty", "&c You are penalized &f<amount>&c for killing the &f<monster>");
         messages.put("itempenalty", "&c You are penalized &f<amount>&c for killing the &f<monster>&c with a &f<item>");
 
@@ -95,6 +99,22 @@ public class CMConfig {
                     }
                 }
             }
+            
+            if (config.getNode("spwanCampTracking") != null) {
+                ConfigurationNode n = config.getNode("spwanCampTracking");
+                campTrackingEnabled = n.getBoolean("enabled", campTrackingEnabled);
+                globalCampTrackingEnabled = n.getBoolean("global", globalCampTrackingEnabled);
+                disableCampingDrops = n.getBoolean("disableDrops", disableCampingDrops);
+                deltaY = n.getInt("deltaY", deltaY);
+                deltaX = n.getInt("deltaX", deltaX);
+                campKills = n.getInt("campKills", campKills);
+                String t = n.getString("timeout");
+                if(n!=null){
+                    campTrackingTimeout = CheckInput.GetBigInt_TimeSpanInSec(t, 'm').longValue() * 1000;
+                }
+            }
+            
+            
             if (config.getNodes("rewards") != null) {
                 for (String k : config.getNodes("rewards").keySet()) {
                     int i = creatureIndex(k);
@@ -144,7 +164,7 @@ public class CMConfig {
 
     public boolean cmEnabled(Location l) {
         if (l != null) {
-            boolean isRegion = CookieMonster.regions.globalRegionManager.hasRegion(l);
+            boolean isRegion = CookieMonster.regions != null && CookieMonster.regions.globalRegionManager.hasRegion(l);
             if(!regionsDisable){ // regions are enabled areas
                 return isRegion;
             }else{ // regions are disabled on allowed worlds, enabled on disabled worlds
