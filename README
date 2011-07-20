@@ -12,6 +12,11 @@ configurable economy reward for items used to kill monsters
 Supports iConomy & BOSeconomy
 Ability to change entity drops with drop-rate.
 Ability to add minimum and maximum money drops for randomness
+A kill tracking system to check for spawn camping
+- define a square-radius for area to check, including max. elevation change
+- define # of kills in this area within a timespan
+- anything over that number within the area will disable rewards until the records are old enough to be removed
+- so far, only lasts in server memory, so records are lost on server stop/reload
 
 
 doesn't allow to damage a creature/mobspawner if penalty is greater than account balance
@@ -39,10 +44,15 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.5.0.1 - ?
+fixed worldedit not found error message
+added ability to have WorldEdit in CookieMonster folder or lib folder
+
+
 Version 1.5 - 7/20/11
 added a kill tracking system to check for spawn camping
-- define a square-radius for area to check, including max. elevation change
-- define # of kills in this area within a timespan
+- define a square-radius for area to check, including max. elevation change, 
+	# of kills in this area, & timespan before an individual kill is no longer counted
 - anything over that number within the area will disable rewards until the records are old enough to be removed
 - so far, only lasts in server memory, so records are lost on server stop/reload
 fixed anonymous replace/add drops setting

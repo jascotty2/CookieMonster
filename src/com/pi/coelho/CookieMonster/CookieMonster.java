@@ -52,12 +52,12 @@ public class CookieMonster extends JavaPlugin {
         
         try {
             regions = new CMRegions(server, getDataFolder());
-        } catch (Exception e) {
+        } catch (NoClassDefFoundError e) {
             if (worldEdit == null) {
                 Log(Level.INFO, "to enable existing regions, put a copy of WorldEdit in the CookieMonster folder, "
                         + "or install WorldEdit to the server");
             } else {
-                Log(Level.WARNING, "Unexpected error while loading region manager", e);
+                Log(Level.WARNING, "Unexpected error while loading region manager");
             }
             regions = null;
         }
