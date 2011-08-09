@@ -74,7 +74,7 @@ public class CMRewardHandler {
         }
         try {
             double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId);
-            if (CookieMonster.config.intOnly || !CMEcon.decimalSupported()) {
+            if (CookieMonster.config.intOnly) {
                 amount = Math.round(amount);
             }
             //System.out.println(CookieMonster.config.Monster_Drop[m].getMaxCoin());
@@ -88,26 +88,26 @@ public class CMRewardHandler {
                     CMEcon.addMoney(p, amount);
                     p.sendMessage(CMConfig.messages.get(pre + "reward").
                             replace("<amount>", CMEcon.format(amount)).
-                            replace("<item>", i.name()).
+                            replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
                             replace("<monster>", CMConfig.CreatureNodes[m]));
                 } else if (amount < 0.0) {
                     CMEcon.subtractMoney(p, -amount);
                     p.sendMessage(CMConfig.messages.get(pre + "penalty").
                             replace("<amount>", CMEcon.format(amount)).
-                            replace("<item>", i.name()).
+                            replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
                             replace("<monster>", CMConfig.CreatureNodes[m]));
                 }
             } else if (amount == 0) {
                 if (CMConfig.isCreature(m)) {
                     if (CMConfig.messages.get(pre + "norewardCreature").length() > 0) {
                         p.sendMessage(CMConfig.messages.get(pre + "norewardCreature").
-                                replace("<item>", i.name()).
+                                replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
                                 replace("<monster>", CMConfig.CreatureNodes[m]));
                     }
                 } else {
                     if (CMConfig.messages.get(pre + "norewardMonster").length() > 0) {
                         p.sendMessage(CMConfig.messages.get(pre + "norewardMonster").
-                                replace("<item>", i.name()).
+                                replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
                                 replace("<monster>", CMConfig.CreatureNodes[m]));
                     }
                 }

@@ -36,13 +36,18 @@ Commands:
 
 
 To-Do:
-mob farming checks (track kill locations & time)
 ? import itemsDB from bettershop to check against config (check if valid items entered as drops)
 permissions? (for rewards & maybe permission to kill without penalty?)
 penalties/rewards for killing players (even groups)
 
 
 Changelog:
+
+Version 1.5.1 - 8/9/11
+added economy support via Register 
+- now supports iConomy 4,5,6, BOSEcon 6,7, MultiCurrency, EssentialsEco
+fixed unknown Material name.. not sure if was throwing errors
+
 
 Version 1.5.0.1 - 7/21/11
 fixed worldedit not found error message

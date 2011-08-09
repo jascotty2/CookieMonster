@@ -6,103 +6,96 @@
  */
 package com.pi.coelho.CookieMonster;
 
-import cosine.boseconomy.BOSEconomy;
-import org.bukkit.Server;
+import com.nijikokun.register_21.payment.Method;
+import com.nijikokun.register_21.payment.Methods;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.event.server.ServerListener;
 
 /**
  * @author jacob
  */
-public class CMEcon {
+public class CMEcon extends ServerListener {
 
-    protected static com.iConomy.iConomy iConomy = null;
-    protected static com.nijiko.coelho.iConomy.iConomy legacyIConomy = null;
-    protected static BOSEconomy economy = null;
+	protected static Method economyMethod = null;
+	protected static Methods _econMethods = new Methods();
 
-    public static boolean initEcon(Server sv) {
-        Plugin test = sv.getPluginManager().getPlugin("iConomy");
-        if (test != null) {//this.getServer().getPluginManager().isPluginEnabled("iConomy")) {
-            try {
-                legacyIConomy = (com.nijiko.coelho.iConomy.iConomy) test;
-            } catch (NoClassDefFoundError e) {
-                iConomy = (com.iConomy.iConomy) test;
-            }
-            CookieMonster.Log("Attached to iConomy.");
-        } else {
-            test = sv.getPluginManager().getPlugin("BOSEconomy");
-            if (test != null) {
-                economy = (BOSEconomy) test;
-                CookieMonster.Log("Attached to BOSEconomy");
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
+	@Override
+	public void onPluginDisable(PluginDisableEvent event) {
+		// Check to see if the plugin thats being disabled is the one we are using
+		if (_econMethods != null && _econMethods.hasMethod() && _econMethods.checkDisabled(event.getPlugin())) {
+			economyMethod = null;
+			CookieMonster.Log(" Economy Plugin was disabled.");
+		}
+	}
 
-    public static boolean decimalSupported() {
-        return iConomy != null || legacyIConomy != null;
-    }
+	@Override
+	public void onPluginEnable(PluginEnableEvent event) {
+		if (!_econMethods.hasMethod()) {
+			if (_econMethods.setMethod(event.getPlugin())) {
+				economyMethod = _econMethods.getMethod();
+				CookieMonster.Log("Using " + economyMethod.getName() + " v" + economyMethod.getVersion() + " for economy");
+			}
+		}
+	}
+
+	public static boolean active() {
+		return economyMethod != null;
+	}
+	
+	public static boolean hasAccount(Player pl){
+		return pl != null && economyMethod != null && economyMethod.hasAccount(pl.getName());
+	}
 
     public static boolean canAfford(Player pl, double amt) {
-        if (legacyIConomy != null) {
-            return com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(pl.getName()).getBalance() >= amt;
-        } else if (iConomy != null) {
-            return iConomy.getAccount(pl.getName()).getHoldings().balance() >= amt;
-        } else if (economy != null) {
-            return economy.getPlayerMoney(pl.getName()) >= amt;
-        } else {
-            return amt >= 0;
-        }
+		return pl != null ? getBalance(pl.getName()) >= amt : false;
     }
 
-    public static boolean hasAccount(Player pl) {
-        if (legacyIConomy != null) {
-            return com.nijiko.coelho.iConomy.iConomy.getBank().hasAccount(pl.getName());
-        } else if (iConomy != null) {
-            return iConomy.hasAccount(pl.getName());
-        } else if (economy != null) {
-            return economy.playerRegistered(pl.getName(), false);
-        } else {
-            return false;
-        }
-    }
+	public static double getBalance(Player pl) {
+		return getBalance(pl.getName());
+	}
 
-    public static void addMoney(Player pl, double amt) {
-        if (legacyIConomy != null) {
-            com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(pl.getName()).add(amt);
-        } else if (iConomy != null) {
-            iConomy.getAccount(pl.getName()).getHoldings().add(amt);
-        } else if (economy != null) {
-            economy.addPlayerMoney(pl.getName(), (int) Math.round(amt), true);
-        }
-    }
+	public static double getBalance(String playerName) {
+		if (economyMethod != null && economyMethod.hasAccount(playerName)) {
+			return economyMethod.getAccount(playerName).balance();
+		}
+		return 0;
+	}
 
-    public static void subtractMoney(Player pl, double amt) {
-        if (legacyIConomy != null) {
-            com.nijiko.coelho.iConomy.iConomy.getBank().getAccount(pl.getName()).subtract(amt);
-        } else if (iConomy != null) {
-            iConomy.getAccount(pl.getName()).getHoldings().subtract(amt);
-        } else if (economy != null) {
-            economy.addPlayerMoney(pl.getName(), -(int) Math.round(amt), true);
-        }
-    }
+	public static void addMoney(Player pl, double amt) {
+		addMoney(pl.getName(), amt);
+	}
 
-    public static String format(double amt) {
-        if (legacyIConomy != null) {
-            com.nijiko.coelho.iConomy.iConomy.getBank().format(amt);
-        } else if (iConomy != null) {
-            return iConomy.format(amt);
-        } else if (economy != null) {
-            amt = Math.round(amt);
-            if (amt < 1 || amt > 1) {
-                return String.valueOf(amt) + " " + economy.getMoneyName();
-            } else {
-                return String.valueOf(amt) + " " + economy.getMoneyNamePlural();
-            }
-        }
-        return String.format("%.2f", amt);
-    }
+	public static void addMoney(String playerName, double amt) {
+		if (economyMethod != null) {
+			if (!economyMethod.hasAccount(playerName)) {
+				// TODO? add methods for creating an account
+				return;
+			}
+			economyMethod.getAccount(playerName).add(amt);
+		}
+	}
+
+	public static void subtractMoney(Player pl, double amt) {
+		subtractMoney(pl.getName(), amt);
+	}
+
+	public static void subtractMoney(String playerName, double amt) {
+		if (economyMethod != null) {
+			if (!economyMethod.hasAccount(playerName)) {
+				// TODO? add methods for creating an account
+				return;
+			}
+			economyMethod.getAccount(playerName).subtract(amt);
+		}
+	}
+
+	public static String format(double amt) {
+		if (economyMethod != null) {
+			return economyMethod.format(amt);
+		}
+		return String.format("%.2f", amt);
+	}
 } // end class CMEcon
 

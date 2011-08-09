@@ -25,6 +25,7 @@ public class CookieMonster extends JavaPlugin {
     private static CMBlockListener blockListener = null;
     private static CMEntityListener entityListener = null;
     private static CMRewardHandler rewardHandler = null;
+	private static CMEcon economyPluginListener = new CMEcon();
     protected static CMRegions regions = null;
     protected static CMCampTracker killTracker = null;
     private static WorldEditPlugin worldEdit = null;
@@ -37,11 +38,6 @@ public class CookieMonster extends JavaPlugin {
         PluginManager pm = server.getPluginManager();
         PluginDescriptionFile pdfFile = this.getDescription();
 
-        // economic plugin
-        if (!CMEcon.initEcon(server)) {
-            Log(Level.WARNING, "Failed to find a supported economy plugin!");
-        }
-
         // w.e.
         Plugin we = pm.getPlugin("WorldEdit");
         if (we != null && we instanceof WorldEditPlugin) {
@@ -49,7 +45,7 @@ public class CookieMonster extends JavaPlugin {
         } else {
             Log(Level.INFO, "Failed to find WorldEdit: regions cannot be defined");
         }
-        
+
         try {
             regions = new CMRegions(server, getDataFolder());
         } catch (NoClassDefFoundError e) {
@@ -94,6 +90,9 @@ public class CookieMonster extends JavaPlugin {
         pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.High, this);
 
+		pm.registerEvent(Type.PLUGIN_ENABLE, economyPluginListener, Priority.Monitor, this);
+		pm.registerEvent(Type.PLUGIN_DISABLE, economyPluginListener, Priority.Monitor, this);
+
         // Console Detail
         Log(" v" + pdfFile.getVersion() + " loaded successfully.");
         Log(" Developed by: " + pdfFile.getAuthors());
@@ -101,8 +100,10 @@ public class CookieMonster extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        regions.globalRegionManager.unload();
-        if(killTracker != null){
+        if (regions != null) {
+            regions.globalRegionManager.unload();
+        }
+        if (killTracker != null) {
             killTracker.save();
         }
     }
@@ -176,7 +177,7 @@ public class CookieMonster extends JavaPlugin {
         if (txt == null) {
             Log(loglevel, params);
         } else {
-            logger.log(loglevel, String.format("[%s] %s", name, txt == null ? "" : txt), (Exception) params);
+            logger.log(loglevel, String.format("[%s] %s", name, txt == null ? "" : txt), params);
         }
     }
 
