@@ -21,6 +21,15 @@ settings:
     #     (however, regions on disabled worlds are reversed & will be enabled)
     # false: cm is globally disabled, except for within regions (disabled worlds ignored)
     regionsDisable: true
+    # for how long a player is 'protected' from spawn camping
+    #		(player kill rewards are nulled)
+    playerRewardWait: 1m
+    # if a player killed within the playerRewardWait period
+    #		reward is reversed (in case of positive reward only)
+    #		eg. player who kills the player pays amount
+    playerReverseProtect: true
+    # if the players who die pay the killer (assuming has enough)
+    playerPaysReward: true
 
 #spawn camp tracking occurs when a player kills a monster
 spwanCampTracking:
@@ -101,6 +110,9 @@ rewards:
     MobSpawner:
         drops:
         coins: -4--5
+    Player:
+        coins: 0
+				
         
 messages:
     # Colors are specified by using "&[colorcode]".
@@ -131,6 +143,12 @@ messages:
     reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
     # if the reward is specific to what the user is holding
     itemreward: "&a You are rewarded &f<amount>&a for killing the &f<monster>&a with a &f<item>"
+    # for killing a player
+    playerreward: "&a You are rewarded &f<amount>&a for killing the Player &f<player>"
+    itemplayerreward: "&a You are rewarded &f<amount>&a for killing the Player &f<player>&a with a &f<item>"
+    # for the victim of the attacks
+    victimpay: "&f <player>&c took &f<amount>&c from you when you died"
+    victimprotection: "&f <player>&a payed you &f<amount>&a as penalty for killing you"
     # this is for when a reward is withheld for suspected spawn camping
     nocampingreward: "&a No more rewards avaliable for this area.. Try again later"
     
@@ -141,6 +159,17 @@ messages:
     # <item>    what used to kill it
     itempenalty: "&c You are penalized &f<amount>&c for killing the &f<monster>&c with a &f<item>"
     
+    # penalized for killing a player
+    # <amount>  how much removed from account
+    # <player> name of the player killed
+    playerpenalty: "&c You are penalized &f<amount>&c for killing Player &f<player>"
+    # penalized for killing a player within the spawn protection
+    # <time> spawn protection time (seconds)
+    playercamppenalty: "&c You are penalized &f<amount>&c for killing &f<player>&c during spawn protection"
+    # <item>    what used to kill
+    itemplayerpenalty: "&c You are penalized &f<amount>&c for killing &f<player>&c during spawn with a &f<item>"
+    itemplayercamppenalty: "&c You are penalized &f<amount>&c for killing &f<player>&c during spawn with a &f<item>"
+    
     # if cannot afford the penalty for killing the entity
     notafford: "&c You cannot afford to kill a &f<monster>"
     itemnotafford: "&c You cannot afford to kill a &f<monster>&c with a &f<item>"
@@ -148,7 +177,9 @@ messages:
     # if no money rewarded (can be blank for none)
     norewardMonster: "&c there is no reward for killing a &f<monster>"
     norewardCreature: 
+    norewardPlayer:
     # <item>    what used to kill it
     itemnorewardMonster: "&c there is no reward for killing a &f<monster>&c with a &f<item>"
     itemnorewardCreature: 
+    itemnorewardPlayer:
 

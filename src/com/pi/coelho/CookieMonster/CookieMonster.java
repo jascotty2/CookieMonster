@@ -24,6 +24,7 @@ public class CookieMonster extends JavaPlugin {
     private static Server server;
     private static CMBlockListener blockListener = null;
     private static CMEntityListener entityListener = null;
+	protected static CMPlayerListener playerListener = new CMPlayerListener();
     private static CMRewardHandler rewardHandler = null;
 	private static CMEcon economyPluginListener = new CMEcon();
     protected static CMRegions regions = null;
@@ -89,6 +90,8 @@ public class CookieMonster extends JavaPlugin {
         pm.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.High, this);
         pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.High, this);
+		pm.registerEvent(Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Normal, this);
 
 		pm.registerEvent(Type.PLUGIN_ENABLE, economyPluginListener, Priority.Monitor, this);
 		pm.registerEvent(Type.PLUGIN_DISABLE, economyPluginListener, Priority.Monitor, this);
