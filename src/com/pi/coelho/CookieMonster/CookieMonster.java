@@ -89,7 +89,10 @@ public class CookieMonster extends JavaPlugin {
         // Event Registration
         pm.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.High, this);
         pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
+//		pm.registerEvent(Type.PROJECTILE_HIT, entityListener, Priority.Normal, this);
+
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.High, this);
+		
 		pm.registerEvent(Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
 		pm.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Normal, this);
 

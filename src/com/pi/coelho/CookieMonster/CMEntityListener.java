@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class CMEntityListener extends EntityListener {
@@ -31,10 +33,13 @@ public class CMEntityListener extends EntityListener {
 		if (entEvent.isCancelled()) {
 			return;
 		}
-		//System.out.println(entEvent);
 		if (entEvent instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
-			entDamage(event.getEntity(), event.getDamager(), entEvent);
+			if(event.getDamager() instanceof Arrow){
+				entDamage(event.getEntity(), ((Arrow)event.getDamager()).getShooter(), entEvent);
+			}else{
+				entDamage(event.getEntity(), event.getDamager(), entEvent);
+			}
 		} else if (entEvent instanceof EntityDamageByProjectileEvent) {
 			EntityDamageByProjectileEvent event = (EntityDamageByProjectileEvent) entEvent;
 			entDamage(event.getEntity(), event.getDamager(), entEvent);
@@ -42,6 +47,11 @@ public class CMEntityListener extends EntityListener {
 			monsterDamaged(entEvent.getEntity(), null, true);
 		}
 	}
+//
+//	@Override
+//	public void onProjectileHit(ProjectileHitEvent event) {
+//		System.out.println(event.getEntity());
+//	}
 
 	void entDamage(Entity monster, Entity damager, EntityDamageEvent entEvent) {
 		if (monster instanceof LivingEntity) {
@@ -156,7 +166,7 @@ public class CMEntityListener extends EntityListener {
 				if (CookieMonster.config.campTrackingEnabled) {
 					Location loc = event.getEntity().getLocation();
 					CookieMonster.killTracker.addKill(loc);
-//                    System.out.println("kill added, bringing toatal about " + loc + " to " + CookieMonster.killTracker.numKills(loc,
+//                    System.out.println("kill added, bringing total about " + loc + " to " + CookieMonster.killTracker.numKills(loc,
 //                            CookieMonster.config.deltaX, CookieMonster.config.deltaY,
 //                            CookieMonster.config.campTrackingTimeout));
 					if (CookieMonster.killTracker.numKills(loc,
