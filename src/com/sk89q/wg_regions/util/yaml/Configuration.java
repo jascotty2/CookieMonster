@@ -74,7 +74,7 @@ public class Configuration extends ConfigurationNode {
     public Configuration(File file) {
         super(new HashMap<String, Object>());
         
-        DumperOptions options = new DumperOptions();
+        final DumperOptions options = new DumperOptions();
         options.setIndent(2);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.AUTO);
 
@@ -113,9 +113,9 @@ public class Configuration extends ConfigurationNode {
      * @param headerLines header lines to prepend
      */
     public void setHeader(String... headerLines) {
-        StringBuilder header = new StringBuilder();
+        final StringBuilder header = new StringBuilder();
 
-        for (String line : headerLines) {
+        for (final String line : headerLines) {
             if (header.length() > 0) {
                 header.append("\r\n");
             }
@@ -154,7 +154,7 @@ public class Configuration extends ConfigurationNode {
     public boolean save() {
         FileOutputStream stream = null;
 
-        File parent = file.getParentFile();
+        fianl File parent = file.getParentFile();
 
         if (parent != null) {
             parent.mkdirs();
@@ -162,7 +162,7 @@ public class Configuration extends ConfigurationNode {
 
         try {
             stream = new FileOutputStream(file);
-            OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
+            final OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
             if (header != null) {
                 writer.append(header);
                 writer.append("\r\n");

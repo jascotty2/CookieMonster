@@ -89,20 +89,20 @@ public class FlatRegionManager extends RegionManager {
      */
     @Override
     public void removeRegion(String id) {
-        Region region = regions.get(id.toLowerCase());
+        final Region region = regions.get(id.toLowerCase());
         regions.remove(id.toLowerCase());
 
         if (region != null) {
-            List<String> removeRegions = new ArrayList<String>();
-            Iterator<Region> iter = regions.values().iterator();
+            final List<String> removeRegions = new ArrayList<String>();
+            final Iterator<Region> iter = regions.values().iterator();
             while (iter.hasNext()) {
-                Region curRegion = iter.next();
+                final Region curRegion = iter.next();
                 if (curRegion.getParent() == region) {
                     removeRegions.add(curRegion.getId().toLowerCase());
                 }
             }
 
-            for (String remId : removeRegions) {
+            for (final String remId : removeRegions) {
                 removeRegion(remId);
             }
         }
@@ -120,7 +120,7 @@ public class FlatRegionManager extends RegionManager {
     }
 
     public boolean hasRegion(Location loc) {
-        for (Region region : regions.values()) {
+        for (final Region region : regions.values()) {
             if (region.contains(loc)) {
                 return true;
             }
@@ -146,10 +146,10 @@ public class FlatRegionManager extends RegionManager {
      */
     @Override
     public ApplicableRegionSet getApplicableRegions(Vector pt) {
-        TreeSet<Region> appRegions =
+        final TreeSet<Region> appRegions =
                 new TreeSet<Region>();
 
-        for (Region region : regions.values()) {
+        for (final Region region : regions.values()) {
             if (region.contains(pt)) {
                 appRegions.add(region);
 
@@ -176,9 +176,9 @@ public class FlatRegionManager extends RegionManager {
      */
     @Override
     public List<String> getApplicableRegionsIDs(Vector pt) {
-        List<String> applicable = new ArrayList<String>();
+        final List<String> applicable = new ArrayList<String>();
 
-        for (Map.Entry<String, Region> entry : regions.entrySet()) {
+        for (final Map.Entry<String, Region> entry : regions.entrySet()) {
             if (entry.getValue().contains(pt)) {
                 applicable.add(entry.getKey());
             }

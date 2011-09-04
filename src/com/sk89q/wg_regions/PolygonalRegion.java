@@ -27,9 +27,9 @@ import org.bukkit.Location;
 
 public class PolygonalRegion extends Region {
 
-     List<BlockVector2D> points;
-     int minY;
-     int maxY;
+    List<BlockVector2D> points;
+    int minY;
+    int maxY;
     private BlockVector min;
     private BlockVector max;
 
@@ -103,7 +103,7 @@ public class PolygonalRegion extends Region {
             return false;
         }
         boolean inside = false;
-        int npoints = points.size();
+        final int npoints = points.size();
         int xNew, zNew;
         int xOld, zOld;
         int x1, z1;
@@ -145,15 +145,15 @@ public class PolygonalRegion extends Region {
 
     @Override
     public List<Region> getIntersectingRegions(List<Region> regions){// throws UnsupportedIntersectionException {
-        int numRegions = regions.size();
-        int numPoints = points.size();
-        List<Region> intersectingRegions = new ArrayList<Region>();
+        final int numRegions = regions.size();
+        final int numPoints = points.size();
+        final List<Region> intersectingRegions = new ArrayList<Region>();
         int i, i2, i3;
 
         for (i = 0; i < numRegions; i++) {
             Region region = regions.get(i);
-            BlockVector rMinPoint = region.getMinimumPoint();
-            BlockVector rMaxPoint = region.getMaximumPoint();
+            final BlockVector rMinPoint = region.getMinimumPoint();
+            final BlockVector rMaxPoint = region.getMaximumPoint();
 
             // Check whether the region is outside the min and max vector
             if ((rMinPoint.getBlockX() < min.getBlockX() && rMaxPoint.getBlockX() < min.getBlockX()) 
@@ -168,8 +168,8 @@ public class PolygonalRegion extends Region {
 
             // Check whether the regions points are inside the other region
             for (i2 = 0; i < numPoints; i++) {
-                Vector pt = new Vector(points.get(i2).getBlockX(), minY, points.get(i2).getBlockZ());
-                Vector pt2 = new Vector(points.get(i2).getBlockX(), maxY, points.get(i2).getBlockZ());
+                final Vector pt = new Vector(points.get(i2).getBlockX(), minY, points.get(i2).getBlockZ());
+                final Vector pt2 = new Vector(points.get(i2).getBlockX(), maxY, points.get(i2).getBlockZ());
                 if (region.contains(pt) || region.contains(pt2)) {
                     intersectingRegions.add(regions.get(i));
                     continue;
@@ -179,11 +179,11 @@ public class PolygonalRegion extends Region {
             // Check whether the other regions points are inside the current region
             if (region instanceof PolygonalRegion) {
                 for (i2 = 0; i < ((PolygonalRegion)region).getPoints().size(); i++) {
-                    BlockVector2D pt2Dr = ((PolygonalRegion)region).getPoints().get(i2);
-                    int minYr = ((PolygonalRegion)region).minY;
-                    int maxYr = ((PolygonalRegion)region).maxY;
-                    Vector ptr = new Vector(pt2Dr.getBlockX(), minYr, pt2Dr.getBlockZ());
-                    Vector ptr2 = new Vector(pt2Dr.getBlockX(), maxYr, pt2Dr.getBlockZ());
+                    final BlockVector2D pt2Dr = ((PolygonalRegion)region).getPoints().get(i2);
+                    final int minYr = ((PolygonalRegion)region).minY;
+                    final int maxYr = ((PolygonalRegion)region).maxY;
+                    final Vector ptr = new Vector(pt2Dr.getBlockX(), minYr, pt2Dr.getBlockZ());
+                    final Vector ptr2 = new Vector(pt2Dr.getBlockX(), maxYr, pt2Dr.getBlockZ());
 
                     if (this.contains(ptr) || this.contains(ptr2)) {
                         intersectingRegions.add(regions.get(i));
@@ -191,8 +191,8 @@ public class PolygonalRegion extends Region {
                     }
                 }
             } else if (region instanceof CuboidRegion) {
-                BlockVector ptcMin = region.getMinimumPoint(); 
-                BlockVector ptcMax = region.getMaximumPoint();
+                final BlockVector ptcMin = region.getMinimumPoint(); 
+                final BlockVector ptcMax = region.getMaximumPoint();
 
                 if (this.contains(new Vector(ptcMin.getBlockX(), ptcMin.getBlockY(), ptcMin.getBlockZ()))
                         || this.contains(new Vector(ptcMin.getBlockX(), ptcMin.getBlockY(), ptcMax.getBlockZ()))
@@ -213,7 +213,7 @@ public class PolygonalRegion extends Region {
             boolean regionIsIntersecting = false;
             for (i2 = 0; i2 < numPoints; i2++) {
                 boolean checkNextPoint = false;
-                BlockVector2D currPoint = points.get(i2);
+                final BlockVector2D currPoint = points.get(i2);
                 BlockVector2D nextPoint;
 
                 if (i2 == (numPoints - 1)) {
