@@ -96,9 +96,9 @@ public class CuboidRegion extends Region {
      */
     @Override
     public boolean contains(Vector pt) {
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
+        final int x = pt.getBlockX();
+        final int y = pt.getBlockY();
+        final int z = pt.getBlockZ();
         return x >= min.getBlockX() && x <= max.getBlockX()
                 && y >= min.getBlockY() && y <= max.getBlockY()
                 && z >= min.getBlockZ() && z <= max.getBlockZ();
@@ -107,9 +107,9 @@ public class CuboidRegion extends Region {
 
     @Override
     public boolean contains(Location loc) {
-        int x = loc.getBlockX();
-        int y = loc.getBlockY();
-        int z = loc.getBlockZ();
+        final int x = loc.getBlockX();
+        final int y = loc.getBlockY();
+        final int z = loc.getBlockZ();
         return x >= min.getBlockX() && x <= max.getBlockX()
                 && y >= min.getBlockY() && y <= max.getBlockY()
                 && z >= min.getBlockZ() && z <= max.getBlockZ();
@@ -142,14 +142,14 @@ public class CuboidRegion extends Region {
 
     @Override
     public List<Region> getIntersectingRegions(List<Region> regions){// throws UnsupportedIntersectionException {
-        int numRegions = regions.size();
-        List<Region> intersectingRegions = new ArrayList<Region>();
+        final int numRegions = regions.size();
+        final List<Region> intersectingRegions = new ArrayList<Region>();
         int i, i2, i3;
 
         for (i = 0; i < numRegions; i++) {
-            Region region = regions.get(i);
-            BlockVector rMinPoint = region.getMinimumPoint();
-            BlockVector rMaxPoint = region.getMaximumPoint();
+            final Region region = regions.get(i);
+            final BlockVector rMinPoint = region.getMinimumPoint();
+            final BlockVector rMaxPoint = region.getMaximumPoint();
 
             // Check whether the region is outside the min and max vector
             if ((rMinPoint.getBlockX() < min.getBlockX() && rMaxPoint.getBlockX() < min.getBlockX()) 
@@ -178,11 +178,11 @@ public class CuboidRegion extends Region {
             // Check whether the other regions points are inside the current region
             if (region instanceof PolygonalRegion) {
                 for (i2 = 0; i2 < ((PolygonalRegion)region).getPoints().size(); i2++) {
-                    BlockVector2D pt2Dr = ((PolygonalRegion)region).getPoints().get(i2);
-                    int minYr = ((PolygonalRegion)region).minY;
-                    int maxYr = ((PolygonalRegion)region).maxY;
-                    Vector ptr = new Vector(pt2Dr.getBlockX(), minYr, pt2Dr.getBlockZ());
-                    Vector ptr2 = new Vector(pt2Dr.getBlockX(), maxYr, pt2Dr.getBlockZ());
+                    final BlockVector2D pt2Dr = ((PolygonalRegion)region).getPoints().get(i2);
+                    final int minYr = ((PolygonalRegion)region).minY;
+                    final int maxYr = ((PolygonalRegion)region).maxY;
+                    final Vector ptr = new Vector(pt2Dr.getBlockX(), minYr, pt2Dr.getBlockZ());
+                    final Vector ptr2 = new Vector(pt2Dr.getBlockX(), maxYr, pt2Dr.getBlockZ());
 
                     if (this.contains(ptr) || this.contains(ptr2)) {
                         intersectingRegions.add(regions.get(i));
@@ -190,8 +190,8 @@ public class CuboidRegion extends Region {
                     }
                 }
             } else if (region instanceof CuboidRegion) {
-                BlockVector ptcMin = region.getMinimumPoint(); 
-                BlockVector ptcMax = region.getMaximumPoint();
+                final BlockVector ptcMin = region.getMinimumPoint(); 
+                final BlockVector ptcMax = region.getMaximumPoint();
 
                 if (this.contains(new Vector(ptcMin.getBlockX(), ptcMin.getBlockY(), ptcMin.getBlockZ()))
                         || this.contains(new Vector(ptcMin.getBlockX(), ptcMin.getBlockY(), ptcMax.getBlockZ()))
@@ -210,7 +210,7 @@ public class CuboidRegion extends Region {
 
             // Check whether the current regions edges collide with the regions edges
             boolean regionIsIntersecting = false;
-            List<BlockVector2D> points = new ArrayList<BlockVector2D>();
+            final List<BlockVector2D> points = new ArrayList<BlockVector2D>();
             points.add(new BlockVector2D(min.getBlockX(), min.getBlockZ()));
             points.add(new BlockVector2D(min.getBlockX(), max.getBlockZ()));
             points.add(new BlockVector2D(max.getBlockX(), max.getBlockZ()));
@@ -218,17 +218,10 @@ public class CuboidRegion extends Region {
 
             for (i2 = 0; i2 < points.size(); i2++) {
                 boolean checkNextPoint = false;
-                BlockVector2D currPoint = points.get(i2);
-                BlockVector2D nextPoint;
-
-                if (i2 == (points.size() - 1)) {
-                    nextPoint = points.get(0);
-                } else {
-                    nextPoint = points.get(i2 + 1);
-                }
-
-                int currX = currPoint.getBlockX();
-                int currZ = currPoint.getBlockZ();
+                final BlockVector2D currPoint = points.get(i2);
+                final BlockVector2D nextPoint = (i2 == points.size() - 1 ? points.get(0) : points.get(i2 + 1));
+                final int currX = currPoint.getBlockX();
+                final int currZ = currPoint.getBlockZ();
                 while (!checkNextPoint) {
                     for(i3 = min.getBlockY(); i3 <= max.getBlockY(); i3++) {
                         if (region.contains(new Vector(currX, i3, currZ))) {
@@ -281,11 +274,10 @@ public class CuboidRegion extends Region {
      */
     @Override
     public int volume() {
-        int xLength = max.getBlockX() - min.getBlockX() + 1;
-        int yLength = max.getBlockY() - min.getBlockY() + 1;
-        int zLength = max.getBlockZ() - min.getBlockZ() + 1;
-
-        int volume = xLength * yLength * zLength;
+        final int xLength = max.getBlockX() - min.getBlockX() + 1;
+        final int yLength = max.getBlockY() - min.getBlockY() + 1;
+        final int zLength = max.getBlockZ() - min.getBlockZ() + 1;
+        final int volume = xLength * yLength * zLength;
         return volume;
     }
 

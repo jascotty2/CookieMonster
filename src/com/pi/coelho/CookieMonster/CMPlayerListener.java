@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class CMPlayerListener extends PlayerListener {
 
-	Map<String, Long> spawns = new HashMap<String, Long>();
+	final Map<String, Long> spawns = new HashMap<String, Long>();
 
 	public CMPlayerListener() {
 	} // end default constructor

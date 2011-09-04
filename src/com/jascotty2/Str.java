@@ -30,35 +30,35 @@ public class Str extends OutputStream {
     }
 
     public static String argStr(String[] s, String sep, int start) {
-        String ret = "";
+        final StringBuffer ret = new StringBuffer();
         if (s != null) {
             for (int i = start; i < s.length; ++i) {
-                ret += s[i];
+                ret.append(s[i]);
                 if (i + 1 < s.length) {
-                    ret += sep;
+                    ret.append(sep);
                 }
             }
         }
-        return ret;
+        return ret.toString();
     }
 
     public static String argStr(String[] s, String sep, int start, int length) {
-        String ret = "";
+        final StringBuffer ret = new StringBuffer();
         if (s != null) {
-            for (int i = start, j = 0; i < s.length && j < length; ++i, ++j) {
-                ret += s[i];
+            for (int i = start; i < start + length; i++) {
+                ret.append(s[i]);
                 if (i + 1 < s.length) {
-                    ret += sep;
+                    ret.append(sep);
                 }
             }
         }
-        return ret;
+        return ret.toString();
     }
 
     public static boolean isIn(String input, String[] check) {
         input = input.trim();
-        for (String c : check) {
-            if (input.equalsIgnoreCase(c.trim())) {
+        for (final String s : check) {
+            if (input.equalsIgnoreCase(s.trim())) {
                 return true;
             }
         }
@@ -66,10 +66,10 @@ public class Str extends OutputStream {
     }
 
     public static boolean isIn(String input, String check) {
-        String comms[] = check.split(",");
+        final String comms[] = check.split(",");
         input = input.trim();
-        for (String c : comms) {
-            if (input.equalsIgnoreCase(c.trim())) {
+        for (final String s : comms) {
+            if (input.equalsIgnoreCase(s.trim())) {
                 return true;
             }
         }
@@ -77,23 +77,19 @@ public class Str extends OutputStream {
     }
 
     public static boolean startIsIn(String input, String check) {
-        String comms[] = check.split(",");
-        for (String c : comms) {
-            if (input.length() >= c.length()) {
-                if (input.substring(0, c.length()).equalsIgnoreCase(c)) {
-                    return true;
-                }
+        final String comms[] = check.split(",");
+        for (final String s : comms) {
+            if (input.length() >= s.length() && input.substring(0, s.length()).equalsIgnoreCase(s)) {
+                return true;
             }
         }
         return false;
     }
 
     public static boolean startIsIn(String input, String[] check) {
-        for (String c : check) {
-            if (input.length() >= c.length()) {
-                if (input.substring(0, c.length()).equalsIgnoreCase(c)) {
-                    return true;
-                }
+        for (final String s : check) {
+            if (input.length() >= s.length() && input.substring(0, s.length()).equalsIgnoreCase(s)) {
+                return true;
             }
         }
         return false;
@@ -103,7 +99,7 @@ public class Str extends OutputStream {
         int c = 0;
         for (int i = 0; i < str.length() - find.length(); ++i) {
             if (str.substring(i, i + find.length()).equals(find)) {
-                ++c;
+                c++;
             }
         }
         return c;
@@ -153,8 +149,8 @@ public class Str extends OutputStream {
         if (err == null) {// || err.getCause() == null) {
             return "";
         }
-        Str stackoutstream = new Str();
-        PrintWriter stackstream = new PrintWriter(stackoutstream);
+        final Str stackoutstream = new Str();
+        final PrintWriter stackstream = new PrintWriter(stackoutstream);
         err.printStackTrace(stackstream);
         stackstream.flush();
         stackstream.close();
@@ -236,11 +232,11 @@ public class Str extends OutputStream {
     }
 
     public static String repeat(char ch, int len) {
-        String str = "";
+        final StringBuffer str = new StringBuffer();
         for (int i = 0; i < len; ++i) {
-            str += ch;
+            str.append(ch);
         }
-        return str;
+        return str.toString();
     }
 
     /**
@@ -250,11 +246,11 @@ public class Str extends OutputStream {
      * @return
      */
     public static String repeat(String str, int count) {
-        String retstr = "";
+        final StringBuffer retstr = new StringBuffer();
         for (int i = 0; i < count; ++i) {
-            retstr += str;
+            retstr.append(str);
         }
-        return retstr;
+        return retstr.toString();
     }
 
     @Override

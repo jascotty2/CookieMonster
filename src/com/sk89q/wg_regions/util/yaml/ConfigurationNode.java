@@ -59,18 +59,18 @@ public class ConfigurationNode {
     @SuppressWarnings("unchecked")
     public Object getProperty(String path) {
         if (!path.contains(".")) {
-            Object val = root.get(path);
+            final Object val = root.get(path);
             if (val == null) {
                 return null;
             }
             return val;
         }
         
-        String[] parts = path.split("\\.");
+        final String[] parts = path.split("\\.");
         Map<String, Object> node = root;
         
         for (int i = 0; i < parts.length; i++) {
-            Object o = node.get(parts[i]);
+            final Object o = node.get(parts[i]);
             
             if (o == null) {
                 return null;
@@ -99,8 +99,8 @@ public class ConfigurationNode {
      */
     private Object prepareSerialization(Object value) {
         if (value instanceof Vector) {
-            Map<String, Double> out = new HashMap<String, Double>();
-            Vector vec = (Vector) value;
+            final Map<String, Double> out = new HashMap<String, Double>();
+            final Vector vec = (Vector) value;
             out.put("x", vec.getX());
             out.put("y", vec.getY());
             out.put("z", vec.getZ());
@@ -126,8 +126,8 @@ public class ConfigurationNode {
             return;
         }
         
-        String[] parts = path.split("\\.");
-        Map<String, Object> node = root;
+        final String[] parts = path.split("\\.");
+        final Map<String, Object> node = root;
         
         for (int i = 0; i < parts.length; i++) {
             Object o = node.get(parts[i]);
@@ -157,8 +157,8 @@ public class ConfigurationNode {
      * @return
      */
     public ConfigurationNode addNode(String path) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        ConfigurationNode node = new ConfigurationNode(map);
+        final Map<String, Object> map = new HashMap<String, Object>();
+        final ConfigurationNode node = new ConfigurationNode(map);
         setProperty(path, map);
         return node;
     }
@@ -173,7 +173,7 @@ public class ConfigurationNode {
      * @return string or null
      */
     public String getString(String path) {
-        Object o = getProperty(path);
+        final Object o = getProperty(path);
         if (o == null) {
             return null;
         }
@@ -189,7 +189,7 @@ public class ConfigurationNode {
      * @return string or default
      */
     public Vector getVector(String path) {
-        ConfigurationNode o = getNode(path);
+        final ConfigurationNode o = getNode(path);
         if (o == null) {
             return null;
         }
@@ -214,7 +214,7 @@ public class ConfigurationNode {
      * @return string or default
      */
     public Vector2D getVector2d(String path) {
-        ConfigurationNode o = getNode(path);
+        final ConfigurationNode o = getNode(path);
         if (o == null) {
             return null;
         }
@@ -239,7 +239,7 @@ public class ConfigurationNode {
      * @return string or default
      */
     public Vector getVector(String path, Vector def) {
-        Vector v = getVector(path);
+        final Vector v = getVector(path);
         if (v == null) {
             setProperty(path, def);
             return def;
@@ -257,7 +257,7 @@ public class ConfigurationNode {
      * @return string or default
      */
     public String getString(String path, String def) {
-        String o = getString(path);
+        final String o = getString(path);
         if (o == null) {
             setProperty(path, def);
             return def;
@@ -275,7 +275,7 @@ public class ConfigurationNode {
      * @return integer or null
      */
     public Integer getInt(String path) {
-        Integer o = castInt(getProperty(path));
+        final Integer o = castInt(getProperty(path));
         if (o == null) {
             return null;
         } else {
@@ -294,7 +294,7 @@ public class ConfigurationNode {
      * @return int or default
      */
     public int getInt(String path, int def) {
-        Integer o = castInt(getProperty(path));
+        final Integer o = castInt(getProperty(path));
         if (o == null) {
             setProperty(path, def);
             return def;
@@ -313,7 +313,7 @@ public class ConfigurationNode {
      * @return double or null
      */
     public Double getDouble(String path) {
-        Double o = castDouble(getProperty(path));
+        final Double o = castDouble(getProperty(path));
         if (o == null) {
             return null;
         } else {
@@ -332,7 +332,7 @@ public class ConfigurationNode {
      * @return double or default
      */
     public double getDouble(String path, double def) {
-        Double o = castDouble(getProperty(path));
+        final Double o = castDouble(getProperty(path));
         if (o == null) {
             setProperty(path, def);
             return def;
@@ -350,7 +350,7 @@ public class ConfigurationNode {
      * @return boolean or null
      */
     public Boolean getBoolean(String path) {
-        Boolean o = castBoolean(getProperty(path));
+        final Boolean o = castBoolean(getProperty(path));
         if (o == null) {
             return null;
         } else {
@@ -368,7 +368,7 @@ public class ConfigurationNode {
      * @return boolean or default
      */
     public boolean getBoolean(String path, boolean def) {
-        Boolean o = castBoolean(getProperty(path));
+        final Boolean o = castBoolean(getProperty(path));
         if (o == null) {
             setProperty(path, def);
             return def;
@@ -387,7 +387,7 @@ public class ConfigurationNode {
     @SuppressWarnings("unchecked")
     public List<String> getKeys(String path) {
         if (path == null) return new ArrayList<String>(root.keySet());
-        Object o = getProperty(path);
+        final Object o = getProperty(path);
         if (o == null) {
             return null;
         } else if (o instanceof Map) {
@@ -406,7 +406,7 @@ public class ConfigurationNode {
      */
     @SuppressWarnings("unchecked")
     public List<Object> getList(String path) {
-        Object o = getProperty(path);
+        final Object o = getProperty(path);
         if (o == null) {
             return null;
         } else if (o instanceof List) {
@@ -429,13 +429,13 @@ public class ConfigurationNode {
      * @return list of strings
      */
     public List<String> getStringList(String path, List<String> def) {
-        List<Object> raw = getList(path);
+        final List<Object> raw = getList(path);
         if (raw == null) {
             return def != null ? def : new ArrayList<String>();
         }
 
-        List<String> list = new ArrayList<String>();
-        for (Object o : raw) {
+        final List<String> list = new ArrayList<String>();
+        for (final Object o : raw) {
             if (o == null) {
                 continue;
             }
@@ -458,14 +458,14 @@ public class ConfigurationNode {
      * @return list of integers
      */
     public List<Integer> getIntList(String path, List<Integer> def) {
-        List<Object> raw = getList(path);
+        final List<Object> raw = getList(path);
         if (raw == null) {
             return def != null ? def : new ArrayList<Integer>();
         }
 
-        List<Integer> list = new ArrayList<Integer>();
-        for (Object o : raw) {
-            Integer i = castInt(o);
+        final List<Integer> list = new ArrayList<Integer>();
+        for (final Object o : raw) {
+            final Integer i = castInt(o);
             if (i != null) {
                 list.add(i);
             }
@@ -486,14 +486,14 @@ public class ConfigurationNode {
      * @return list of integers
      */
     public List<Double> getDoubleList(String path, List<Double> def) {
-        List<Object> raw = getList(path);
+        final List<Object> raw = getList(path);
         if (raw == null) {
             return def != null ? def : new ArrayList<Double>();
         }
 
-        List<Double> list = new ArrayList<Double>();
-        for (Object o : raw) {
-            Double i = castDouble(o);
+        final List<Double> list = new ArrayList<Double>();
+        for (final Object o : raw) {
+            fianl Double i = castDouble(o);
             if (i != null) {
                 list.add(i);
             }
@@ -514,14 +514,14 @@ public class ConfigurationNode {
      * @return list of integers
      */
     public List<Boolean> getBooleanList(String path, List<Boolean> def) {
-        List<Object> raw = getList(path);
+        final List<Object> raw = getList(path);
         if (raw == null) {
             return def != null ? def : new ArrayList<Boolean>();
         }
 
-        List<Boolean> list = new ArrayList<Boolean>();
-        for (Object o : raw) {
-            Boolean tetsu = castBoolean(o);
+        final List<Boolean> list = new ArrayList<Boolean>();
+        for (final Object o : raw) {
+            final Boolean tetsu = castBoolean(o);
             if (tetsu != null) {
                 list.add(tetsu);
             }
@@ -541,16 +541,15 @@ public class ConfigurationNode {
      * @param def default value or null for an empty list as default
      * @return list of integers
      */
-    public List<Vector> getVectorList(
-            String path, List<Vector> def) {
+    public List<Vector> getVectorList(String path, List<Vector> def) {
         
-        List<ConfigurationNode> raw = getNodeList(path, null);
-        List<Vector> list = new ArrayList<Vector>();
+        final List<ConfigurationNode> raw = getNodeList(path, null);
+        final List<Vector> list = new ArrayList<Vector>();
         
-        for (ConfigurationNode o : raw) {
-            Double x = o.getDouble("x");
-            Double y = o.getDouble("y");
-            Double z = o.getDouble("z");
+        for (final ConfigurationNode o : raw) {
+            final Double x = o.getDouble("x");
+            final Double y = o.getDouble("y");
+            final Double z = o.getDouble("z");
             
             if (x == null || y == null || z == null) {
                 continue;
@@ -573,15 +572,14 @@ public class ConfigurationNode {
      * @param def default value or null for an empty list as default
      * @return list of integers
      */
-    public List<Vector2D> getVector2dList(
-            String path, List<Vector2D> def) {
+    public List<Vector2D> getVector2dList(String path, List<Vector2D> def) {
         
-        List<ConfigurationNode> raw = getNodeList(path, null);
-        List<Vector2D> list = new ArrayList<Vector2D>();
+        final List<ConfigurationNode> raw = getNodeList(path, null);
+        final List<Vector2D> list = new ArrayList<Vector2D>();
         
-        for (ConfigurationNode o : raw) {
-            Double x = o.getDouble("x");
-            Double z = o.getDouble("z");
+        for (final ConfigurationNode o : raw) {
+            final Double x = o.getDouble("x");
+            final Double z = o.getDouble("z");
             
             if (x == null || z == null) {
                 continue;
@@ -604,15 +602,14 @@ public class ConfigurationNode {
      * @param def default value or null for an empty list as default
      * @return list of integers
      */
-    public List<BlockVector2D> getBlockVector2dList(
-            String path, List<BlockVector2D> def) {
+    public List<BlockVector2D> getBlockVector2dList(String path, List<BlockVector2D> def) {
         
-        List<ConfigurationNode> raw = getNodeList(path, null);
-        List<BlockVector2D> list = new ArrayList<BlockVector2D>();
+        final List<ConfigurationNode> raw = getNodeList(path, null);
+        final List<BlockVector2D> list = new ArrayList<BlockVector2D>();
         
-        for (ConfigurationNode o : raw) {
-            Double x = o.getDouble("x");
-            Double z = o.getDouble("z");
+        for (final ConfigurationNode o : raw) {
+            final Double x = o.getDouble("x");
+            final Double z = o.getDouble("z");
             
             if (x == null || z == null) {
                 continue;
@@ -637,13 +634,13 @@ public class ConfigurationNode {
      */
     @SuppressWarnings("unchecked")
     public List<ConfigurationNode> getNodeList(String path, List<ConfigurationNode> def) {
-        List<Object> raw = getList(path);
+        final List<Object> raw = getList(path);
         if (raw == null) {
             return def != null ? def : new ArrayList<ConfigurationNode>();
         }
 
-        List<ConfigurationNode> list = new ArrayList<ConfigurationNode>();
-        for (Object o : raw) {
+        final List<ConfigurationNode> list = new ArrayList<ConfigurationNode>();
+        for (final Object o : raw) {
             if (o instanceof Map) {
                 list.add(new ConfigurationNode((Map<String, Object>)o));
             }
@@ -662,7 +659,7 @@ public class ConfigurationNode {
      */
     @SuppressWarnings("unchecked")
     public ConfigurationNode getNode(String path) {
-        Object raw = getProperty(path);
+        final Object raw = getProperty(path);
         if (raw instanceof Map) {
             return new ConfigurationNode((Map<String, Object>)raw);
         }
@@ -679,17 +676,15 @@ public class ConfigurationNode {
      */
     @SuppressWarnings("unchecked")
     public Map<String, ConfigurationNode> getNodes(String path) {
-        Object o = getProperty(path);
+        final Object o = getProperty(path);
         if (o == null) {
             return null;
         } else if (o instanceof Map) {
-            Map<String, ConfigurationNode> nodes =
-                new HashMap<String, ConfigurationNode>();
+            final Map<String, ConfigurationNode> nodes = new HashMap<String, ConfigurationNode>();
             
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>)o).entrySet()) {
+            for (final Map.Entry<String, Object> entry : ((Map<String, Object>)o).entrySet()) {
                 if (entry.getValue() instanceof Map) {
-                    nodes.put(entry.getKey(),
-                            new ConfigurationNode((Map<String, Object>) entry.getValue()));
+                    nodes.put(entry.getKey(), new ConfigurationNode((Map<String, Object>) entry.getValue()));
                 }
             }
             
@@ -776,11 +771,11 @@ public class ConfigurationNode {
             return;
         }
         
-        String[] parts = path.split("\\.");
+        final String[] parts = path.split("\\.");
         Map<String, Object> node = root;
         
         for (int i = 0; i < parts.length; i++) {
-            Object o = node.get(parts[i]);
+            final Object o = node.get(parts[i]);
             
             // Found our target!
             if (i == parts.length - 1) {

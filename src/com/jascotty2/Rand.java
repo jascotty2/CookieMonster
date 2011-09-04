@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class Rand {
 
-    static Random rand = new Random();
+    static final Random rand = new Random();
     public static char filenameChars[] = {};
     protected static boolean isRand = false;
 
@@ -40,11 +40,11 @@ public class Rand {
                 }
             }
         }
-        String ret = "";
+        final StringBuffer ret = new StringBuffer();
         for (int i = RandomInt(minlength, maxlength); i > 0; --i) {
-            ret += filenameChars[RandomInt(0, filenameChars.length - 1)];
+            ret.append(filenameChars[RandomInt(0, filenameChars.length - 1)]);
         }
-        return ret;
+        return ret.toString();
     }
 
     public static int RandomInt(int min, int max) {
