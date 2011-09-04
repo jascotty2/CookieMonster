@@ -44,7 +44,7 @@ public class PolygonalRegion extends Region {
         int maxX = points.get(0).getBlockX();
         int maxZ = points.get(0).getBlockZ();
 
-        for (BlockVector2D v : points) {
+        for (final BlockVector2D v : points) {
             int x = v.getBlockX();
             int z = v.getBlockZ();
             if (x < minX) {

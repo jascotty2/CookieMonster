@@ -154,7 +154,7 @@ public class Configuration extends ConfigurationNode {
     public boolean save() {
         FileOutputStream stream = null;
 
-        fianl File parent = file.getParentFile();
+        final File parent = file.getParentFile();
 
         if (parent != null) {
             parent.mkdirs();

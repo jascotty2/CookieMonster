@@ -113,10 +113,10 @@ public class HashMap3D<V> implements Cloneable {
      * @return
      */
     public V get(Point3D point) {
-        if (map.containsKey(point.x)
-                && map.get(point.x).containsKey(point.y)
-                && map.get(point.x).get(point.y).containsKey(point.z)) {
-            return map.get(point.x).get(point.y).get(point.z);
+        if (map.containsKey(point.getX())
+                && map.get(point.getX()).containsKey(point.getY())
+                && map.get(point.getX()).get(point.getY()).containsKey(point.getZ())) {
+            return map.get(point.getX()).get(point.getY()).get(point.getZ());
         }
         return null;
     }
@@ -130,9 +130,9 @@ public class HashMap3D<V> implements Cloneable {
      * @return <tt>true</tt> if this map contains a mapping for the specified key.
      */
     public boolean contains(Point3D point) {
-        return map.containsKey(point.x)
-                && map.get(point.x).containsKey(point.y)
-                && map.get(point.x).get(point.y).containsKey(point.z);
+        return map.containsKey(point.getX())
+                && map.get(point.getX()).containsKey(point.getY())
+                && map.get(point.getX()).get(point.getY()).containsKey(point.getZ());
     }
 
     /**
@@ -148,13 +148,13 @@ public class HashMap3D<V> implements Cloneable {
      *          previously associated <tt>null</tt> with <tt>key</tt>.)
      */
     public V put(Point3D point, V value) {
-        if (!map.containsKey(point.x)) {
-            map.put(point.x, new HashMap<Integer, HashMap<Integer, V>>());
+        if (!map.containsKey(point.getX())) {
+            map.put(point.getX(), new HashMap<Integer, HashMap<Integer, V>>());
         }
-        if (!map.get(point.x).containsKey(point.y)) {
-            map.get(point.x).put(point.y, new HashMap<Integer, V>());
+        if (!map.get(point.getX()).containsKey(point.getY())) {
+            map.get(point.getX()).put(point.getY(), new HashMap<Integer, V>());
         }
-        return map.get(point.x).get(point.y).put(point.z, value);
+        return map.get(point.getX()).get(point.getY()).put(point.getZ(), value);
     }
 
     /**
@@ -168,10 +168,10 @@ public class HashMap3D<V> implements Cloneable {
      *          previously associated <tt>null</tt> with <tt>key</tt>.)
      */
     public V remove(Point3D point) {
-        if (map.containsKey(point.x)
-                && map.get(point.x).containsKey(point.y)
-                && map.get(point.x).get(point.y).containsKey(point.z)) {
-            return map.get(point.x).get(point.y).remove(point.z);
+        if (map.containsKey(point.getX())
+                && map.get(point.getX()).containsKey(point.getY())
+                && map.get(point.getX()).get(point.getY()).containsKey(point.getZ())) {
+            return map.get(point.getX()).get(point.getY()).remove(point.getZ());
         }
         return null;
     }

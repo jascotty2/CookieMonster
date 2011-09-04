@@ -61,7 +61,7 @@ public class ApplicableRegionSet implements Iterable<Region> {
      * @param region
      */
     private void clearParents(Set<Region> needsClear, Set<Region> hasCleared, Region region) {
-        final Region parent = region.getParent();
+        Region parent = region.getParent();
 
         while (parent != null) {
             if (!needsClear.remove(parent)) {
@@ -80,7 +80,7 @@ public class ApplicableRegionSet implements Iterable<Region> {
      * @param region
      */
     private void clearParents(Map<Region, ?> needsClear, Set<Region> hasCleared, Region region) {
-        final Region parent = region.getParent();
+        Region parent = region.getParent();
 
         while (parent != null) {
             if (needsClear.remove(parent) == null) {
