@@ -58,7 +58,7 @@ public class CheckInput {
         try {
             Integer.parseInt(input);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             return false;
         }
     }
@@ -67,7 +67,7 @@ public class CheckInput {
         try {
             Byte.parseByte(input);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             return false;
         }
     }
@@ -77,52 +77,48 @@ public class CheckInput {
     }
 
     public static long GetLong(String input, long onError) {
-        if(input==null)return onError;
-        try {
-            return Pattern.matches(IntPattern, input) ? Long.parseLong(input) : onError;
-        } catch (NumberFormatException e) {
-            // just in case the number is too large... can never be too careful..
-            return onError;
-        }
+    	try {
+    		return Long.parseLong(input);
+    	}
+    	catch (final NumberFormatException e) {
+    		return onError;
+    	}
     }
 
     public static int GetInt(String input, int onError) {
-        if(input==null)return onError;
         try {
-            return Pattern.matches(IntPattern, input) ? Integer.parseInt(input) : onError;
-        } catch (NumberFormatException e) {
-            // just in case the number is too large... can never be too careful..
-            return onError;
+        	return Integer.parseInt(input);
+        }
+        catch (final NumberFormatException e) {
+        	return onError;
         }
     }
 
     public static double GetDouble(String input, double onError) {
-        if(input==null)return onError;
         try {
-            return Pattern.matches(fpRegex, input) ? Double.parseDouble(input) : onError;
-        } catch (NumberFormatException e) {
-            return onError;
+        	return Double.parseDouble(input);
+        }
+        catch (final NumberFormatException e) {
+        	return onError;
         }
     }
 
     public static byte GetByte(String input, byte onError) {
-        if(input==null)return onError;
-        // not fully sure how to catch a byte with an expression, so checking int instead
-        try {
-            return Pattern.matches(IntPattern, input) ? Byte.parseByte(input) : onError;
-        } catch (NumberFormatException e) {
-            return onError;
-        }
+    	try {
+    		return Byte.parseByte(input);
+    	}
+    	catch (final NumberFormatException e) {
+    		return onError;
+    	}
     }
-
     
     public static BigInteger GetBigInt(String str, long defaultNum) {
-        if(str==null){
+        if (str == null) {
             return new BigInteger(String.valueOf(defaultNum));
         }
-        try{
+        try {
             return new BigInteger(str);
-        }catch(Exception e){
+        } catch (final Exception e) {
             return new BigInteger(String.valueOf(defaultNum));
         }
     }

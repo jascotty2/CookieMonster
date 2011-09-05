@@ -17,7 +17,7 @@ public class CMBlockListener extends BlockListener {
                 event.setCancelled(true);
             } else {
                 CookieMonster.getRewardHandler().GivePlayerMobSpawnerCoinReward(event.getPlayer());
-                ItemStack newDrops[] = CookieMonster.getRewardHandler().getMSDropReward();
+                final ItemStack[] newDrops = CookieMonster.getRewardHandler().getMSDropReward();
                 if (newDrops != null) {
                     for (ItemStack i : newDrops) {
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), i);

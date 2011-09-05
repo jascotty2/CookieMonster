@@ -54,7 +54,7 @@ public class CMRegions {
             return false;
         }
 
-        String id = args[2];
+        final String id = args[2];
 
         if (!Region.isValidId(id)) {
             pl.sendMessage("Invalid region ID specified!");
@@ -68,20 +68,20 @@ public class CMRegions {
 
         // Detect the type of region from WorldEdit
         if (sel instanceof Polygonal2DSelection) {
-            Polygonal2DSelection polySel = (Polygonal2DSelection) sel;
-            int minY = polySel.getNativeMinimumPoint().getBlockY();
-            int maxY = polySel.getNativeMaximumPoint().getBlockY();
+            final Polygonal2DSelection polySel = (Polygonal2DSelection) sel;
+            final int minY = polySel.getNativeMinimumPoint().getBlockY();
+            final int maxY = polySel.getNativeMaximumPoint().getBlockY();
             region = new PolygonalRegion(id, polySel.getNativePoints(), minY, maxY);
         } else if (sel instanceof CuboidSelection) {
-            BlockVector min = sel.getNativeMinimumPoint().toBlockVector();
-            BlockVector max = sel.getNativeMaximumPoint().toBlockVector();
+            final BlockVector min = sel.getNativeMinimumPoint().toBlockVector();
+            final BlockVector max = sel.getNativeMaximumPoint().toBlockVector();
             region = new CuboidRegion(id, min, max);
         } else {
             pl.sendMessage(ChatColor.RED + "The type of region selected in WorldEdit is unsupported!");
             return false;
         }
 
-        RegionManager mgr = globalRegionManager.get(sel.getWorld());
+        final RegionManager mgr = globalRegionManager.get(sel.getWorld());
         mgr.addRegion(region);
 
         try {
@@ -98,22 +98,22 @@ public class CMRegions {
             sender.sendMessage("Error parsing command: incorrect # of args");
             return;
         }
-        int listSize = 10;
+        final int listSize = 10;
 
-        int page = args.length == 3 ? CheckInput.GetInt(args[2], 0) - 1 : 0;
+        final int page = args.length == 3 ? CheckInput.GetInt(args[2], 0) - 1 : 0;
 
         if (sender instanceof Player) {
-            World world = ((Player) sender).getWorld();
+            final World world = ((Player) sender).getWorld();
 
-            RegionManager mgr = globalRegionManager.get(world);
-            Map<String, Region> regions = mgr.getRegions();
+            final RegionManager mgr = globalRegionManager.get(world);
+            final Map<String, Region> regions = mgr.getRegions();
 
-            int size = regions.size();
+            final int size = regions.size();
 
-            String[] regionIDList = regions.keySet().toArray(new String[0]);
+            final String[] regionIDList = regions.keySet().toArray(new String[0]);
             Arrays.sort(regionIDList);
 
-            int pages = (int) Math.ceil(size / (float) listSize);
+            final int pages = (int) Math.ceil(size / (float) listSize);
 
             sender.sendMessage(ChatColor.AQUA
                     + world.getName() + " Regions (page " + (page + 1) + " of " + pages + "):");
@@ -129,29 +129,29 @@ public class CMRegions {
             }
         } else {
 
-            Map<String, Map<String, Region>> regions = new TreeMap<String, Map<String, Region>>();
+            final Map<String, Map<String, Region>> regions = new TreeMap<String, Map<String, Region>>();
 
-            for (World w : sender.getServer().getWorlds()) {
-                RegionManager mgr = globalRegionManager.get(w);
+            for (final World w : sender.getServer().getWorlds()) {
+                final RegionManager mgr = globalRegionManager.get(w);
                 //regions.putAll(mgr.getRegions());
                 regions.put(w.getName(), mgr.getRegions());
             }
 
             int size = 0;//regions.size();
-            for (String w : regions.keySet()) {
+            for (final String w : regions.keySet()) {
                 size += regions.get(w).size();
             }
 
             int i = 0;
             String[] regionIDList = new String[size];
-            for (String w : regions.keySet()) {
-                for (String r : regions.get(w).keySet()) {
+            for (final String w : regions.keySet()) {
+                for (final String r : regions.get(w).keySet()) {
                     regionIDList[i++] = w + ":" + r;
                 }
             }
             Arrays.sort(regionIDList);
 
-            int pages = (int) Math.ceil(size / (float) listSize);
+            final int pages = (int) Math.ceil(size / (float) listSize);
 
             sender.sendMessage(ChatColor.AQUA
                     + "Server Regions (page " + (page + 1) + " of " + pages + "):");
@@ -189,7 +189,7 @@ public class CMRegions {
             }
             World world = null;
 
-            for (World w : sender.getServer().getWorlds()) {
+            for (final World w : sender.getServer().getWorlds()) {
                 if (w.getName().equalsIgnoreCase(worldname)) {
                     world = w;
                     break;
@@ -206,8 +206,8 @@ public class CMRegions {
     }
 
     private void remove(CommandSender sender, World world, String id) {
-        RegionManager mgr = globalRegionManager.get(world);
-        Region region = mgr.getRegion(id);
+        final RegionManager mgr = globalRegionManager.get(world);
+        final Region region = mgr.getRegion(id);
 
         if (region == null) {
             sender.sendMessage("Could not find a region by that ID.");

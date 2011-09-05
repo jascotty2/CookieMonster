@@ -24,22 +24,22 @@ public class CMConfig {
 	//public final static File configurationFile = new File("plugins" + File.pathSeparatorChar + "CookieMonster" + File.pathSeparatorChar + "config.yml");
 	//public static String Plugin_Directory;
 	//Creature Names (MUST be parallel to CreatureType.values())
-	public final static String CreatureNodes[] = {
+	public final static String[] CreatureNodes = {
 		"Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
 		"Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
 		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player"
 	};
 	//Monster Configuration
-	public MonsterDrops Monster_Drop[] = new MonsterDrops[CreatureNodes.length];
+	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
 	// settings
 	public long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
-	public boolean intOnly = false,
-			disableAnoymDrop = false,
-			replaceDrops = true,
-			alwaysReplaceDrops = true,
-			allowWolfHunt = true,
-			disableExpensiveKill = true,
-			regionsDisable = true;
+	public boolean intOnly = false;
+	public boolean disableAnoymDrop = false;
+	public boolean replaceDrops = true;
+	public boolean alwaysReplaceDrops = true;
+	public boolean allowWolfHunt = true;
+	public boolean disableExpensiveKill = true;
+	public boolean regionsDisable = true;
 	protected ArrayList<String> disabledWorlds = new ArrayList<String>();
 	// messages
 	public static HashMap<String, String> messages = new HashMap<String, String>();

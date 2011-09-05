@@ -48,7 +48,7 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
     public void load() throws IOException {
         config.load();
         
-        Map<String, ConfigurationNode> regionData = config.getNodes("regions");
+        final Map<String, ConfigurationNode> regionData = config.getNodes("regions");
         
         // No regions are even configured
         if (regionData == null) {
@@ -56,14 +56,14 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
             return;
         }
 
-        Map<String,Region> regs = new HashMap<String,Region>();
-        Map<Region,String> parentSets = new LinkedHashMap<Region, String>();
+        final Map<String,Region> regs = new HashMap<String,Region>();
+        final Map<Region,String> parentSets = new LinkedHashMap<Region, String>();
         
-        for (Map.Entry<String, ConfigurationNode> entry : regionData.entrySet()) {
-            String id = entry.getKey().toLowerCase().replace(".", "");
-            ConfigurationNode node = entry.getValue();
+        for (final Map.Entry<String, ConfigurationNode> entry : regionData.entrySet()) {
+            final String id = entry.getKey().toLowerCase().replace(".", "");
+            final ConfigurationNode node = entry.getValue();
             
-            String type = node.getString("type");
+            final String type = node.getString("type");
             Region region;
             
             try {
@@ -71,15 +71,15 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
                     //logger.warning("Undefined region type for region '" + id + '"');
                     continue;
                 } else if (type.equals("cuboid")) {
-                    Vector pt1 = checkNonNull(node.getVector("min"));
-                    Vector pt2 = checkNonNull(node.getVector("max"));
-                    BlockVector min = Vector.getMinimum(pt1, pt2).toBlockVector();
-                    BlockVector max = Vector.getMaximum(pt1, pt2).toBlockVector();
+                    final Vector pt1 = checkNonNull(node.getVector("min"));
+                    final Vector pt2 = checkNonNull(node.getVector("max"));
+                    final BlockVector min = Vector.getMinimum(pt1, pt2).toBlockVector();
+                    final BlockVector max = Vector.getMaximum(pt1, pt2).toBlockVector();
                     region = new CuboidRegion(id, min, max);
                 } else if (type.equals("poly2d")) {
-                    Integer minY = checkNonNull(node.getInt("min-y"));
-                    Integer maxY = checkNonNull(node.getInt("max-y"));
-                    List<BlockVector2D> points = node.getBlockVector2dList("points", null);
+                    final Integer minY = checkNonNull(node.getInt("min-y"));
+                    final Integer maxY = checkNonNull(node.getInt("max-y"));
+                    final List<BlockVector2D> points = node.getBlockVector2dList("points", null);
                     region = new PolygonalRegion(id, points, minY, maxY);
                 } else if (type.equals("global")) {
                     region = new GlobalRegion(id);
@@ -88,11 +88,11 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
                     continue;
                 }
                 
-                Integer priority = checkNonNull(node.getInt("priority"));
+                final Integer priority = checkNonNull(node.getInt("priority"));
                 region.setPriority(priority);
                 regs.put(id, region);
                 
-                String parentId = node.getString("parent");
+                final String parentId = node.getString("parent");
                 if (parentId != null) {
                     parentSets.put(region, parentId);
                 }
@@ -102,8 +102,8 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
         }
         
         // Relink parents
-        for (Map.Entry<Region, String> entry : parentSets.entrySet()) {
-            Region parent = regs.get(entry.getValue());
+        for (final Map.Entry<Region, String> entry : parentSets.entrySet()) {
+            final Region parent = regs.get(entry.getValue());
             if (parent != null) {
                 try {
                     entry.getKey().setParent(parent);
@@ -129,24 +129,24 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
     public void save() throws IOException {
         config.clear();
         
-        for (Map.Entry<String, Region> entry : regions.entrySet()) {
-            Region region = entry.getValue();
-            ConfigurationNode node = config.addNode("regions." + entry.getKey());
+        for (final Map.Entry<String, Region> entry : regions.entrySet()) {
+            final Region region = entry.getValue();
+            final ConfigurationNode node = config.addNode("regions." + entry.getKey());
             
             if (region instanceof CuboidRegion) {
-                CuboidRegion cuboid = (CuboidRegion) region;
+                final CuboidRegion cuboid = (CuboidRegion) region;
                 node.setProperty("type", "cuboid");
                 node.setProperty("min", cuboid.getMinimumPoint());
                 node.setProperty("max", cuboid.getMaximumPoint());
             } else if (region instanceof PolygonalRegion) {
-                PolygonalRegion poly = (PolygonalRegion) region;
+                final PolygonalRegion poly = (PolygonalRegion) region;
                 node.setProperty("type", "poly2d");
                 node.setProperty("min-y", poly.getMinimumPoint().getBlockY());
                 node.setProperty("max-y", poly.getMaximumPoint().getBlockY());
                 
-                List<Map<String, Object>> points = new ArrayList<Map<String,Object>>();
-                for (BlockVector2D point : poly.getPoints()) {
-                    Map<String, Object> data = new HashMap<String, Object>();
+                final List<Map<String, Object>> points = new ArrayList<Map<String,Object>>();
+                for (final BlockVector2D point : poly.getPoints()) {
+                    final Map<String, Object> data = new HashMap<String, Object>();
                     data.put("x", point.getBlockX());
                     data.put("z", point.getBlockZ());
                     points.add(data);
@@ -160,7 +160,7 @@ public class YAMLDatabase extends AbstractProtectionDatabase {
             }
 
             node.setProperty("priority", region.getPriority());
-            Region parent = region.getParent();
+            final Region parent = region.getParent();
             if (parent != null) {
                 node.setProperty("parent", parent.getId());
             }

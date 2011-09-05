@@ -44,8 +44,7 @@ public class ApplicableRegionSet implements Iterable<Region> {
      * @param applicable
      * @param globalRegion 
      */
-    public ApplicableRegionSet(Collection<Region> applicable,
-            Region globalRegion) {
+    public ApplicableRegionSet(Collection<Region> applicable, Region globalRegion) {
         this.applicable = applicable;
         this.globalRegion = globalRegion;
     }
@@ -61,8 +60,7 @@ public class ApplicableRegionSet implements Iterable<Region> {
      * @param hasCleared
      * @param region
      */
-    private void clearParents(Set<Region> needsClear,
-            Set<Region> hasCleared, Region region) {
+    private void clearParents(Set<Region> needsClear, Set<Region> hasCleared, Region region) {
         Region parent = region.getParent();
 
         while (parent != null) {
@@ -81,8 +79,7 @@ public class ApplicableRegionSet implements Iterable<Region> {
      * @param hasCleared
      * @param region
      */
-    private void clearParents(Map<Region, ?> needsClear,
-            Set<Region> hasCleared, Region region) {
+    private void clearParents(Map<Region, ?> needsClear, Set<Region> hasCleared, Region region) {
         Region parent = region.getParent();
 
         while (parent != null) {

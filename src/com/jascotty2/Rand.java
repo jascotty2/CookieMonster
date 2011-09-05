@@ -14,8 +14,7 @@ import java.util.Random;
  */
 public class Rand {
 
-    static Random rand = new Random();
-    public static char filenameChars[] = {};
+    static final Random rand = new Random();
     protected static boolean isRand = false;
 
     static String randFname() {
@@ -27,24 +26,14 @@ public class Rand {
     }
 
     static String randFname(int minlength, int maxlength) {
-        if (filenameChars.length == 0) {
-            // populate with alphanumerical chars
-            filenameChars = new char[62];
-            int n = 48;
-            for (int i = 0; i < 62; ++i) {
-                filenameChars[i] = (char) n++;
-                if (n == 58) {
-                    n = 65;
-                } else if (n == 91) {
-                    n = 97;
-                }
-            }
-        }
-        String ret = "";
+    	final char[] filenameChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+        final StringBuffer ret = new StringBuffer();
+        
         for (int i = RandomInt(minlength, maxlength); i > 0; --i) {
-            ret += filenameChars[RandomInt(0, filenameChars.length - 1)];
+            ret.append(filenameChars[RandomInt(0, filenameChars.length - 1)]);
         }
-        return ret;
+        
+        return ret.toString();
     }
 
     public static int RandomInt(int min, int max) {
