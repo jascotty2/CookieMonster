@@ -18,9 +18,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MonsterDrops {
 
-    private CoinReward reward = new CoinReward(); // double reward.max, reward.min;
-    private HashMap<Integer, CoinReward> itemRewards = new HashMap<Integer, CoinReward>();
-    private ArrayList<Drop> drops = new ArrayList<Drop>();
+    private final CoinReward reward = new CoinReward(); // double reward.max, reward.min;
+    private final HashMap<Integer, CoinReward> itemRewards = new HashMap<Integer, CoinReward>();
+    private final ArrayList<Drop> drops = new ArrayList<Drop>();
     public boolean useCustomDrops = false;
 
     public boolean setReward(String str) {
@@ -116,7 +116,7 @@ public class MonsterDrops {
         if (!useCustomDrops) {
             return null;
         }
-        ArrayList<ItemStack> droppings = new ArrayList<ItemStack>();
+        final ArrayList<ItemStack> droppings = new ArrayList<ItemStack>();
         for (Drop d : drops) {
             if (Rand.RandomBoolean(d.probability / 100) && d.amount > 0) {
                 int num = Rand.RandomInt(1, d.amount < 1 ? 1 : d.amount);
@@ -132,10 +132,6 @@ public class MonsterDrops {
 
         public CoinReward() {
             max = min = 0;
-        }
-
-        public CoinReward(String str) {
-            setReward(str);
         }
 
         public boolean setReward(String str) {
