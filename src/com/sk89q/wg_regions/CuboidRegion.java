@@ -220,8 +220,8 @@ public class CuboidRegion extends Region {
                 boolean checkNextPoint = false;
                 final BlockVector2D currPoint = points.get(i2);
                 final BlockVector2D nextPoint = (i2 == points.size() - 1 ? points.get(0) : points.get(i2 + 1));
-                final int currX = currPoint.getBlockX();
-                final int currZ = currPoint.getBlockZ();
+                int currX = currPoint.getBlockX();
+                int currZ = currPoint.getBlockZ();
                 while (!checkNextPoint) {
                     for(i3 = min.getBlockY(); i3 <= max.getBlockY(); i3++) {
                         if (region.contains(new Vector(currX, i3, currZ))) {

@@ -127,7 +127,7 @@ public class ConfigurationNode {
         }
         
         final String[] parts = path.split("\\.");
-        final Map<String, Object> node = root;
+        Map<String, Object> node = root;
         
         for (int i = 0; i < parts.length; i++) {
             Object o = node.get(parts[i]);
@@ -493,7 +493,7 @@ public class ConfigurationNode {
 
         final List<Double> list = new ArrayList<Double>();
         for (final Object o : raw) {
-            fianl Double i = castDouble(o);
+            final Double i = castDouble(o);
             if (i != null) {
                 list.add(i);
             }

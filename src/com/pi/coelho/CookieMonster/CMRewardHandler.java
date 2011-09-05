@@ -48,9 +48,11 @@ public class CMRewardHandler {
 		return c >= 0 ? canAffordKill(p, c) : false;
 	}
 
+	/*
 	private boolean hasPenalty(Player p, int c) {
 		return CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()) < 0;
 	}
+	*/
 
 	public boolean canAffordKill(Player p, Entity e) {
 		final int c = CMConfig.creatureIndex(e);

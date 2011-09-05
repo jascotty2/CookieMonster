@@ -116,7 +116,7 @@ public class MonsterDrops {
         if (!useCustomDrops) {
             return null;
         }
-        ArrayList<ItemStack> droppings = new ArrayList<ItemStack>();
+        final ArrayList<ItemStack> droppings = new ArrayList<ItemStack>();
         for (Drop d : drops) {
             if (Rand.RandomBoolean(d.probability / 100) && d.amount > 0) {
                 int num = Rand.RandomInt(1, d.amount < 1 ? 1 : d.amount);
@@ -132,10 +132,6 @@ public class MonsterDrops {
 
         public CoinReward() {
             max = min = 0;
-        }
-
-        public CoinReward(String str) {
-            setReward(str);
         }
 
         public boolean setReward(String str) {
