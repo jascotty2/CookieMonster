@@ -8,8 +8,11 @@ package com.jascotty2.item;
 
 import com.jascotty2.CheckInput;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.inventory.ItemStack;
 
 public class Item {
@@ -207,8 +210,8 @@ public class Item {
         if (search == null) {
             return null;
         }
-        Item searchitem = new Item(search);
-        for (Item i : items.values()) {
+        final Item searchitem = new Item(search);
+        for (final Item i : items.values()) {
             //if(i.equals(search)) return i;
             if (i.equals(searchitem)) {
                 return i;
@@ -223,7 +226,7 @@ public class Item {
     }
 
     public static Item findItem(int id, byte sub) {
-        for (Item i : items.values()) {
+        for (final Item i : items.values()) {
             if (i.ID() == id && i.Data() == sub) {
                 return i;
             }
@@ -242,7 +245,7 @@ public class Item {
             return items.get(search.replace(":", "") + ":0");
         } else if (search.contains(":")) {
             // run a search for both parts (faster than .equals for string)
-            Item isearch = findItem(search.substring(0, search.indexOf(":")));
+            final Item isearch = findItem(search.substring(0, search.indexOf(":")));
             //System.out.println("found: " + (isearch==null?"null" : isearch) + "   " + (isearch != null && isearch.IsTool()));
             if (isearch != null) {
                 if (isearch.IsTool()) {
@@ -252,7 +255,7 @@ public class Item {
                     int id = isearch.ID();
                     // now check second part
                     if (CheckInput.IsByte(search.substring(search.indexOf(":") + 1))) {
-                        byte dat = CheckInput.GetByte(search.substring(search.indexOf(":") + 1), (byte) 0);
+                        final byte dat = CheckInput.GetByte(search.substring(search.indexOf(":") + 1), (byte) 0);
                         for (Item i : items.values()) {
                             if (i.ID() == id && i.Data() == dat) {
                                 return i;
@@ -260,40 +263,55 @@ public class Item {
                         }
                     }
                     search = search.substring(search.indexOf(":") + 1);
-                    for (Item i : items.values()) {
+                    for (final Item i : items.values()) {
                         if (i.ID() == id && i.HasSubAlias(search)) {
                             return i;
                         }
                     }
                 }
             }
-        } else {
-            //Item searchitem = new Item(search);
-            // if no imediate result: check plurality
-            for (String ss : new String[]{
-                        search,
-                        (search.endsWith("s") ? search.substring(0, search.length() - 1) : null),
-                        (search.endsWith("es") ? search.substring(0, search.length() - 2) : null)}) {
-                if (ss == null) {
-                    break;
-                }
-                //System.out.println("searching " + ss);
-                for (Item i : items.values()) {
-                    //if (i.equals(searchitem)) {
-                    if (i.name.equalsIgnoreCase(ss)) {
-                        return i;
-                    } else {
-                        for (String suba : i.itemAliases) {
-                            if (suba.equalsIgnoreCase(ss)) {
-                                return i;
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-        return null;
+        } 
+    	Item i = findItemSearch(search, items.values());
+    	if (i != null) return i;
+    	if (search.endsWith("s")) i = findItemSearch(search.substring(0, search.length() - 1), items.values());
+    	if (i != null) return i;
+    	if (search.endsWith("es")) return findItemSearch(search.substring(0, search.length() - 2), items.values());
+    	return null;
+    }
+    
+    private static Item[] findItemsSearch(final String search, final Collection<Item> items)
+    {
+    	ArrayList<Item> is = new ArrayList<Item>();
+    	if (search != null) {
+    		for (final Item i : items) {
+    			if (i.name.equalsIgnoreCase(search)) {
+    				is.add(i);
+    			}
+    			for (final String suba : i.itemAliases) {
+    				if (suba.equalsIgnoreCase(search)) {
+    					is.add(i);
+    				}
+    			}
+    		}
+    	}
+    	return is.toArray(new Item[0]);
+    }
+    
+    private static Item findItemSearch(final String search, final Collection<Item> items)
+    {
+    	if (search != null) {
+    		for (final Item i : items) {
+    			if (i.name.equalsIgnoreCase(search)) {
+    				return i;
+    			}
+    			for (final String suba : i.itemAliases) {
+    				if (suba.equalsIgnoreCase(search)) {
+    					return i;
+    				}
+    			}
+    		}
+    	}
+    	return null;
     }
 
     public static Item[] findItems(String search) {
@@ -307,30 +325,8 @@ public class Item {
         } else if (search.contains(":")) {
             return new Item[]{findItem(search)};
         }
-        ArrayList<Item> found = new ArrayList<Item>();
-        search = search.toLowerCase();
-        // run a name search
-        for (String ss : new String[]{
-                    search,
-                    (search.endsWith("s") ? search.substring(0, search.length() - 1) : null),
-                    (search.endsWith("es") ? search.substring(0, search.length() - 2) : null)}) {
-            if (ss == null) {
-                break;
-            }
-            for (Item i : items.values()) {
-                if (i.name.toLowerCase().contains(search) && !found.contains(i)) {
-                    found.add(i);
-                } else {
-                    for (String suba : i.itemAliases) {
-                        if (suba.contains(search) && !found.contains(i)) {
-                            found.add(i);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return found.toArray(new Item[0]);
+        
+        return findItemsSearch(search.toLowerCase(), items.values());
     }
 
     public boolean equals(Item i) {
@@ -347,7 +343,7 @@ public class Item {
         s = s.toLowerCase().trim();
         if (s.contains(":")) {
             // find base id
-            Item first = findItem(s.substring(0, s.indexOf(":")));
+            final Item first = findItem(s.substring(0, s.indexOf(":")));
             // if exists & id matched this one:
             if (first != null && first.ID() == itemId) {
                 // check if second part is a number or alias
@@ -374,7 +370,9 @@ public class Item {
         if (col == null) {
             return false;
         }
+        
         col = col.toLowerCase().trim();
+        
         /*
         #       &0 is black
         #       &1 is dark blue
@@ -393,42 +391,47 @@ public class Item {
         #       &e is yellow
         #       &f is white
          */
-        if (col.equalsIgnoreCase("black")) {
-            color = "\u00A70"; //String.format("\u00A7%x", 0x0);// 
-        } else if (col.equals("blue") || col.equals("dark blue")) {
-            color = "\u00A71"; // String.format("\u00A7%x", 0x1);// 
-        } else if (col.equals("green") || col.equals("dark green")) {
-            color = "\u00A72"; // String.format("\u00A7%x", 0x2);// 
-        } else if (col.equals("sky blue") || col.equals("dark sky blue")) {
-            color = "\u00A73"; // String.format("\u00A7%x", 0x3);// 
-        } else if (col.equals("red")) {
-            color = "\u00A74"; // String.format("\u00A7%x", 0x4);// 
-        } else if (col.equals("magenta") || col.equals("purple")) {
-            color = "\u00A75"; // String.format("\u00A7%x", 0x5);// 
-        } else if (col.equals("gold") || col.equals("amber") || col.equals("dark yellow")) {
-            color = "\u00A76"; // String.format("\u00A7%x", 0x6);// 
-        } else if (col.equals("light gray") || col.equals("light grey")) {
-            color = "\u00A77"; // String.format("\u00A7%x", 0x7);// 
-        } else if (col.equals("dark gray") || col.equals("dark grey") || col.equals("gray") || col.equals("grey")) {
-            color = "\u00A78"; // String.format("\u00A7%x", 0x8);// 
-        } else if (col.equals("medium blue")) {
-            color = "\u00A79"; // String.format("\u00A7%x", 0x9);// 
-        } else if (col.equals("light green") || col.equals("lime") || col.equals("lime green")) {
-            color = "\u00A7a"; // String.format("\u00A7%x", 0xA);// 
-        } else if (col.equals("cyan") || col.equals("light blue")) {
-            color = "\u00A7b"; // String.format("\u00A7%x", 0xB);// 
-        } else if (col.equals("orange") || col.equals("orange-red") || col.equals("red-orange")) {
-            color = "\u00A7c"; // String.format("\u00A7%x", 0xC);// 
-        } else if (col.equals("pink") || col.equals("light red")) {
-            color = "\u00A7d"; // String.format("\u00A7%x", 0xD);// 
-        } else if (col.equals("yellow")) {
-            color = "\u00A7e"; // String.format("\u00A7%x", 0xE);// 
-        } else if (col.equals("white")) {
-            color = "\u00A7f"; //String.format("\u00A7%x", 0xF);//
-        } else {
-            return false;
+        
+        final ConcurrentHashMap<String, String> colors = new ConcurrentHashMap<String, String>();
+        colors.put("black", "\u00A70");
+        colors.put("blue", "\u00A71");
+        colors.put("dark blue", "\u00A71");
+        colors.put("green", "\u00A72");
+        colors.put("dark green", "\u00A72");
+        colors.put("sky blue", "\u00A73");
+        colors.put("dark sky blue", "\u00A73");
+        colors.put("red", "\u00A74");
+        colors.put("magenta", "\u00A75");
+        colors.put("purple", "\u00A75");
+        colors.put("gold", "\u00A76");
+        colors.put("amber", "\u00A76");
+        colors.put("dark yellow", "\u00A76");
+        colors.put("light gray", "\u00A77");
+        colors.put("light grey", "\u00A77");
+        colors.put("dark gray", "\u00A78");
+        colors.put("dark grey", "\u00A78");
+        colors.put("gray", "\u00A78");
+        colors.put("grey", "\u00A78");
+        colors.put("medium blue", "\u00A79");
+        colors.put("light green", "\u00A7a");
+        colors.put("lime", "\u00A7a");
+        colors.put("lime green", "\u00A7a");
+        colors.put("cyan", "\u00A7b");
+        colors.put("light blue", "\u00A7b");
+        colors.put("orange", "\u00A7c");
+        colors.put("orange-red", "\u00A7c");
+        colors.put("red-orange", "\u00A7c");
+        colors.put("pink", "\u00A7d");
+        colors.put("light red", "\u00A7d");
+        colors.put("yellow", "\u00A7e");
+        colors.put("white", "\u00A7f");
+        
+        if (colors.containsKey(col))
+        {
+        	color = colors.get(col);
+        	return true;
         }
-        return true;
+        return false;
     }
 
     @Override
