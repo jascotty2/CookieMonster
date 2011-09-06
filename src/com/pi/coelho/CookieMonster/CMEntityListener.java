@@ -16,7 +16,6 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class CMEntityListener extends EntityListener {
@@ -47,11 +46,6 @@ public class CMEntityListener extends EntityListener {
 			monsterDamaged(entEvent.getEntity(), null, true);
 		}
 	}
-//
-//	@Override
-//	public void onProjectileHit(ProjectileHitEvent event) {
-//		System.out.println(event.getEntity());
-//	}
 
 	void entDamage(Entity monster, Entity damager, EntityDamageEvent entEvent) {
 		if (monster instanceof LivingEntity) {

@@ -82,7 +82,8 @@ public class CookieMonster extends JavaPlugin {
         blockListener = new CMBlockListener();
         rewardHandler = new CMRewardHandler();
 
-        if (config.campTrackingEnabled) {
+        if (config.campTrackingEnabled
+				|| config.globalCampTrackingEnabled) {
             killTracker = new CMCampTracker();
         }
 
@@ -125,9 +126,11 @@ public class CookieMonster extends JavaPlugin {
                 if (!config.load()) {
                     sender.sendMessage("Reload Failed!");
                 } else {
-                    if (config.campTrackingEnabled && killTracker == null) {
+                    if ((config.campTrackingEnabled || config.globalCampTrackingEnabled)
+						&& killTracker == null) {
                         killTracker = new CMCampTracker();
-                    } else if (!config.campTrackingEnabled && killTracker != null) {
+                    } else if ((config.campTrackingEnabled || config.globalCampTrackingEnabled)
+						&& killTracker != null) {
                         //todo:save
                         killTracker = null;
                     }

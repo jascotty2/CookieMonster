@@ -133,6 +133,9 @@ public class CheckInput {
     
     public static BigInteger GetBigInt_TimeSpanInSec(String str, char defaultUnit) throws Exception {
         BigInteger ret = new BigInteger("0");
+		if(str == null){
+			return ret;
+		}
         int charPos = 0;
         for (; charPos < str.length() ; ++charPos) {
             if (!Character.isDigit(str.charAt(charPos))) {

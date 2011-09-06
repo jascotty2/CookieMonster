@@ -92,9 +92,11 @@ public class CMConfig {
 
 		messages.put("norewardMonster", "&c there is no reward for killing a &f<monster>");
 		messages.put("norewardCreature", "");
+		messages.put("norewardPlayer", "");
 
 		messages.put("itemnorewardMonster", "&c there is no reward for killing a &f<monster>&c with a &f<item>");
 		messages.put("itemnorewardCreature", "");
+		messages.put("itemnorewardPlayer", "");
 
 		for (int i = 0; i < Monster_Drop.length; ++i) {
 			Monster_Drop[i].useCustomDrops = false;
@@ -119,7 +121,7 @@ public class CMConfig {
 					}
 				}
 				String t = n.getString("playerRewardWait");
-				if (n != null) {
+				if (t != null) {
 					playerRewardWait = CheckInput.GetBigInt_TimeSpanInSec(t, 'm').longValue() * 1000;
 				}
 				playerReverseProtect = n.getBoolean("playerReverseProtect", playerReverseProtect);
@@ -135,7 +137,7 @@ public class CMConfig {
 				deltaX = n.getInt("deltaX", deltaX);
 				campKills = n.getInt("campKills", campKills);
 				String t = n.getString("timeout");
-				if (n != null) {
+				if (t != null) {
 					campTrackingTimeout = CheckInput.GetBigInt_TimeSpanInSec(t, 'm').longValue() * 1000;
 				}
 			}

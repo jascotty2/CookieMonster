@@ -9,9 +9,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class CMRewardHandler {
 
-	public CMRewardHandler() {
-	}
-
 	public void GivePlayerCoinReward(Player p, Entity e) {
 		int c = CMConfig.creatureIndex(e, p);
 
