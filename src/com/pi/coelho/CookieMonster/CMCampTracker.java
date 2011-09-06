@@ -17,7 +17,7 @@ import org.bukkit.Location;
  */
 public class CMCampTracker {
 
-    HashMap<String, HashMap3D<KillGridSquare>> kills = new HashMap<String, HashMap3D<KillGridSquare>>();
+    final HashMap<String, HashMap3D<KillGridSquare>> kills = new HashMap<String, HashMap3D<KillGridSquare>>();
 
     public CMCampTracker() {
         load();
@@ -170,7 +170,7 @@ public class CMCampTracker {
 
 class KillGridSquare {
 
-    ArrayList<KillRecord> kills = new ArrayList<KillRecord>();
+    final ArrayList<KillRecord> kills = new ArrayList<KillRecord>();
 
     public int numKills() {
         return kills.size();

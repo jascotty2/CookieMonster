@@ -36,26 +36,28 @@ public class CMRewardHandler {
 	}
 
 	public boolean canAffordMobSpawner(Player p) {
-		int c = CMConfig.creatureIndex("MobSpawner");
+		final int c = CMConfig.creatureIndex("MobSpawner");
 		return canAffordKill(p, c);
 	}
 
 	public boolean hasPenalty(Player p, Entity e) {
-		int c = CMConfig.creatureIndex(e);
+		final int c = CMConfig.creatureIndex(e);
 		return c >= 0 ? canAffordKill(p, c) : false;
 	}
 
+	/*
 	private boolean hasPenalty(Player p, int c) {
 		return CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId()) < 0;
 	}
+	*/
 
 	public boolean canAffordKill(Player p, Entity e) {
-		int c = CMConfig.creatureIndex(e);
+		final int c = CMConfig.creatureIndex(e);
 
 		if (c >= 0 && e instanceof Player) {
 			//System.out.println("player killed");
-			double min = CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId());
-			long l = CookieMonster.playerListener.playerLifeLength(e);
+			final double min = CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId());
+			final long l = CookieMonster.playerListener.playerLifeLength(e);
 			if (CookieMonster.config.playerReverseProtect
 					&& (l < 0 || l < CookieMonster.config.playerRewardWait)) {
 				// then there is a penalty, not reward, for killing the player
@@ -71,7 +73,7 @@ public class CMRewardHandler {
 	}
 
 	private boolean canAffordKill(Player p, int c) {
-		double min = CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId());
+		final double min = CookieMonster.config.Monster_Drop[c].getMinCoin(p.getItemInHand().getTypeId());
 		if (c >= 0 && min < 0
 				&& !CMEcon.canAfford(p, -min)) {
 			playerNotAfford(p, c);
@@ -98,7 +100,7 @@ public class CMRewardHandler {
 	}
 
 	public double MinMobSpawnerCoinReward(int itemId) {
-		int c = CMConfig.creatureIndex("MobSpawner");
+		final int c = CMConfig.creatureIndex("MobSpawner");
 		if (c >= 0) {
 			return CookieMonster.config.Monster_Drop[c].getMinCoin(itemId);
 		}
@@ -131,7 +133,7 @@ public class CMRewardHandler {
 			if (CookieMonster.config.Monster_Drop[m].itemHasReward(itemId)) {
 				pre = "item";
 			}
-			Material i = Material.getMaterial(itemId);
+			final Material i = Material.getMaterial(itemId);
 			if (amount != 0) {
 				if (amount > 0.0) {
 					if (CMConfig.isPlayer(m)) {

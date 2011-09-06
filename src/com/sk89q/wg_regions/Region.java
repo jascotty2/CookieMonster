@@ -204,7 +204,7 @@ public abstract class Region implements Comparable<Region> {
             return false;
         }
         
-        Region other = (Region) obj;
+        final Region other = (Region) obj;
         return other.getId().equals(getId());
     }
     

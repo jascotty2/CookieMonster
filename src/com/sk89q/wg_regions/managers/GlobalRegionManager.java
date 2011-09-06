@@ -90,7 +90,7 @@ public class GlobalRegionManager {
      * @param name
      */
     public void unload(String name) {
-        RegionManager manager = managers.get(name);
+        final RegionManager manager = managers.get(name);
 
         if (manager != null) {
             managers.remove(name);
@@ -113,8 +113,8 @@ public class GlobalRegionManager {
      * @return 
      */
     public RegionManager load(World world) {
-        String name = world.getName();
-        File file = getPath(name);
+        final String name = world.getName();
+        final File file = getPath(name);
 
         try {
             // Create a manager
@@ -145,7 +145,7 @@ public class GlobalRegionManager {
      */
     public void preload() {
         // Load regions
-        for (World world : bukkitServer.getWorlds()) {
+        for (final World world : bukkitServer.getWorlds()) {
             load(world);
         }
     }
@@ -155,8 +155,8 @@ public class GlobalRegionManager {
      * have changed.
      */
     public void reloadChanged() {
-        for (String name : managers.keySet()) {
-            File file = getPath(name);
+        for (final String name : managers.keySet()) {
+            final File file = getPath(name);
 
             Long oldDate = lastModified.get(name);
 
@@ -166,7 +166,7 @@ public class GlobalRegionManager {
 
             try {
                 if (file.lastModified() > oldDate) {
-                    World world = bukkitServer.getWorld(name);
+                    final World world = bukkitServer.getWorld(name);
 
                     if (world != null) {
                         load(world);
@@ -185,19 +185,15 @@ public class GlobalRegionManager {
      */
     public RegionManager get(World world) {
         RegionManager manager = managers.get(world.getName());
-
         if (manager == null) {
             manager = load(world);
         }
-
         return manager;
     }
 
     public boolean hasRegion(Location loc) {
-        World world = loc.getWorld();
-
-        RegionManager mgr = get(world);
-
+        final World world = loc.getWorld();
+        final RegionManager mgr = get(world);
         return mgr != null && mgr.getApplicableRegions(loc).size() > 0;
     }
 }

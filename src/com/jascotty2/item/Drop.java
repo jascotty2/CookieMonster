@@ -29,20 +29,16 @@ public class Drop {
 
     public static Drop fromStr(String str) {
         // syntax: itemID[:subData][@maxDrop]%Probability
-        if (!str.contains(",")
-                && Str.count(str, "%") == 1
-                && Str.count(str, ":") <= 1
-                && Str.count(str, "@") <= 1) {
-            int sdat = str.indexOf(":");
-            int samt = str.indexOf("@");
-            int sper = str.indexOf("%");
+        if (!str.contains(",") && Str.count(str, "%") == 1 && Str.count(str, ":") <= 1 && Str.count(str, "@") <= 1) {
+            final int sdat = str.indexOf(":");
+            final int samt = str.indexOf("@");
+            final int sper = str.indexOf("%");
             if (sdat <= samt && sdat < sper && samt < sper) {
-                Item src = Item.fromIDD(str.substring(0, samt > 0 ? samt : sper).trim());
+                final Item src = Item.fromIDD(str.substring(0, samt > 0 ? samt : sper).trim());
                 if (src != null) {
                     if (org.bukkit.Material.getMaterial(src.itemId) != null) {
-                        return new Drop(src,
-                                samt > 0 ? CheckInput.GetInt(str.substring(samt + 1, sper), 1) : 1,
-                                CheckInput.GetDouble(str.substring(sper + 1), 50));
+                        return new Drop(src, samt > 0 ? CheckInput.GetInt(str.substring(samt + 1, sper), 1) : 1, 
+                        		CheckInput.GetDouble(str.substring(sper + 1), 50));
                     } else {
                         return null;
                     }
