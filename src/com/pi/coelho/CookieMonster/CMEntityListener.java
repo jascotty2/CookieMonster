@@ -12,7 +12,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -39,9 +38,6 @@ public class CMEntityListener extends EntityListener {
 			}else{
 				entDamage(event.getEntity(), event.getDamager(), entEvent);
 			}
-		} else if (entEvent instanceof EntityDamageByProjectileEvent) {
-			EntityDamageByProjectileEvent event = (EntityDamageByProjectileEvent) entEvent;
-			entDamage(event.getEntity(), event.getDamager(), entEvent);
 		} else {
 			monsterDamaged(entEvent.getEntity(), null, true);
 		}

@@ -23,11 +23,12 @@ public class CMConfig {
 	public final static File configfile = new File(pluginFolder, "config.yml");
 	//public final static File configurationFile = new File("plugins" + File.pathSeparatorChar + "CookieMonster" + File.pathSeparatorChar + "config.yml");
 	//public static String Plugin_Directory;
-	//Creature Names (MUST be parallel to CreatureType.values())
+	//Creature Names
 	public final static String[] CreatureNodes = {
 		"Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
 		"Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
-		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player"
+		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player", 
+		"Enderman", "Silverfish", "Cave_Spider"
 	};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
@@ -249,6 +250,12 @@ public class CMConfig {
 			} else {
 				name = "Wild_Wolf";
 			}
+		} else if (le instanceof Enderman) {
+			return "Enderman";
+		} else if (le instanceof Silverfish) {
+			return "Silverfish";
+		} else if (le instanceof CaveSpider) {
+			return "Cave_Spider";
 		} else if (le instanceof Monster) {
 			return "Monster";
 		}
@@ -305,6 +312,12 @@ public class CMConfig {
 			}
 		} else if (le instanceof Player) {
 			return 19;
+		} else if (le instanceof Enderman) {
+			return 20;
+		} else if (le instanceof Silverfish) {
+			return 21;
+		} else if (le instanceof CaveSpider) {
+			return 22;
 		} else if (le instanceof Monster) {
 			return 5;
 		}
@@ -329,7 +342,8 @@ public class CMConfig {
 
 	public static boolean isMonster(int i) {
 		return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9
-				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17;
+				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17
+				|| i == 20 || i == 21 || i == 22;
 	}
 
 	public static boolean isPlayer(int i) {

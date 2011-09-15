@@ -7,7 +7,7 @@ settings:
     onlyKillDrop: false
     # if replaceDrop, then default drops are removed & substituted
     #   if false, custom drops are added to the existing drops
-    replaceDrops: true
+    replaceDrops: false
     # if onlyKillDrop: false, should custom drops always occur?
     alwaysReplaceDrops: true
     # if allow hunting with wolves
@@ -107,6 +107,15 @@ rewards:
         # this applies if you kill a wolf that is your own
         drops:
         coins: 
+    Enderman:
+        drops:
+        coins: 1-2
+    Silverfish:
+        drops:
+        coins: 1-2
+    Cave_Spider:
+        drops:
+        coins: 1-2
     MobSpawner:
         drops:
         coins: -4--5

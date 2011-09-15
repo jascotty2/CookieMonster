@@ -37,12 +37,15 @@ Commands:
 
 
 To-Do:
-? import itemsDB from bettershop to check against config (check if valid items entered as drops)
 permissions? (for rewards & maybe permission to kill without penalty?)
 penalties/rewards for killing players (even groups)
 
 
 Changelog:
+
+Version 1.6.4 - ?
+updated for mc 1.8
+
 
 Version 1.6.3 - 9/5/11
 fixed a nullpointer error if a config node is missing
