@@ -6,12 +6,13 @@
  */
 package com.pi.coelho.CookieMonster;
 
-import com.nijikokun.register_21.payment.Method;
-import com.nijikokun.register_21.payment.Methods;
+import com.nijikokun.register_1_3.payment.Method;
+import com.nijikokun.register_1_3.payment.Methods;
 import org.bukkit.entity.Player;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * @author jacob
@@ -20,22 +21,31 @@ public class CMEcon extends ServerListener {
 
 	protected static Method economyMethod = null;
 	protected static Methods _econMethods = new Methods();
+	CookieMonster plugin = null;
+	PluginManager pm;
+
+	public CMEcon(CookieMonster plugin) {
+		this.plugin = plugin;
+		pm = plugin.getServer().getPluginManager();
+	}
 
 	@Override
 	public void onPluginDisable(PluginDisableEvent event) {
 		// Check to see if the plugin thats being disabled is the one we are using
-		if (_econMethods != null && _econMethods.hasMethod() && _econMethods.checkDisabled(event.getPlugin())) {
+		if (_econMethods != null && Methods.hasMethod() && Methods.checkDisabled(event.getPlugin())) {
 			economyMethod = null;
+			Methods.reset();
 			CookieMonster.Log(" Economy Plugin was disabled.");
 		}
 	}
 
 	@Override
 	public void onPluginEnable(PluginEnableEvent event) {
-		if (!_econMethods.hasMethod()) {
-			if (_econMethods.setMethod(event.getPlugin())) {
-				economyMethod = _econMethods.getMethod();
-				CookieMonster.Log("Using " + economyMethod.getName() + " v" + economyMethod.getVersion() + " for economy");
+		if (!Methods.hasMethod()) {
+			if (Methods.setMethod(pm) && Methods.hasMethod()) {
+				economyMethod = Methods.getMethod();
+				CookieMonster.Log("Using " + economyMethod.getName()
+						+ " v" + economyMethod.getVersion() + " for economy");
 			}
 		}
 	}
@@ -43,14 +53,14 @@ public class CMEcon extends ServerListener {
 	public static boolean active() {
 		return economyMethod != null;
 	}
-	
-	public static boolean hasAccount(Player pl){
+
+	public static boolean hasAccount(Player pl) {
 		return pl != null && economyMethod != null && economyMethod.hasAccount(pl.getName());
 	}
 
-    public static boolean canAfford(Player pl, double amt) {
+	public static boolean canAfford(Player pl, double amt) {
 		return pl != null ? getBalance(pl.getName()) >= amt : false;
-    }
+	}
 
 	public static double getBalance(Player pl) {
 		return getBalance(pl.getName());

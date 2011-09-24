@@ -26,7 +26,7 @@ public class CookieMonster extends JavaPlugin {
     private static CMEntityListener entityListener = null;
 	protected static CMPlayerListener playerListener = new CMPlayerListener();
     private static CMRewardHandler rewardHandler = null;
-	private static CMEcon economyPluginListener = new CMEcon();
+	private static CMEcon economyPluginListener;
     protected static CMRegions regions = null;
     protected static CMCampTracker killTracker = null;
     private static WorldEditPlugin worldEdit = null;
@@ -81,6 +81,7 @@ public class CookieMonster extends JavaPlugin {
         entityListener = new CMEntityListener(getServer());
         blockListener = new CMBlockListener();
         rewardHandler = new CMRewardHandler();
+		economyPluginListener = new CMEcon(this);
 
         if (config.campTrackingEnabled
 				|| config.globalCampTrackingEnabled) {

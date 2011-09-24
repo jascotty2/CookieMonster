@@ -88,19 +88,25 @@ public class CMEntityListener extends EntityListener {
 
 	@Override
 	public void onEntityDeath(EntityDeathEvent event) {
+		if (!(event.getEntity() instanceof LivingEntity)){
+			return;
+		} 
+		MonsterAttack at = attacks.get(event.getEntity().getEntityId());
+		if(at != null && !at.handleKill){
+			return;
+		}
+
 		if (event.getEntity() instanceof Player) {
-			if (event.getEntity() instanceof LivingEntity
-					&& attacks.containsKey(event.getEntity().getEntityId())) {
-				if (attacks.get(event.getEntity().getEntityId()).attackTimeAgo()
-						<= CookieMonster.config.damageTimeThreshold) {
-					attacks.get(event.getEntity().getEntityId()).rewardKill(event);
+			if (at != null) {
+				if (at.attackTimeAgo() <= CookieMonster.config.damageTimeThreshold) {
+					at.rewardKill(event);
 				}
 				attacks.remove(event.getEntity().getEntityId());
 			}
 			return;
 		}
 		if (CookieMonster.config.disableAnoymDrop) {
-			if (!attacks.containsKey(event.getEntity().getEntityId())) {
+			if (at == null) {
 				event.getDrops().clear();
 			}
 		} else if (CookieMonster.config.alwaysReplaceDrops) {
@@ -112,11 +118,9 @@ public class CMEntityListener extends EntityListener {
 				event.getDrops().addAll(Arrays.asList(newDrops));
 			}
 		}
-		if (event.getEntity() instanceof LivingEntity
-				&& attacks.containsKey(event.getEntity().getEntityId())) {
-			if (attacks.get(event.getEntity().getEntityId()).attackTimeAgo()
-					<= CookieMonster.config.damageTimeThreshold) {
-				attacks.get(event.getEntity().getEntityId()).rewardKill(event);
+		if (at != null) {
+			if (at.attackTimeAgo() <= CookieMonster.config.damageTimeThreshold) {
+				at.rewardKill(event);
 			}
 			attacks.remove(event.getEntity().getEntityId());
 		} else if (CookieMonster.config.globalCampTrackingEnabled) {

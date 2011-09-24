@@ -1,6 +1,6 @@
-package com.nijikokun.register_21.payment.methods;
+package com.nijikokun.register_1_3.payment.methods;
 
-import com.nijikokun.register_21.payment.Method;
+import com.nijikokun.register_1_3.payment.Method;
 import cosine.boseconomy.BOSEconomy;
 import org.bukkit.plugin.Plugin;
 
@@ -26,10 +26,17 @@ public class BOSE7 implements Method {
     public String getVersion() {
         return "0.7.0";
     }
+    
+    public int fractionalDigits() {
+    	return this.BOSEconomy.getFractionalDigits();
+    }
 
     public String format(double amount) {
         String currency = this.BOSEconomy.getMoneyNamePlural();
-        if(amount == 1) currency = this.BOSEconomy.getMoneyName();
+
+        if(amount == 1) 
+            currency = this.BOSEconomy.getMoneyName();
+
         return amount + " " + currency;
     }
 
@@ -50,17 +57,23 @@ public class BOSE7 implements Method {
     }
 
     public MethodAccount getAccount(String name) {
-        if(!hasAccount(name)) return null;
+        if(!hasAccount(name)) 
+            return null;
+
         return new BOSEAccount(name, this.BOSEconomy);
     }
 
     public MethodBankAccount getBankAccount(String bank, String name) {
-        if(!hasBankAccount(bank, name)) return null;
+        if(!hasBankAccount(bank, name)) 
+            return null;
+
         return new BOSEBankAccount(bank, BOSEconomy);
     }
 
     public boolean isCompatible(Plugin plugin) {
-        return plugin.getDescription().getName().equalsIgnoreCase("boseconomy") && plugin instanceof BOSEconomy && !plugin.getDescription().getVersion().equals("0.6.2");
+        return plugin.getDescription().getName().equalsIgnoreCase("boseconomy") 
+            && plugin instanceof BOSEconomy
+           && !plugin.getDescription().getVersion().equals("0.6.2");
     }
 
     public void setPlugin(Plugin plugin) {
