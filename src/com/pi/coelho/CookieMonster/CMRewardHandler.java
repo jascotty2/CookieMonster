@@ -11,7 +11,7 @@ public class CMRewardHandler {
 
 	public void GivePlayerCoinReward(Player p, Entity e) {
 		int c = CMConfig.creatureIndex(e, p);
-
+		
 		if (c >= 0) {
 			if (e instanceof Player) {
 				long l = CookieMonster.playerListener.playerLifeLength(e);

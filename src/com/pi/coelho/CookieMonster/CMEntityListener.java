@@ -109,7 +109,9 @@ public class CMEntityListener extends EntityListener {
 			if (at == null) {
 				event.getDrops().clear();
 			}
-		} else if (CookieMonster.config.alwaysReplaceDrops) {
+		} else if (!(at != null
+				&& at.attackTimeAgo() <= CookieMonster.config.damageTimeThreshold)
+				&& CookieMonster.config.alwaysReplaceDrops) {
 			ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
 			if (newDrops != null) {
 				if (CookieMonster.config.replaceDrops) {

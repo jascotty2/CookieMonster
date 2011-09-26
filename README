@@ -43,6 +43,12 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.6.5 - 9/26/11
+fixed alwaysReplaceDrops sometimes being applied twice
+? fixed payment errors ?
+- not sure why last build wasn't working..
+
+
 Version 1.6.4 - 9/24/11
 updated for mc 1.8
 fixed custom drops occuring in disabled regions
