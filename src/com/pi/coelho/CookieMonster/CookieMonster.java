@@ -81,12 +81,13 @@ public class CookieMonster extends JavaPlugin {
         entityListener = new CMEntityListener(getServer());
         blockListener = new CMBlockListener();
         rewardHandler = new CMRewardHandler();
-		economyPluginListener = new CMEcon(this);
 
         if (config.campTrackingEnabled
 				|| config.globalCampTrackingEnabled) {
             killTracker = new CMCampTracker();
         }
+		
+		economyPluginListener = new CMEcon(this);		
 
         // Event Registration
         pm.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.High, this);

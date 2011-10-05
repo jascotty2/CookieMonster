@@ -27,6 +27,11 @@ public class CMEcon extends ServerListener {
 	public CMEcon(CookieMonster plugin) {
 		this.plugin = plugin;
 		pm = plugin.getServer().getPluginManager();
+        Methods.setMethod(pm);
+		
+        if ((economyMethod = Methods.getMethod()) != null)
+            CookieMonster.Log("Using " + economyMethod.getName()
+						+ " v" + economyMethod.getVersion() + " for economy");
 	}
 
 	@Override

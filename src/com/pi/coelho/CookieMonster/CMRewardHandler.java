@@ -27,6 +27,8 @@ public class CMRewardHandler {
 			} else {
 				GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId());
 			}
+		} else {
+			CookieMonster.Log(Level.WARNING, "Error rewarding player: unknown entity " + e);
 		}
 	}
 
@@ -114,6 +116,7 @@ public class CMRewardHandler {
 	private void GivePlayerCoinReward(Player p, int m, int itemId,
 			boolean reverseReward, Player victim) {
 		if (m < 0 || !CMEcon.hasAccount(p)) {
+			System.out.println(m + " " + CMEcon.hasAccount(p));
 			return;
 		}
 		try {

@@ -43,10 +43,12 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.6.6 - 10/4/11
+fixed pre-enabled econ plugin from disabling money rewards
+
+
 Version 1.6.5 - 9/26/11
 fixed alwaysReplaceDrops sometimes being applied twice
-? fixed payment errors ?
-- not sure why last build wasn't working..
 
 
 Version 1.6.4 - 9/24/11
