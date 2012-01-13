@@ -116,11 +116,31 @@ rewards:
     Cave_Spider:
         drops:
         coins: 1-2
+    Ender_Dragon:
+        drops:
+        coins: 100-500
+    Villager:
+        drops:
+        coins: 0
+    Blaze:
+        drops:
+        coins: 2-4
+    Mushroom_Cow:
+        drops:
+        coins: 0
+    Magma_Cube:
+        drops:
+        coins: 1-2
+    Snow_Golem:
+        drops:
+        coins: -1--2
     MobSpawner:
         drops:
         coins: -4--5
     Player:
         coins: 0
+        drops:
+
 
         
 messages:

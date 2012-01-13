@@ -33,9 +33,9 @@ public class CMEntityListener extends EntityListener {
 		}
 		if (entEvent instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
-			if(event.getDamager() instanceof Arrow){
-				entDamage(event.getEntity(), ((Arrow)event.getDamager()).getShooter(), entEvent);
-			}else{
+			if (event.getDamager() instanceof Arrow) {
+				entDamage(event.getEntity(), ((Arrow) event.getDamager()).getShooter(), entEvent);
+			} else {
 				entDamage(event.getEntity(), event.getDamager(), entEvent);
 			}
 		} else {
@@ -61,16 +61,6 @@ public class CMEntityListener extends EntityListener {
 			if (pl == null) {
 				monsterDamaged(monster, null, handleKill);
 			} else {
-				if (handleKill && CookieMonster.config.disableExpensiveKill) {
-					int c = CMConfig.creatureIndex(monster);
-					if (c >= 0 && !CookieMonster.getRewardHandler().canAffordKill(pl, monster)) {
-						entEvent.setCancelled(true);
-						if (damager instanceof Wolf) {
-							((CraftWolf) damager).setTarget(null);
-						}
-						return;
-					}
-				}
 				monsterDamaged(monster, pl, handleKill);
 			}
 		}
@@ -88,11 +78,11 @@ public class CMEntityListener extends EntityListener {
 
 	@Override
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (!(event.getEntity() instanceof LivingEntity)){
+		if (!(event.getEntity() instanceof LivingEntity)) {
 			return;
-		} 
+		}
 		MonsterAttack at = attacks.get(event.getEntity().getEntityId());
-		if(at != null && !at.handleKill){
+		if (at != null && !at.handleKill) {
 			return;
 		}
 

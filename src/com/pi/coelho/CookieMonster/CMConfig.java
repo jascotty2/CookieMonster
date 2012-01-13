@@ -28,8 +28,8 @@ public class CMConfig {
 		"Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
 		"Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
 		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player", 
-		"Enderman", "Silverfish", "Cave_Spider"
-	};
+		"Enderman", "Silverfish", "Cave_Spider", 
+		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem"};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
 	// settings
@@ -232,6 +232,8 @@ public class CMConfig {
 			name = "Sheep";
 		} else if (le instanceof Skeleton) {
 			name = "Skeleton";
+		} else if(le instanceof MagmaCube) {
+			return "Magma_Cube";
 		} else if (le instanceof Slime) {
 			name = "Slime";
 		} else if (le instanceof Spider) {
@@ -256,9 +258,20 @@ public class CMConfig {
 			return "Silverfish";
 		} else if (le instanceof CaveSpider) {
 			return "Cave_Spider";
+		} else if(le instanceof EnderDragon) {
+			return "Ender_Dragon";
+		} else if(le instanceof Villager) {
+			return "Villager";
+		} else if(le instanceof Blaze) {
+			return "Blaze";
+		} else if(le instanceof MushroomCow) {
+			return "Mushroom_Cow";
+		} else if(le instanceof Snowman) {
+			return "Snow_Golem";
 		} else if (le instanceof Monster) {
 			return "Monster";
 		}
+		
 		return name;
 	}
 
@@ -292,6 +305,8 @@ public class CMConfig {
 			return 8;
 		} else if (le instanceof Skeleton) {
 			return 9;
+		} else if(le instanceof MagmaCube) {
+			return 27;
 		} else if (le instanceof Slime) {
 			return 10;
 		} else if (le instanceof Spider) {
@@ -318,6 +333,16 @@ public class CMConfig {
 			return 21;
 		} else if (le instanceof CaveSpider) {
 			return 22;
+		} else if(le instanceof EnderDragon) {
+			return 23;
+		} else if(le instanceof Villager) {
+			return 24;
+		} else if(le instanceof Blaze) {
+			return 25;
+		} else if(le instanceof MushroomCow) {
+			return 26;
+		} else if(le instanceof Snowman) {
+			return 28;
 		} else if (le instanceof Monster) {
 			return 5;
 		}
@@ -337,15 +362,16 @@ public class CMConfig {
 	}
 
 	public static boolean isCreature(int i) {
-		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18;
+		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18 
+				|| i == 26 || i == 24 || i == 28;
 	}
 
 	public static boolean isMonster(int i) {
 		return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9
 				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17
-				|| i == 20 || i == 21 || i == 22;
+				|| i == 20 || i == 21 || i == 22 || i == 23 || i == 25 || i == 27;
 	}
-
+	
 	public static boolean isPlayer(int i) {
 		return i == 19;
 	}

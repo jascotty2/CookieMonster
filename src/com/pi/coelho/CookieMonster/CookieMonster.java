@@ -1,6 +1,7 @@
 package com.pi.coelho.CookieMonster;
 
 import com.jascotty2.util.Str;
+import com.pi.coelho.CookieMonster.protectcheck.*;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +24,9 @@ public class CookieMonster extends JavaPlugin {
     protected static CMConfig config = new CMConfig();
     private static Server server;
     private static CMBlockListener blockListener = null;
+	private static BlockProtectListener blockProtectListener = new BlockProtectListener();
     private static CMEntityListener entityListener = null;
+	private static EntityProtectListener entityProtectListener = new EntityProtectListener();
 	protected static CMPlayerListener playerListener = new CMPlayerListener();
     private static CMRewardHandler rewardHandler = null;
 	private static CMEcon economyPluginListener;
@@ -90,10 +93,12 @@ public class CookieMonster extends JavaPlugin {
 		economyPluginListener = new CMEcon(this);		
 
         // Event Registration
+		pm.registerEvent(Type.ENTITY_DAMAGE, entityProtectListener, Priority.Low, this);
         pm.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.High, this);
-        pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal, this);
+        pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.High, this);
 //		pm.registerEvent(Type.PROJECTILE_HIT, entityListener, Priority.Normal, this);
 
+        pm.registerEvent(Type.BLOCK_BREAK, blockProtectListener, Priority.Low, this);
         pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.High, this);
 		
 		pm.registerEvent(Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
@@ -171,6 +176,10 @@ public class CookieMonster extends JavaPlugin {
     public static CMRewardHandler getRewardHandler() {
         return rewardHandler;
     }
+	
+	public static CMConfig getSettings() {
+		return config;
+	}
 
     public static void Log(String txt) {
         logger.log(Level.INFO, String.format("[%s] %s", name, txt));

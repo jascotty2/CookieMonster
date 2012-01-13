@@ -43,6 +43,12 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7 - 1/13/12
+updated for mc 1.0
+changed how entity protection is handled
+- now in two classes, so protection occurs before drops do (allows for other plugin compatibility)
+
+
 Version 1.6.6 - 10/4/11
 fixed pre-enabled econ plugin from disabling money rewards
 
