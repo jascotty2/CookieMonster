@@ -43,6 +43,10 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.0.1 - 1/15/12
+fixed block rewarding for compatibility with lwc & worldguard
+
+
 Version 1.7 - 1/13/12
 updated for mc 1.0
 changed how entity protection is handled
