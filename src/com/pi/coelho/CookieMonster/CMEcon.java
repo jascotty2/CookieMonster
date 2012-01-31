@@ -9,15 +9,17 @@ package com.pi.coelho.CookieMonster;
 import com.nijikokun.register_1_3.payment.Method;
 import com.nijikokun.register_1_3.payment.Methods;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.PluginManager;
 
 /**
  * @author jacob
  */
-public class CMEcon extends ServerListener {
+public class CMEcon implements Listener {
 
 	protected static Method economyMethod = null;
 	protected static Methods _econMethods = new Methods();
@@ -27,14 +29,15 @@ public class CMEcon extends ServerListener {
 	public CMEcon(CookieMonster plugin) {
 		this.plugin = plugin;
 		pm = plugin.getServer().getPluginManager();
-        Methods.setMethod(pm);
-		
-        if ((economyMethod = Methods.getMethod()) != null)
-            CookieMonster.Log("Using " + economyMethod.getName()
-						+ " v" + economyMethod.getVersion() + " for economy");
+		Methods.setMethod(pm);
+
+		if ((economyMethod = Methods.getMethod()) != null) {
+			CookieMonster.Log("Using " + economyMethod.getName()
+					+ " v" + economyMethod.getVersion() + " for economy");
+		}
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPluginDisable(PluginDisableEvent event) {
 		// Check to see if the plugin thats being disabled is the one we are using
 		if (_econMethods != null && Methods.hasMethod() && Methods.checkDisabled(event.getPlugin())) {
@@ -44,7 +47,7 @@ public class CMEcon extends ServerListener {
 		}
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPluginEnable(PluginEnableEvent event) {
 		if (!Methods.hasMethod()) {
 			if (Methods.setMethod(pm) && Methods.hasMethod()) {

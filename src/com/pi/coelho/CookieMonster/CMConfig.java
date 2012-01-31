@@ -27,13 +27,14 @@ public class CMConfig {
 	public final static String[] CreatureNodes = {
 		"Chicken", "Cow", "Creeper", "Ghast", "Giant", "Monster", "Pig", "PigZombie",
 		"Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
-		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player", 
-		"Enderman", "Silverfish", "Cave_Spider", 
+		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player",
+		"Enderman", "Silverfish", "Cave_Spider",
 		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem"};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
 	// settings
 	public long damageTimeThreshold = 500; // if dies within this time of damage (ms), will reward killer
+	public double expMultiplier = 1; // exp multiplier for kills
 	public boolean intOnly = false;
 	public boolean disableAnoymDrop = false;
 	public boolean replaceDrops = true;
@@ -47,6 +48,7 @@ public class CMConfig {
 	// spawn camping settings
 	public boolean campTrackingEnabled = false,
 			disableCampingDrops = true,
+			disableCampingExp = true,
 			globalCampTrackingEnabled = false;
 	public int deltaY = 5, deltaX = 20, campKills = 50;
 	public long campTrackingTimeout = 20 * 60000;
@@ -127,6 +129,8 @@ public class CMConfig {
 				}
 				playerReverseProtect = n.getBoolean("playerReverseProtect", playerReverseProtect);
 				playerPaysReward = n.getBoolean("playerPaysReward", playerPaysReward);
+				
+				expMultiplier = n.getDouble("expMultiplier", expMultiplier);
 			}
 
 			if (config.getNode("spwanCampTracking") != null) {
@@ -134,6 +138,7 @@ public class CMConfig {
 				campTrackingEnabled = n.getBoolean("enabled", campTrackingEnabled);
 				globalCampTrackingEnabled = n.getBoolean("global", globalCampTrackingEnabled);
 				disableCampingDrops = n.getBoolean("disableDrops", disableCampingDrops);
+				disableCampingExp = n.getBoolean("disableExp", disableCampingExp);
 				deltaY = n.getInt("deltaY", deltaY);
 				deltaX = n.getInt("deltaX", deltaX);
 				campKills = n.getInt("campKills", campKills);
@@ -232,7 +237,7 @@ public class CMConfig {
 			name = "Sheep";
 		} else if (le instanceof Skeleton) {
 			name = "Skeleton";
-		} else if(le instanceof MagmaCube) {
+		} else if (le instanceof MagmaCube) {
 			return "Magma_Cube";
 		} else if (le instanceof Slime) {
 			name = "Slime";
@@ -258,20 +263,20 @@ public class CMConfig {
 			return "Silverfish";
 		} else if (le instanceof CaveSpider) {
 			return "Cave_Spider";
-		} else if(le instanceof EnderDragon) {
+		} else if (le instanceof EnderDragon) {
 			return "Ender_Dragon";
-		} else if(le instanceof Villager) {
+		} else if (le instanceof Villager) {
 			return "Villager";
-		} else if(le instanceof Blaze) {
+		} else if (le instanceof Blaze) {
 			return "Blaze";
-		} else if(le instanceof MushroomCow) {
+		} else if (le instanceof MushroomCow) {
 			return "Mushroom_Cow";
-		} else if(le instanceof Snowman) {
+		} else if (le instanceof Snowman) {
 			return "Snow_Golem";
 		} else if (le instanceof Monster) {
 			return "Monster";
 		}
-		
+
 		return name;
 	}
 
@@ -305,7 +310,7 @@ public class CMConfig {
 			return 8;
 		} else if (le instanceof Skeleton) {
 			return 9;
-		} else if(le instanceof MagmaCube) {
+		} else if (le instanceof MagmaCube) {
 			return 27;
 		} else if (le instanceof Slime) {
 			return 10;
@@ -333,15 +338,15 @@ public class CMConfig {
 			return 21;
 		} else if (le instanceof CaveSpider) {
 			return 22;
-		} else if(le instanceof EnderDragon) {
+		} else if (le instanceof EnderDragon) {
 			return 23;
-		} else if(le instanceof Villager) {
+		} else if (le instanceof Villager) {
 			return 24;
-		} else if(le instanceof Blaze) {
+		} else if (le instanceof Blaze) {
 			return 25;
-		} else if(le instanceof MushroomCow) {
+		} else if (le instanceof MushroomCow) {
 			return 26;
-		} else if(le instanceof Snowman) {
+		} else if (le instanceof Snowman) {
 			return 28;
 		} else if (le instanceof Monster) {
 			return 5;
@@ -362,7 +367,7 @@ public class CMConfig {
 	}
 
 	public static boolean isCreature(int i) {
-		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18 
+		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18
 				|| i == 26 || i == 24 || i == 28;
 	}
 
@@ -371,7 +376,7 @@ public class CMConfig {
 				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17
 				|| i == 20 || i == 21 || i == 22 || i == 23 || i == 25 || i == 27;
 	}
-	
+
 	public static boolean isPlayer(int i) {
 		return i == 19;
 	}

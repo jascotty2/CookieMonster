@@ -43,6 +43,15 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.1 - 1/31/12
+removed a debug message that occured when a player didn't have an account to credit
+updated listeners for new bukkit system
+fixed so camping player kills won't remove items
+- player gets to keep their items
+- tried to make so keeps their xp, but may be a bukkit limmitation for now..
+added option to remove drops from camping kills
+
+
 Version 1.7.0.1 - 1/15/12
 fixed block rewarding for compatibility with lwc & worldguard
 

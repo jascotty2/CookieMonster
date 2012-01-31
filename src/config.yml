@@ -30,6 +30,8 @@ settings:
     playerReverseProtect: true
     # if the players who die pay the killer (assuming has enough)
     playerPaysReward: true
+    # optional multiplier for dropped exp
+    expMultiplier: 1
 
 #spawn camp tracking occurs when a player kills a monster
 spwanCampTracking:
@@ -37,10 +39,12 @@ spwanCampTracking:
     enabled: false
     # if global is enabled, will apply camp tracking to "natural" deaths
     #   this would allow monsters to drop items naturally, but disable monster killing machines
-    #   (ignores player disableDrops setting: all drops are disabled if threshold passed)
+    #   (player drops are preserved, though, to protect the innocent)
     global: false
     # if suspected camping kills won't drop items
     disableDrops: true
+    # if also disabled exp drops
+    disableExp: true
     # elevation change max
     deltaY: 5
     # square about center (distance from center to edge)

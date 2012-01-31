@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pi.coelho.CookieMonster.protectcheck;
+package com.pi.coelho.CookieMonster;
 
-import com.pi.coelho.CookieMonster.CMConfig;
 import com.pi.coelho.CookieMonster.CookieMonster;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
@@ -13,17 +13,29 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 
 /**
  *
  * @author Jacob
  */
-public class EntityProtectListener extends EntityListener {
-
-	@Override
+public class ProtectionListener implements Listener {
+	
+	@EventHandler(priority = EventPriority.LOW)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!event.isCancelled() && event.getBlock().getType() == Material.MOB_SPAWNER) {
+            if (!CookieMonster.getRewardHandler().canAffordMobSpawner(event.getPlayer())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+	
+	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityDamage(EntityDamageEvent entEvent) {
 		if (entEvent.isCancelled() || !CookieMonster.getSettings().disableExpensiveKill) {
 			return;

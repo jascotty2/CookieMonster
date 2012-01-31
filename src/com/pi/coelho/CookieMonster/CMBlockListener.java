@@ -1,16 +1,18 @@
 package com.pi.coelho.CookieMonster;
 
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
-public class CMBlockListener extends BlockListener {
+public class CMBlockListener implements Listener {
 
 	public CMBlockListener() {
 	}
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (!event.isCancelled() && event.getBlock().getType() == Material.MOB_SPAWNER) {
 			CookieMonster.getRewardHandler().GivePlayerMobSpawnerCoinReward(event.getPlayer());

@@ -116,7 +116,7 @@ public class CMRewardHandler {
 	private void GivePlayerCoinReward(Player p, int m, int itemId,
 			boolean reverseReward, Player victim) {
 		if (m < 0 || !CMEcon.hasAccount(p)) {
-			System.out.println(m + " " + CMEcon.hasAccount(p));
+			//System.out.println(m + " " + CMEcon.hasAccount(p));
 			return;
 		}
 		try {
