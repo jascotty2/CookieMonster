@@ -43,6 +43,10 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.2 - 3/5/12
+quick fix - added old config classes so still works
+
+
 Version 1.7.1 - 1/31/12
 removed a debug message that occured when a player didn't have an account to credit
 updated listeners for new bukkit system

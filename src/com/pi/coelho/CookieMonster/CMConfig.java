@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import me.jascotty2.lib.bukkit.config.Configuration;
+import me.jascotty2.lib.bukkit.config.ConfigurationNode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 public class CMConfig {
 
