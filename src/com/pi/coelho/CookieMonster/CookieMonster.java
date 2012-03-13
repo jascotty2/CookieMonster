@@ -18,7 +18,7 @@ public class CookieMonster extends JavaPlugin {
 
 	protected final static Logger logger = Logger.getLogger("Minecraft");
 	public static final String name = "CookieMonster";
-	protected static CMConfig config = new CMConfig();
+	protected static CMConfig config;
 	private static Server server;
 	private static CMBlockListener blockListener = null;
 	private static ProtectionListener protectListener = new ProtectionListener();
@@ -32,6 +32,7 @@ public class CookieMonster extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		config = new CMConfig(this);
 
 		// Grab plugin details
 		server = getServer();

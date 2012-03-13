@@ -43,6 +43,10 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.2.1 - 3/5/12
+better fix - converted to new config system
+
+
 Version 1.7.2 - 3/5/12
 quick fix - added old config classes so still works
 

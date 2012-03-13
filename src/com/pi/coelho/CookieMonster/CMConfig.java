@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
-import me.jascotty2.lib.bukkit.config.Configuration;
-import me.jascotty2.lib.bukkit.config.ConfigurationNode;
 import org.bukkit.Location;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 
@@ -21,6 +21,7 @@ public class CMConfig {
 	// Files and Directories
 	public final static File pluginFolder = new File("plugins", CookieMonster.name);
 	public final static File configfile = new File(pluginFolder, "config.yml");
+	CookieMonster plugin;
 	//public final static File configurationFile = new File("plugins" + File.pathSeparatorChar + "CookieMonster" + File.pathSeparatorChar + "config.yml");
 	//public static String Plugin_Directory;
 	//Creature Names
@@ -62,7 +63,8 @@ public class CMConfig {
 	public boolean playerReverseProtect = true,
 			playerPaysReward = true; // if the players who die pay the killer (assuming has enough)
 
-	public CMConfig() {
+	public CMConfig(CookieMonster plugin) {
+		this.plugin = plugin;
 		for (int i = 0; i < Monster_Drop.length; ++i) {
 			Monster_Drop[i] = new MonsterDrops();
 		}
@@ -106,10 +108,11 @@ public class CMConfig {
 			Monster_Drop[i].setReward(0);
 		}
 		try {
-			Configuration config = new Configuration(configfile);
-			config.load();
-			if (config.getNode("settings") != null) {
-				ConfigurationNode n = config.getNode("settings");
+			FileConfiguration config = plugin.getConfig();
+			config.load(configfile);
+			Object v = config.get("settings");
+			if (v instanceof MemorySection) {
+				MemorySection n = (MemorySection) v;
 				intOnly = n.getBoolean("wholeNumberRewards", intOnly);
 				disableAnoymDrop = n.getBoolean("onlyKillDrop", disableAnoymDrop);
 				allowWolfHunt = n.getBoolean("allowWolfHunt", allowWolfHunt);
@@ -132,9 +135,10 @@ public class CMConfig {
 				
 				expMultiplier = n.getDouble("expMultiplier", expMultiplier);
 			}
-
-			if (config.getNode("spwanCampTracking") != null) {
-				ConfigurationNode n = config.getNode("spwanCampTracking");
+			
+			v = config.get("spwanCampTracking");
+			if (v instanceof MemorySection) {
+				MemorySection n = (MemorySection) v;
 				campTrackingEnabled = n.getBoolean("enabled", campTrackingEnabled);
 				globalCampTrackingEnabled = n.getBoolean("global", globalCampTrackingEnabled);
 				disableCampingDrops = n.getBoolean("disableDrops", disableCampingDrops);
@@ -147,9 +151,11 @@ public class CMConfig {
 					campTrackingTimeout = CheckInput.GetBigInt_TimeSpanInSec(t, 'm').longValue() * 1000;
 				}
 			}
-
-			if (config.getNodes("rewards") != null) {
-				for (String k : config.getNodes("rewards").keySet()) {
+			
+			v = config.get("rewards");
+			if (v instanceof MemorySection) {
+				MemorySection n = (MemorySection) v;
+				for (String k : n.getKeys(false)) {
 					int i = creatureIndex(k);
 					if (i >= 0) {
 						if (!Monster_Drop[i].setDrops(config.getString("rewards." + k + ".drops"))) {
@@ -166,8 +172,10 @@ public class CMConfig {
 			} else {
 				CookieMonster.Log(Level.SEVERE, "rewards node missing from config");
 			}
-			if (config.getNodes("messages") != null) {
-				List<String> msgs = config.getKeys("messages");//.getNodes("messages").keySet();
+			
+			v = config.get("messages");
+			if (v instanceof MemorySection) {
+				Set<String> msgs = ((MemorySection) v).getKeys(false);
 				for (String k : msgs) {
 					if (!messages.containsKey(k)) {
 						CookieMonster.Log(Level.WARNING, "unused message setting: " + k);
@@ -175,12 +183,13 @@ public class CMConfig {
 						messages.put(k, config.getString("messages." + k, messages.get(k)));
 					}
 				}
-				// check if there are any missing
-				for (String k : messages.keySet()) {
-					if (!msgs.contains(k)) {
-						CookieMonster.Log(Level.WARNING, "missing message setting: " + k);
-					}
-				}
+				// MemorySection.getKeys does not return keys with empty values
+//				// check if there are any missing
+//				for (String k : messages.keySet()) {
+//					if (!msgs.contains(k)) {
+//						CookieMonster.Log(Level.WARNING, "missing message setting: " + k);
+//					}
+//				}
 			} else {
 				CookieMonster.Log(Level.WARNING, "messages node missing from config");
 			}
