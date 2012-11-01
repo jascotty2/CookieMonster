@@ -138,6 +138,17 @@ rewards:
     Snow_Golem:
         drops:
         coins: -1--2
+    Wild_Ocelot:
+    Tame_Ocelot:
+        coins: -5--10
+    Pet_Ocelot:
+    Iron_Golem:
+        coins: -5--10
+    Wither_Skeleton:
+        coins: 5-10
+    Bat:
+    Witch:
+        coins: 10-20
     MobSpawner:
         drops:
         coins: -4--5

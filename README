@@ -43,6 +43,12 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.3 - 10/21/12
+updated for new entities
+- (added Wild_Ocelot, Tame_Ocelot, Pet_Ocelot, Iron_Golem, Wither_Skeleton, Bat, Witch)
+added compatibility for Vault
+
+
 Version 1.7.2.1 - 3/5/12
 better fix - converted to new config system
 

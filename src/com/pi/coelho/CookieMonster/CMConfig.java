@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 
-
 public class CMConfig {
 
 	// Files and Directories
@@ -30,7 +29,11 @@ public class CMConfig {
 		"Sheep", "Skeleton", "Slime", "Spider", "Squid", "Zombie", "Tame_Wolf", "MobSpawner",
 		"Charged_Creeper", "Wild_Wolf", "Pet_Wolf", "Player",
 		"Enderman", "Silverfish", "Cave_Spider",
-		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem"};
+		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem",
+		"Wild_Ocelot", "Tame_Ocelot", "Pet_Ocelot", "Iron_Golem",
+		// 1.4
+		"Wither_Skeleton", "Bat", "Witch"
+	};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
 	// settings
@@ -132,10 +135,10 @@ public class CMConfig {
 				}
 				playerReverseProtect = n.getBoolean("playerReverseProtect", playerReverseProtect);
 				playerPaysReward = n.getBoolean("playerPaysReward", playerPaysReward);
-				
+
 				expMultiplier = n.getDouble("expMultiplier", expMultiplier);
 			}
-			
+
 			v = config.get("spwanCampTracking");
 			if (v instanceof MemorySection) {
 				MemorySection n = (MemorySection) v;
@@ -151,7 +154,7 @@ public class CMConfig {
 					campTrackingTimeout = CheckInput.GetBigInt_TimeSpanInSec(t, 'm').longValue() * 1000;
 				}
 			}
-			
+
 			v = config.get("rewards");
 			if (v instanceof MemorySection) {
 				MemorySection n = (MemorySection) v;
@@ -172,7 +175,7 @@ public class CMConfig {
 			} else {
 				CookieMonster.Log(Level.SEVERE, "rewards node missing from config");
 			}
-			
+
 			v = config.get("messages");
 			if (v instanceof MemorySection) {
 				Set<String> msgs = ((MemorySection) v).getKeys(false);
@@ -224,68 +227,10 @@ public class CMConfig {
 
 	public static String checkMonsters(LivingEntity le, Player p) {
 		String name = "";
-		if (le instanceof Chicken) {
-			name = "Chicken";
-		} else if (le instanceof Cow) {
-			name = "Cow";
-		} else if (le instanceof Creeper) {
-			if (((Creeper) le).isPowered()) {
-				name = "Charged_Creeper";
-			} else {
-				name = "Creeper";
-			}
-		} else if (le instanceof Ghast) {
-			name = "Ghast";
-		} else if (le instanceof Giant) {
-			name = "Giant";
-		} else if (le instanceof Pig) {
-			name = "Pig";
-		} else if (le instanceof PigZombie) {
-			name = "PigZombie";
-		} else if (le instanceof Sheep) {
-			name = "Sheep";
-		} else if (le instanceof Skeleton) {
-			name = "Skeleton";
-		} else if (le instanceof MagmaCube) {
-			return "Magma_Cube";
-		} else if (le instanceof Slime) {
-			name = "Slime";
-		} else if (le instanceof Spider) {
-			name = "Spider";
-		} else if (le instanceof Squid) {
-			name = "Squid";
-		} else if (le instanceof Zombie) {
-			name = "Zombie";
-		} else if (le instanceof Wolf) {
-			if (((Wolf) le).isTamed()) {
-				if (p != null && ((CraftWolf) le).getOwner() == p) {
-					name = "Pet_Wolf";
-				} else {
-					name = "Tame_Wolf";
-				}
-			} else {
-				name = "Wild_Wolf";
-			}
-		} else if (le instanceof Enderman) {
-			return "Enderman";
-		} else if (le instanceof Silverfish) {
-			return "Silverfish";
-		} else if (le instanceof CaveSpider) {
-			return "Cave_Spider";
-		} else if (le instanceof EnderDragon) {
-			return "Ender_Dragon";
-		} else if (le instanceof Villager) {
-			return "Villager";
-		} else if (le instanceof Blaze) {
-			return "Blaze";
-		} else if (le instanceof MushroomCow) {
-			return "Mushroom_Cow";
-		} else if (le instanceof Snowman) {
-			return "Snow_Golem";
-		} else if (le instanceof Monster) {
-			return "Monster";
+		int n = creatureIndex(le, p);
+		if(n >= 0 && n < CreatureNodes.length) {
+			name = CreatureNodes[n];
 		}
-
 		return name;
 	}
 
@@ -357,6 +302,23 @@ public class CMConfig {
 			return 26;
 		} else if (le instanceof Snowman) {
 			return 28;
+		} else if (le instanceof Ocelot) {
+			if (((Ocelot) le).isTamed()) {
+				if (p != null && ((Ocelot) le).getOwner() == p) {
+					return 31;
+				} else {
+					return 30;
+				}
+			}
+			return 29;
+		} else if (le instanceof IronGolem) {
+			return 32;
+		} else if (le instanceof Wither) {
+			return 33;
+		} else if (le instanceof Bat) {
+			return 34;
+		} else if (le instanceof Witch) {
+			return 35;
 		} else if (le instanceof Monster) {
 			return 5;
 		}
@@ -377,13 +339,14 @@ public class CMConfig {
 
 	public static boolean isCreature(int i) {
 		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18
-				|| i == 26 || i == 24 || i == 28;
+				|| i == 26 || i == 24 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34;
 	}
 
 	public static boolean isMonster(int i) {
 		return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9
 				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17
-				|| i == 20 || i == 21 || i == 22 || i == 23 || i == 25 || i == 27;
+				|| i == 20 || i == 21 || i == 22 || i == 23 || i == 25 || i == 27
+				|| i == 32 || i == 33 || i == 35;
 	}
 
 	public static boolean isPlayer(int i) {
