@@ -144,8 +144,10 @@ rewards:
     Pet_Ocelot:
     Iron_Golem:
         coins: -5--10
-    Wither_Skeleton:
+    Wither:
         coins: 5-10
+    Wither_Skeleton:
+        coins: 2-4
     Bat:
     Witch:
         coins: 10-20

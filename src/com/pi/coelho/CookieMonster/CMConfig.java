@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
+import net.minecraft.server.EntitySkeleton;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 
@@ -32,7 +34,7 @@ public class CMConfig {
 		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem",
 		"Wild_Ocelot", "Tame_Ocelot", "Pet_Ocelot", "Iron_Golem",
 		// 1.4
-		"Wither_Skeleton", "Bat", "Witch"
+		"Wither", "Bat", "Witch", "Wither_Skeleton"
 	};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
@@ -263,6 +265,9 @@ public class CMConfig {
 		} else if (le instanceof Sheep) {
 			return 8;
 		} else if (le instanceof Skeleton) {
+			if(((CraftSkeleton) le).getHandle().getSkeletonType() == 1) {
+				return 36;
+			}
 			return 9;
 		} else if (le instanceof MagmaCube) {
 			return 27;
