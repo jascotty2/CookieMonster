@@ -125,7 +125,7 @@ public class CookieMonster extends JavaPlugin {
 					if ((config.campTrackingEnabled || config.globalCampTrackingEnabled)
 							&& killTracker == null) {
 						killTracker = new CMCampTracker();
-					} else if ((config.campTrackingEnabled || config.globalCampTrackingEnabled)
+					} else if (!(config.campTrackingEnabled || config.globalCampTrackingEnabled)
 							&& killTracker != null) {
 						//todo:save
 						killTracker = null;

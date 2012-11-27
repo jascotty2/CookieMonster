@@ -1,6 +1,7 @@
 package com.pi.coelho.CookieMonster;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -87,7 +88,7 @@ public class CMEntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (!(event.getEntity() instanceof LivingEntity)) {
+		if (!(event.getEntity() instanceof LivingEntity) || event.getDrops() == null || event.getDrops() == Collections.EMPTY_LIST) {
 			return;
 		}
 		MonsterAttack at = attacks.get(event.getEntity().getEntityId());

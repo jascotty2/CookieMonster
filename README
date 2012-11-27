@@ -43,8 +43,10 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
-Version 1.7.3.1 - 11/27/12
+Version 1.7.3.2 - 11/27/12
 added new option in formatting messages: <longamount> (only works with vault - prints the name of the currency after the amount)
+fixed tracking errors related to config reload
+fixed an essentials-specific error when invoking "/killall"
 
 
 Version 1.7.3 - 10/21/12
