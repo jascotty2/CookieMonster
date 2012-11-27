@@ -43,9 +43,13 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.3.1 - 11/27/12
+added new option in formatting messages: <longamount> (only works with vault - prints the name of the currency after the amount)
+
+
 Version 1.7.3 - 10/21/12
 updated for new entities
-- (added Wild_Ocelot, Tame_Ocelot, Pet_Ocelot, Iron_Golem, Wither_Skeleton, Bat, Witch)
+- (added Wild_Ocelot, Tame_Ocelot, Pet_Ocelot, Iron_Golem, Wither, Wither_Skeleton, Bat, Witch)
 added compatibility for Vault
 
 

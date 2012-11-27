@@ -184,6 +184,7 @@ messages:
 
     # rewarded for killing a monster:
     # <amount>  how much credited to account
+    # <longamount> how much, with currency name (vault only)
     # <monster> name of the creature killed
     # <item>    what used to kill it
     reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
@@ -200,6 +201,7 @@ messages:
     
     # penalized for killing a monster (if coin range is negative)
     # <amount>  how much removed from account
+    # <longamount> how much, with currency name (vault only)
     # <monster> name of the creature killed
     penalty: "&c You are penalized &f<amount>&c for killing the &f<monster>"
     # <item>    what used to kill it

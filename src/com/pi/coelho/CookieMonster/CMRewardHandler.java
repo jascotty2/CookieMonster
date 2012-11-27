@@ -151,6 +151,7 @@ public class CMRewardHandler {
 						CMEcon.addMoney(p, amount);
 						p.sendMessage(CMConfig.messages.get(pre + "playerreward").
 								replace("<amount>", CMEcon.format(amount)).
+								replace("<longamount>", CMEcon.formatCurrency(amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<player>", victim != null ? victim.getDisplayName() : "?").
 								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)));
@@ -165,6 +166,7 @@ public class CMRewardHandler {
 						CMEcon.addMoney(p, amount);
 						p.sendMessage(CMConfig.messages.get(pre + "reward").
 								replace("<amount>", CMEcon.format(amount)).
+								replace("<longamount>", CMEcon.formatCurrency(amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<monster>", CMConfig.CreatureNodes[m]));
 					}
@@ -173,18 +175,21 @@ public class CMRewardHandler {
 					if (reverseReward && CMConfig.isPlayer(m)) {
 						p.sendMessage(CMConfig.messages.get(pre + "playercamppenalty").
 								replace("<amount>", CMEcon.format(-amount)).
+								replace("<longamount>", CMEcon.formatCurrency(-amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<player>", victim != null ? victim.getDisplayName() : "?").
 								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)));
 					} else if (CMConfig.isPlayer(m)) {
 						p.sendMessage(CMConfig.messages.get(pre + "playerpenalty").
 								replace("<amount>", CMEcon.format(-amount)).
+								replace("<longamount>", CMEcon.formatCurrency(-amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<player>", victim != null ? victim.getDisplayName() : "?").
 								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)));
 					} else {
 						p.sendMessage(CMConfig.messages.get(pre + "penalty").
 								replace("<amount>", CMEcon.format(-amount)).
+								replace("<longamount>", CMEcon.formatCurrency(-amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<monster>", CMConfig.CreatureNodes[m]));
 					}
@@ -192,6 +197,7 @@ public class CMRewardHandler {
 						CMEcon.addMoney(victim, -amount);
 						victim.sendMessage(CMConfig.messages.get("victimprotection").
 								replace("<amount>", CMEcon.format(-amount)).
+								replace("<longamount>", CMEcon.formatCurrency(-amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<player>", p.getDisplayName()).
 								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)));

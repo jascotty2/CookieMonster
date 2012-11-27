@@ -154,5 +154,14 @@ public class CMEcon implements Listener {
 		}
 		return String.format("%.2f", amt);
 	}
+
+	public static String formatCurrency(double amt) {
+		if(vaultEcon != null) {
+			return vaultEcon.format(amt) + " " + (amt == 1 ? vaultEcon.currencyNameSingular() : vaultEcon.currencyNamePlural());
+		} else if (economyMethod != null) {
+			return economyMethod.format(amt);
+		}
+		return String.format("%.2f", amt);
+	}
 } // end class CMEcon
 
