@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -54,8 +53,8 @@ public class CMEntityListener implements Listener {
 			if (damager instanceof Player) {
 				pl = (Player) damager;
 			} else if (damager instanceof Wolf && CookieMonster.config.allowWolfHunt) {
-				if (((CraftWolf) damager).isTamed()) {
-					AnimalTamer at = ((CraftWolf) damager).getOwner();
+				if (((Wolf) damager).isTamed()) {
+					AnimalTamer at = ((Wolf) damager).getOwner();
 					if (at instanceof Player) {
 						pl = (Player) at;
 					}

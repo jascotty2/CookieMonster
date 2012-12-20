@@ -43,6 +43,10 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
+Version 1.7.4 - 12/19/12
+Updated to work with craftbukkit 1.4.5-R1.0
+
+
 Version 1.7.3.2 - 11/27/12
 added new option in formatting messages: <longamount> (only works with vault - prints the name of the currency after the amount)
 fixed tracking errors related to config reload

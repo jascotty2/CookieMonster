@@ -6,7 +6,7 @@ package com.pi.coelho.CookieMonster;
 
 import com.pi.coelho.CookieMonster.CookieMonster;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftWolf;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;

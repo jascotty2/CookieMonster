@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
-import net.minecraft.server.EntitySkeleton;
+import net.minecraft.server.v1_4_5.EntitySkeleton;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.entity.CraftWolf;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftWolf;
 import org.bukkit.entity.*;
 
 public class CMConfig {
