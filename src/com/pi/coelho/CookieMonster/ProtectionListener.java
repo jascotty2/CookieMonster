@@ -6,7 +6,6 @@ package com.pi.coelho.CookieMonster;
 
 import com.pi.coelho.CookieMonster.CookieMonster;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftWolf;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -56,8 +55,8 @@ public class ProtectionListener implements Listener {
 			if (damager instanceof Player) {
 				pl = (Player) damager;
 			} else if (damager instanceof Wolf && CookieMonster.getSettings().allowWolfHunt) {
-				if (((CraftWolf) damager).isTamed()) {
-					AnimalTamer at = ((CraftWolf) damager).getOwner();
+				if (((Wolf) damager).isTamed()) {
+					AnimalTamer at = ((Wolf) damager).getOwner();
 					if (at instanceof Player) {
 						pl = (Player) at;
 					}
@@ -67,7 +66,7 @@ public class ProtectionListener implements Listener {
 				if (!CookieMonster.getRewardHandler().canAffordKill(pl, monster)) {
 					entEvent.setCancelled(true);
 					if (damager instanceof Wolf) {
-						((CraftWolf) damager).setTarget(null);
+						((Wolf) damager).setTarget(null);
 					}
 					return;
 				}
