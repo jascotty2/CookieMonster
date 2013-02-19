@@ -87,7 +87,10 @@ public class CMEntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (!(event.getEntity() instanceof LivingEntity) || event.getDrops() == null || event.getDrops() == Collections.EMPTY_LIST) {
+		if (!(event.getEntity() instanceof LivingEntity) 
+				|| event.getDrops() == null 
+				|| event.getDrops() == Collections.EMPTY_LIST
+				|| event.getEntity().getLastDamageCause() == null) {
 			return;
 		}
 		MonsterAttack at = attacks.get(event.getEntity().getEntityId());

@@ -43,7 +43,11 @@ penalties/rewards for killing players (even groups)
 
 Changelog:
 
-Version 1.7.4.1 - 12/19/12
+Version 1.7.4.2 - 2/19/13
+added check for MonsterFix compatibility
+
+
+Version 1.7.4.1 - 12/23/12
 Minor changes for compatibility with v1.4.6
 
 
