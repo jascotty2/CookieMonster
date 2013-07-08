@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
+import net.minecraft.server.v1_6_R1.EntityHorse;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftAnimals;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
@@ -32,7 +34,9 @@ public class CMConfig {
 		"Ender_Dragon", "Villager", "Blaze", "Mushroom_Cow", "Magma_Cube", "Snow_Golem",
 		"Wild_Ocelot", "Tame_Ocelot", "Pet_Ocelot", "Iron_Golem",
 		// 1.4
-		"Wither", "Bat", "Witch", "Wither_Skeleton"
+		"Wither", "Bat", "Witch", "Wither_Skeleton",
+		// 1.6.1
+		"Horse"
 	};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
@@ -66,10 +70,19 @@ public class CMConfig {
 	public boolean playerReverseProtect = true,
 			playerPaysReward = true; // if the players who die pay the killer (assuming has enough)
 
+	private static boolean compatibilityMode = false;
 	public CMConfig(CookieMonster plugin) {
 		this.plugin = plugin;
 		for (int i = 0; i < Monster_Drop.length; ++i) {
 			Monster_Drop[i] = new MonsterDrops();
+		}
+		
+		try {
+			Class test = Class.forName("org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer");
+			org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer testSource;
+		} catch (Throwable t) {
+			plugin.getLogger().log(Level.WARNING, "Unsupported Platform (enabling compatibility mode)");
+			compatibilityMode = true;
 		}
 	}
 
@@ -109,6 +122,7 @@ public class CMConfig {
 		for (int i = 0; i < Monster_Drop.length; ++i) {
 			Monster_Drop[i].useCustomDrops = false;
 			Monster_Drop[i].setReward(0);
+			Monster_Drop[i].setItemRewards(null);
 		}
 		try {
 			FileConfiguration config = plugin.getConfig();
@@ -322,6 +336,8 @@ public class CMConfig {
 			return 34;
 		} else if (le instanceof Witch) {
 			return 35;
+		} else if (le instanceof Horse || (!compatibilityMode && (le instanceof CraftAnimals && ((CraftAnimals) le).getHandle() instanceof EntityHorse))) {
+			return 37;
 		} else if (le instanceof Monster) {
 			return 5;
 		}
@@ -342,7 +358,7 @@ public class CMConfig {
 
 	public static boolean isCreature(int i) {
 		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18
-				|| i == 26 || i == 24 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34;
+				|| i == 26 || i == 24 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 37;
 	}
 
 	public static boolean isMonster(int i) {
