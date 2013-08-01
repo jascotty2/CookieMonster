@@ -3,6 +3,8 @@ package com.pi.coelho.CookieMonster;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.AnimalTamer;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,22 +34,22 @@ public class CMEntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamage(EntityDamageEvent entEvent) {
-		if (entEvent.isCancelled()) {
+		if (entEvent.isCancelled() || !(entEvent.getEntity() instanceof LivingEntity)) {
 			return;
 		}
 		if (entEvent instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
-			if (event.getDamager() instanceof Arrow) {
-				entDamage(event.getEntity(), ((Arrow) event.getDamager()).getShooter(), entEvent);
+			if (event.getDamager() instanceof Projectile) {
+				entDamage((LivingEntity) event.getEntity(), ((Projectile) event.getDamager()).getShooter(), entEvent);
 			} else {
-				entDamage(event.getEntity(), event.getDamager(), entEvent);
+				entDamage((LivingEntity) event.getEntity(), event.getDamager(), entEvent);
 			}
 		} else {
-			monsterDamaged(entEvent.getEntity(), null, true);
+			monsterDamaged((LivingEntity) entEvent.getEntity(), null, true, entEvent.getDamage());
 		}
 	}
 
-	void entDamage(Entity monster, Entity damager, EntityDamageEvent entEvent) {
+	void entDamage(LivingEntity monster, Entity damager, EntityDamageEvent entEvent) {
 		if (monster instanceof LivingEntity) {
 			//System.out.println(damager);
 			Player pl = null;
@@ -62,20 +65,21 @@ public class CMEntityListener implements Listener {
 			}
 			boolean handleKill = CookieMonster.config.cmEnabled(entEvent.getEntity().getLocation());
 			if (pl == null) {
-				monsterDamaged(monster, null, handleKill);
+				monsterDamaged(monster, null, handleKill, entEvent.getDamage());
 			} else {
-				monsterDamaged(monster, pl, handleKill);
+				monsterDamaged(monster, pl, handleKill, entEvent.getDamage());
 			}
 		}
 	}
 
-	public void monsterDamaged(Entity monster, Player player, boolean handleKill) {
+	public void monsterDamaged(LivingEntity monster, Player player, boolean handleKill, double damage) {
+
 		if (!attacks.containsKey(monster.getEntityId())) {
 			if (player != null) {
-				attacks.put(monster.getEntityId(), new MonsterAttack(player, handleKill));
+				attacks.put(monster.getEntityId(), new MonsterAttack(player, damage, handleKill));
 			}
 		} else {
-			attacks.get(monster.getEntityId()).setAttack(player, handleKill);
+			attacks.get(monster.getEntityId()).addAttack(player, damage, handleKill);
 		}
 	}
 
@@ -84,11 +88,11 @@ public class CMEntityListener implements Listener {
 		EntityDeathEvent entd = new EntityDeathEvent(event.getEntity(), event.getDrops(), event.getDroppedExp());
 		onEntityDeath(entd);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDeath(EntityDeathEvent event) {
-		if (!(event.getEntity() instanceof LivingEntity) 
-				|| event.getDrops() == null 
+		if (!(event.getEntity() instanceof LivingEntity)
+				|| event.getDrops() == null
 				|| event.getDrops() == Collections.EMPTY_LIST
 				|| event.getEntity().getLastDamageCause() == null) {
 			return;
@@ -108,8 +112,12 @@ public class CMEntityListener implements Listener {
 			if (CookieMonster.killTracker.numKills(loc,
 					CookieMonster.config.deltaX, CookieMonster.config.deltaY,
 					CookieMonster.config.campTrackingTimeout) > CookieMonster.config.campKills) {
-				if (at != null && at.lastAttackPlayer != null) {
-					at.lastAttackPlayer.sendMessage(CMConfig.messages.get("nocampingreward"));
+				if (at != null) {
+					for (Player p : at.damagers.keySet()) {
+						if (p != null) {
+							p.sendMessage(CMConfig.messages.get("nocampingreward"));
+						}
+					}
 				}
 
 				// don't remove player exp or drops, but don't reward the kill, either
@@ -140,7 +148,6 @@ public class CMEntityListener implements Listener {
 			return;
 		}
 
-
 		if (CookieMonster.config.disableAnoymDrop) {
 			if (at == null) {
 				event.getDrops().clear();
@@ -165,39 +172,80 @@ public class CMEntityListener implements Listener {
 
 	public class MonsterAttack {
 
+		final HashMap<Player, Double> damagers = new HashMap<Player, Double>();
+		Player lastAttacker;
 		long lastAttackTime;
-		Player lastAttackPlayer;
 		boolean handleKill = true;
 
-		public MonsterAttack(Player attacker, boolean handleKill) {
-			setAttack(attacker, handleKill);
+		public MonsterAttack(Player attacker, double dmg, boolean handleKill) {
+			addAttack(attacker, dmg, handleKill);
 		}
 
 		public long attackTimeAgo() {
 			return lastAttackTime > 0 ? System.currentTimeMillis() - lastAttackTime : 0;
 		}
 
-		public final void setAttack(Player attacker, boolean handleKill) {
-			lastAttackPlayer = attacker;
+		public final void addAttack(Player attacker, double dmg, boolean handleKill) {
+			lastAttacker = attacker;
+			final long now = System.currentTimeMillis();
+			if (lastAttackTime == 0 || (now - lastAttackTime) > CookieMonster.config.damageDelay) {
+				damagers.clear();
+			}
+			lastAttackTime = now;
+			Double oldDmg = damagers.get(attacker);
+			damagers.put(attacker, (oldDmg != null ? oldDmg.doubleValue() : 0) + dmg);
+
+
 			this.handleKill = handleKill;
 			lastAttackTime = System.currentTimeMillis();
 		}
 
+		Map<Player, Double> killResults() {
+			if (lastAttackTime > 0 && (System.currentTimeMillis() - lastAttackTime) <= CookieMonster.config.damageDelay) {
+				HashMap<Player, Double> damagePercents = new HashMap<Player, Double>();
+				double total = 0;
+				for (Double d : damagers.values()) {
+					total += d;
+				}
+				for (Map.Entry<Player, Double> e : damagers.entrySet()) {
+					damagePercents.put(e.getKey(), e.getValue() / total);
+				}
+				return damagePercents;
+			}
+			damagers.clear();
+			return null;
+		}
+
 		public void rewardKill(EntityDeathEvent event) {
-			if (handleKill && lastAttackPlayer != null) {
-				CookieMonster.getRewardHandler().GivePlayerCoinReward(lastAttackPlayer, event.getEntity());
-				//if (!(event.getEntity() instanceof Player)) {
-				ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
-				if (newDrops != null) {
-					if (CookieMonster.config.replaceDrops) {
-						event.getDrops().clear();
+			if (handleKill && !damagers.isEmpty()) {
+				Map<Player, Double> damagePercents = killResults();
+				if (damagePercents != null && !damagePercents.isEmpty()) {
+					if (CookieMonster.config.multipleRewards) {
+						if (damagePercents.size() == 1) {
+							Player p = damagePercents.keySet().iterator().next();
+							CookieMonster.getRewardHandler().GivePlayerCoinReward(p, event.getEntity(), 1);
+						} else {
+							for (Map.Entry<Player, Double> e : damagePercents.entrySet()) {
+								final Player p = e.getKey();
+								CookieMonster.getRewardHandler().GivePlayerCoinReward(p, event.getEntity(), e.getValue());
+							}
+						}
+					} else {
+						CookieMonster.getRewardHandler().GivePlayerCoinReward(lastAttacker, event.getEntity(), 1);
 					}
-					event.getDrops().addAll(Arrays.asList(newDrops));
+					//if (!(event.getEntity() instanceof Player)) {
+					ItemStack newDrops[] = CookieMonster.getRewardHandler().getDropReward(event.getEntity());
+					if (newDrops != null) {
+						if (CookieMonster.config.replaceDrops) {
+							event.getDrops().clear();
+						}
+						event.getDrops().addAll(Arrays.asList(newDrops));
+					}
+					if (CookieMonster.config.expMultiplier != 1) {
+						event.setDroppedExp((int) (event.getDroppedExp() * CookieMonster.config.expMultiplier));
+					}
+					//}
 				}
-				if (CookieMonster.config.expMultiplier != 1) {
-					event.setDroppedExp((int) (event.getDroppedExp() * CookieMonster.config.expMultiplier));
-				}
-				//}
 			}
 		}
 	}

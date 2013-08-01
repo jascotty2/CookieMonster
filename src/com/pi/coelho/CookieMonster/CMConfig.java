@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
-import net.minecraft.server.v1_6_R1.EntityHorse;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftAnimals;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 
@@ -50,6 +48,7 @@ public class CMConfig {
 	public boolean allowWolfHunt = true;
 	public boolean disableExpensiveKill = true;
 	public boolean regionsDisable = true;
+	public boolean multipleRewards = true;
 	protected ArrayList<String> disabledWorlds = new ArrayList<String>();
 	// messages
 	public static HashMap<String, String> messages = new HashMap<String, String>();
@@ -70,30 +69,30 @@ public class CMConfig {
 	public boolean playerReverseProtect = true,
 			playerPaysReward = true; // if the players who die pay the killer (assuming has enough)
 
-	private static boolean compatibilityMode = false;
+	long damageDelay = 20 * 1000; // 20 seconds
+	
 	public CMConfig(CookieMonster plugin) {
 		this.plugin = plugin;
 		for (int i = 0; i < Monster_Drop.length; ++i) {
 			Monster_Drop[i] = new MonsterDrops();
 		}
 		
-		try {
-			Class test = Class.forName("org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer");
-			org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer testSource;
-		} catch (Throwable t) {
-			plugin.getLogger().log(Level.WARNING, "Unsupported Platform (enabling compatibility mode)");
-			compatibilityMode = true;
-		}
 	}
 
 	public boolean load() {
 		extractConfig();
 		disabledWorlds.clear();
 		messages.clear();
+		
 		messages.put("reward", "&a You are rewarded &f<amount>&a for killing the &f<monster>");
+		messages.put("rewardpercent", "&a You are rewarded &f<amount>&a for assisting <percent> of damage to the &f<monster>");
 		messages.put("itemreward", "&a You are rewarded &f<amount>&a for killing the &f<monster> with a <item>");
+		messages.put("itemrewardpercent", "&a You are rewarded &f<amount>&a for assisting <percent> of damage to the &f<monster>&a with a &f<item>");
+		
 		messages.put("playerreward", "&a You are rewarded &f<amount>&a for killing the Player &f<player>");
+		messages.put("playerrewardpercent", "&a You are rewarded &f<amount>&a for assisting <percent> of damage to &f<player>");
 		messages.put("itemplayerreward", "&a You are rewarded &f<amount>&a for killing the Player &f<player>&a with a &f<item>");
+		messages.put("itemplayerrewardpercent", "&a You are rewarded &f<amount>&a for assisting <percent> of damage to &f<player>&a with a &f<item>");
 
 		messages.put("victimpay", "&f <player>&c took &f<amount>&c from you when you died");
 		messages.put("victimprotection", "&f <player>&a payed you &f<amount>&a as penalty for killing you");
@@ -151,6 +150,7 @@ public class CMConfig {
 				playerPaysReward = n.getBoolean("playerPaysReward", playerPaysReward);
 
 				expMultiplier = n.getDouble("expMultiplier", expMultiplier);
+				multipleRewards = n.getBoolean("multipleRewards", multipleRewards);
 			}
 
 			v = config.get("spwanCampTracking");
@@ -336,7 +336,7 @@ public class CMConfig {
 			return 34;
 		} else if (le instanceof Witch) {
 			return 35;
-		} else if (le instanceof Horse || (!compatibilityMode && (le instanceof CraftAnimals && ((CraftAnimals) le).getHandle() instanceof EntityHorse))) {
+		} else if (le instanceof Horse) {
 			return 37;
 		} else if (le instanceof Monster) {
 			return 5;

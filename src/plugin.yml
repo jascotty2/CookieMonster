@@ -1,6 +1,6 @@
 name: CookieMonster
 main: com.pi.coelho.CookieMonster.CookieMonster
-version: 1.7.4.3
+version: 1.8
 authors: [jascotty2, Coelho]
 softdepend: [Vault]
 commands:

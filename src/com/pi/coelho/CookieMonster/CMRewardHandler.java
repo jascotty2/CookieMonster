@@ -9,7 +9,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class CMRewardHandler {
 
-	public void GivePlayerCoinReward(Player p, Entity e) {
+	public void GivePlayerCoinReward(Player p, Entity e, double percent) {
+		if(p == null) {
+			return;
+		}
 		int c = CMConfig.creatureIndex(e, p);
 		
 		if (c >= 0) {
@@ -19,13 +22,13 @@ public class CMRewardHandler {
 						&& (l < 0 || l < CookieMonster.config.playerRewardWait)) {
 					// then there is a penalty, not reward, for killing the player
 					GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId(), true,
-							((Player) e));
+							((Player) e), percent);
 				} else {
 					GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId(), false,
-							((Player) e));
+							((Player) e), percent);
 				}
 			} else {
-				GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId());
+				GivePlayerCoinReward(p, c, p.getItemInHand().getTypeId(), percent);
 			}
 		} else {
 			CookieMonster.Log(Level.WARNING, "Error rewarding player: unknown entity " + e);
@@ -34,7 +37,7 @@ public class CMRewardHandler {
 
 	public void GivePlayerMobSpawnerCoinReward(Player p) {
 		GivePlayerCoinReward(p, CMConfig.creatureIndex("MobSpawner"),
-				p.getItemInHand().getTypeId());
+				p.getItemInHand().getTypeId(), 1);
 	}
 
 	public boolean canAffordMobSpawner(Player p) {
@@ -109,18 +112,18 @@ public class CMRewardHandler {
 		return 0;
 	}
 
-	private void GivePlayerCoinReward(Player p, int m, int itemId) {
-		GivePlayerCoinReward(p, m, itemId, false, null);
+	private void GivePlayerCoinReward(Player p, int m, int itemId, double percent) {
+		GivePlayerCoinReward(p, m, itemId, false, null, percent);
 	}
 
 	private void GivePlayerCoinReward(Player p, int m, int itemId,
-			boolean reverseReward, Player victim) {
+			boolean reverseReward, Player victim, double percent) {
 		if (m < 0 || !CMEcon.hasAccount(p)) {
 			//System.out.println(m + " " + CMEcon.hasAccount(p));
 			return;
 		}
 		try {
-			double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId);
+			double amount = CookieMonster.config.Monster_Drop[m].getCoinReward(itemId) * percent;
 			if (CookieMonster.config.intOnly) {
 				amount = Math.round(amount);
 			}
@@ -149,12 +152,13 @@ public class CMRewardHandler {
 							CMEcon.subtractMoney(victim, amount);
 						}
 						CMEcon.addMoney(p, amount);
-						p.sendMessage(CMConfig.messages.get(pre + "playerreward").
+						p.sendMessage(CMConfig.messages.get(pre + "playerreward" + (percent != 1 ? "percent" : "")).
 								replace("<amount>", CMEcon.format(amount)).
 								replace("<longamount>", CMEcon.formatCurrency(amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
 								replace("<player>", victim != null ? victim.getDisplayName() : "?").
-								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)));
+								replace("<time>", String.valueOf(CookieMonster.config.playerRewardWait / 1000)).
+								replace("<percent>", String.format("%.0f", percent * 100)));
 						if (CookieMonster.config.playerPaysReward) {
 							victim.sendMessage(CMConfig.messages.get("victimpay").
 									replace("<amount>", CMEcon.format(amount)).
@@ -164,11 +168,12 @@ public class CMRewardHandler {
 						}
 					} else {
 						CMEcon.addMoney(p, amount);
-						p.sendMessage(CMConfig.messages.get(pre + "reward").
+						p.sendMessage(CMConfig.messages.get(pre + "reward" + (percent != 1 ? "percent" : "")).
 								replace("<amount>", CMEcon.format(amount)).
 								replace("<longamount>", CMEcon.formatCurrency(amount)).
 								replace("<item>", i == null ? "?" + itemId + "?" : i.name()).
-								replace("<monster>", CMConfig.CreatureNodes[m]));
+								replace("<monster>", CMConfig.CreatureNodes[m]).
+								replace("<percent>", String.format("%.0f", percent * 100)));
 					}
 				} else if (amount < 0.0) {
 					CMEcon.subtractMoney(p, -amount);

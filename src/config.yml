@@ -32,6 +32,9 @@ settings:
     playerPaysReward: true
     # optional multiplier for dropped exp
     expMultiplier: 1
+    # optionally can reward all player who helped kill a monster
+    # will give a % of the potential reward generated for each player
+    multipleRewards: true
 
 #spawn camp tracking occurs when a player kills a monster
 spwanCampTracking:
@@ -170,11 +173,15 @@ messages:
     # <monster> name of the creature killed
     # <item>    what used to kill it
     reward: "&a You are rewarded &f<amount>&a for killing the &f<monster>"
+    rewardpercent: "&a You are rewarded &f<amount>&a for assisting <percent> of damage to the &f<monster>"
     # if the reward is specific to what the user is holding
     itemreward: "&a You are rewarded &f<amount>&a for killing the &f<monster>&a with a &f<item>"
+    itemrewardpercent: "&a You are rewarded &f<amount>&a for assisting <percent> of damage to the &f<monster>&a with a &f<item>"
     # for killing a player
     playerreward: "&a You are rewarded &f<amount>&a for killing the Player &f<player>"
+    playerrewardpercent: "&a You are rewarded &f<amount>&a for assisting <percent> of damage to &f<player>"
     itemplayerreward: "&a You are rewarded &f<amount>&a for killing the Player &f<player>&a with a &f<item>"
+    itemplayerrewardpercent: "&a You are rewarded &f<amount>&a for assisting <percent> of damage to &f<player>&a with a &f<item>"
     # for the victim of the attacks
     victimpay: "&f <player>&c took &f<amount>&c from you when you died"
     victimprotection: "&f <player>&a payed you &f<amount>&a as penalty for killing you"

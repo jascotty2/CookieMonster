@@ -2,6 +2,7 @@ package com.pi.coelho.CookieMonster;
 
 import com.jascotty2.util.Str;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -99,6 +100,14 @@ public class CookieMonster extends JavaPlugin {
 		// Console Detail
 		Log(" v" + pdfFile.getVersion() + " loaded successfully.");
 		Log(" Developed by: " + pdfFile.getAuthors());
+		
+		
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {
+			// Failed to submit the stats :-(
+		}
 	}
 
 	@Override

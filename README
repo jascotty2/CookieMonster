@@ -38,10 +38,19 @@ Commands:
 
 To-Do:
 permissions? (for rewards & maybe permission to kill without penalty?)
-penalties/rewards for killing players (even groups)
+penalties/rewards for killing players (with permissions.. even groups)
 
 
 Changelog:
+
+Version 1.8 - 8/1/13
+added feature to allow rewarding a percentage of kill, instead of all reward to last damager
+damage listener now works for snowballs (damage = 0, but still ;)), potions, and other projectiles
+
+
+Version 1.7.4.3 - 7/7/13
+Update for 1.6.1-DEV
+
 
 Version 1.7.4.2 - 2/19/13
 added check for MonsterFix compatibility
