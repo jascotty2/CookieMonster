@@ -4,11 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +38,9 @@ public class CMEntityListener implements Listener {
 		if (entEvent instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
 			if (event.getDamager() instanceof Projectile) {
-				entDamage((LivingEntity) event.getEntity(), ((Projectile) event.getDamager()).getShooter(), entEvent);
+				if (((Projectile) event.getDamager()).getShooter() instanceof LivingEntity) {
+					entDamage((LivingEntity) event.getEntity(), (LivingEntity) ((Projectile) event.getDamager()).getShooter(), entEvent);
+				}
 			} else {
 				entDamage((LivingEntity) event.getEntity(), event.getDamager(), entEvent);
 			}
@@ -194,7 +194,6 @@ public class CMEntityListener implements Listener {
 			lastAttackTime = now;
 			Double oldDmg = damagers.get(attacker);
 			damagers.put(attacker, (oldDmg != null ? oldDmg.doubleValue() : 0) + dmg);
-
 
 			this.handleKill = handleKill;
 			lastAttackTime = System.currentTimeMillis();

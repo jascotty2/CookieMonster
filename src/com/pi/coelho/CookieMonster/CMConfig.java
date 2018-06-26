@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.entity.Skeleton.SkeletonType;
 
 public class CMConfig {
 
@@ -34,7 +33,11 @@ public class CMConfig {
 		// 1.4
 		"Wither", "Bat", "Witch", "Wither_Skeleton",
 		// 1.6.1
-		"Horse"
+		"Horse",
+		// adding for 1.12 support
+		"Cave_Spider", "Donkey", "Elder_Guardian", "Evoker", "Guardian", "Husk", 
+		"Illusioner", "Llama", "Mule", "Parrot", "Polar_Bear", "Rabbit", "Shulker", 
+		"Skeleton_Horse", "Snowman", "Stray", "Vex", "Vindicator", "Zombie_Horse", "Zombie_Villager"
 	};
 	//Monster Configuration
 	public MonsterDrops[] Monster_Drop = new MonsterDrops[CreatureNodes.length];
@@ -256,6 +259,51 @@ public class CMConfig {
 		if (le == null) {
 			return -1;
 		}
+		// added for 1.12
+		if(le instanceof CaveSpider) {
+			return 38;
+		} else if(le instanceof Donkey) {
+			return 39;
+		} else if(le instanceof ElderGuardian) {
+			return 40;
+		} else if(le instanceof Evoker) {
+			return 41;
+		} else if(le instanceof Guardian) {
+			return 42;
+		} else if(le instanceof Husk) {
+			return 43;
+		} else if(le instanceof Illusioner) {
+			return 44;
+		} else if(le instanceof Llama) {
+			return 45;
+		} else if(le instanceof Mule) {
+			return 46;
+		} else if(le instanceof Parrot) {
+			return 47;
+		} else if(le instanceof PolarBear) {
+			return 48;
+		} else if(le instanceof Rabbit) {
+			return 49;
+		} else if(le instanceof Shulker) {
+			return 50;
+		} else if(le instanceof SkeletonHorse) {
+			return 51;
+		} else if(le instanceof Snowman) {
+			return 52;
+		} else if(le instanceof Stray) {
+			return 53;
+		} else if(le instanceof Vex) {
+			return 54;
+		} else if(le instanceof Vindicator) {
+			return 55;
+		} else if(le instanceof ZombieHorse) {
+			return 56;
+		} else if(le instanceof ZombieVillager) {
+			return 57;
+		} else if(le instanceof WitherSkeleton) {
+			return 36;
+		}
+		
 		if (le instanceof Chicken) {
 			return 0;
 		} else if (le instanceof Cow) {
@@ -277,9 +325,6 @@ public class CMConfig {
 		} else if (le instanceof Sheep) {
 			return 8;
 		} else if (le instanceof Skeleton) {
-			if(((Skeleton)le).getSkeletonType() == SkeletonType.WITHER) {
-				return 36;
-			}
 			return 9;
 		} else if (le instanceof MagmaCube) {
 			return 27;
@@ -358,14 +403,18 @@ public class CMConfig {
 
 	public static boolean isCreature(int i) {
 		return i == 0 || i == 1 || i == 6 || i == 8 || i == 12 || i == 14 || i == 18
-				|| i == 26 || i == 24 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 37;
+				|| i == 26 || i == 24 || i == 28 || i == 29 || i == 30 || i == 31 || i == 34 || i == 37
+				
+				|| i == 39 || i == 45 || i == 46 || i == 47 || i == 48 || i == 49 || i == 51 || i == 52 || i == 56;
 	}
 
 	public static boolean isMonster(int i) {
 		return i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 9
 				|| i == 10 || i == 11 || i == 13 || i == 14 || i == 16 || i == 17
 				|| i == 20 || i == 21 || i == 22 || i == 23 || i == 25 || i == 27
-				|| i == 32 || i == 33 || i == 35;
+				|| i == 32 || i == 33 || i == 35
+				
+				|| i == 38 || i == 40 || i == 41 || i == 42 || i == 43 || i == 44 || i == 50 || i == 53 || i == 54 || i == 55 || i == 57;
 	}
 
 	public static boolean isPlayer(int i) {

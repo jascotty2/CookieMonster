@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.pi.coelho.CookieMonster;
 
-import com.pi.coelho.CookieMonster.CookieMonster;
 import org.bukkit.Material;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Arrow;
@@ -19,10 +14,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-/**
- *
- * @author Jacob
- */
 public class ProtectionListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW)
@@ -41,8 +32,8 @@ public class ProtectionListener implements Listener {
 		}
 		if (entEvent instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) entEvent;
-			if (event.getDamager() instanceof Arrow) {
-				entDamage(event.getEntity(), ((Arrow) event.getDamager()).getShooter(), entEvent);
+			if (event.getDamager() instanceof Arrow && ((Arrow) event.getDamager()).getShooter() instanceof LivingEntity) {
+				entDamage(event.getEntity(), (LivingEntity) ((Arrow) event.getDamager()).getShooter(), entEvent);
 			} else {
 				entDamage(event.getEntity(), event.getDamager(), entEvent);
 			}
